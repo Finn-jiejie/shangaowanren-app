@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>山高万仞</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a25;--bg4:#222230;
+  --accent:#6c5ce7;--accent2:#a29bfe;--green:#00b894;--red:#e17055;--orange:#fdcb6e;--blue:#74b9ff;
+  --text:#e8e8f0;--text2:#9999aa;--text3:#666677;
+  --radius:12px;--radius2:8px;
+}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-tap-highlight-color:transparent}
+.app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
+.header{padding:16px 20px 12px;flex-shrink:0}
+.header h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:12px;color:var(--text3);margin-top:2px}
+.header .sub .sync-status{float:right;font-size:10px}
+.content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{display:none}
+.tab-page{display:none}.tab-page.active{display:block}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card-title{font-size:13px;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card-title .emoji{font-size:16px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:14px 12px;text-align:center}
+.stat .val{font-size:22px;font-weight:700;margin-bottom:2px}
+.stat .label{font-size:11px;color:var(--text3)}
+.stat.green .val{color:var(--green)}.stat.blue .val{color:var(--blue)}.stat.orange .val{color:var(--orange)}.stat.red .val{color:var(--red)}
+.goal-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bg3)}
+.goal-item:last-child{border-bottom:none}
+.goal-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.goal-check.done{background:var(--green);border-color:var(--green)}
+.goal-check.done::after{content:'✓';color:#fff;font-size:12px;font-weight:700}
+.goal-text{font-size:14px;flex:1;cursor:pointer}.goal-text.done{text-decoration:line-through;color:var(--text3)}
+.goal-input{background:var(--bg3);border:1px solid var(--accent);border-radius:var(--radius2);padding:8px 10px;color:var(--text);font-size:13px;width:100%;outline:none}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius2);padding:10px 12px;color:var(--text);font-size:14px;outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.form-group textarea{resize:none;height:60px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius2);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:active{background:var(--accent2);transform:scale(.97)}
+.btn-outline{background:transparent;border:1px solid var(--bg4);color:var(--text2)}.btn-outline:active{background:var(--bg3)}
+.btn-danger{background:var(--red);color:#fff;font-size:12px;padding:6px 10px;border-radius:6px}
+.btn-block{width:100%}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
+.list-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--bg3);gap:10px}
+.list-item:last-child{border-bottom:none}
+.list-icon{width:36px;height:36px;border-radius:var(--radius2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.list-info{flex:1;min-width:0}
+.list-info .title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-info .meta{font-size:11px;color:var(--text3);margin-top:2px}
+.list-amount{font-size:15px;font-weight:600;flex-shrink:0}
+.list-amount.income{color:var(--green)}.list-amount.expense{color:var(--red)}
+.progress{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-bar{height:100%;border-radius:3px;transition:width .5s}
+.progress-bar.green{background:var(--green)}.progress-bar.blue{background:var(--blue)}.progress-bar.orange{background:var(--orange)}.progress-bar.purple{background:var(--accent)}
+.countdown-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--bg3)}
+.countdown-item:last-child{border-bottom:none}
+.cd-num{font-size:28px;font-weight:700;min-width:50px;text-align:center}
+.cd-num.green{color:var(--green)}.cd-num.orange{color:var(--orange)}.cd-num.blue{color:var(--blue)}.cd-num.red{color:var(--red)}.cd-num.purple{color:var(--accent2)}
+.cd-info .cd-label{font-size:14px}.cd-info .cd-date{font-size:11px;color:var(--text3);margin-top:2px}
+/* Calendar styles */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-header h3{font-size:16px}
+.cal-nav{background:var(--bg3);border:1px solid var(--bg4);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal-dow{font-size:11px;color:var(--text3);padding:4px 0}
+.cal-day{font-size:13px;padding:8px 4px;border-radius:8px;cursor:pointer;position:relative;min-height:36px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cal-day:hover{background:var(--bg3)}
+.cal-day.today{background:var(--accent);color:#fff;font-weight:700}
+.cal-day.other-month{color:var(--text3);opacity:.4}
+.cal-day .cal-dots{display:flex;gap:2px;justify-content:center}
+.cal-dot{width:4px;height:4px;border-radius:50%}
+.cal-dot.work{background:var(--accent2)}.cal-dot.expense{background:var(--red)}.cal-dot.study{background:var(--green)}
+/* Plan styles */
+.plan-day{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.plan-day .plan-date{font-size:13px;color:var(--accent2);font-weight:600;margin-bottom:8px}
+.plan-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px}
+.plan-item .plan-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--bg4);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.plan-item .plan-check.done{background:var(--green);border-color:var(--green)}
+.plan-item .plan-check.done::after{content:'✓';color:#fff;font-size:10px}
+.plan-item .plan-text.done{text-decoration:line-through;color:var(--text3)}
+.plan-item .plan-time{color:var(--text3);font-size:11px;margin-left:auto;flex-shrink:0}
+.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:var(--bg2);border-top:1px solid var(--bg4);padding:8px 0 env(safe-area-inset-bottom,8px);flex-shrink:0}
+.tab-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.tab-btn .icon{font-size:20px}.tab-btn .text{font-size:9px;color:var(--text3)}
+.tab-btn.active .icon{transform:scale(1.1)}.tab-btn.active .text{color:var(--accent2)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border-radius:var(--radius) var(--radius) 0 0;padding:24px 20px env(safe-area-inset-bottom,20px);width:100%;max-width:480px;max-height:70vh;overflow-y:auto}
+.modal h3{font-size:16px;margin-bottom:16px}
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}.empty .emoji{font-size:40px;margin-bottom:10px}.empty .msg{font-size:13px}
+.tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.tag-green{background:rgba(0,184,148,.15);color:var(--green)}.tag-orange{background:rgba(253,203,110,.15);color:var(--orange)}.tag-blue{background:rgba(116,185,255,.15);color:var(--blue)}.tag-purple{background:rgba(108,92,231,.15);color:var(--accent2)}
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.slider-row label{font-size:12px;color:var(--text2);min-width:80px;flex-shrink:0}
+.slider-row input[type=range]{flex:1;accent-color:var(--accent);height:6px}
+.slider-row .slider-val{font-size:14px;font-weight:600;min-width:40px;text-align:right}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.fade-in{animation:fadeIn .3s ease}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1 id="headerTitle">山高万仞</h1>
+    <div class="sub" id="dateDisplay"><span class="sync-status" id="syncStatus"></span></div>
+  </div>
+  <div class="content">
+    <!-- HOME -->
+    <div class="tab-page active" id="page-home">
+      <div class="stats" id="homeStats"></div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">🎯</span> 今日目标</div>
+        <div id="dailyGoals"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">⏰</span> 倒计时</div>
+        <div id="homeCountdown"></div>
+      </div>
+      <div class="card" id="homeQuote" style="text-align:center;padding:20px">
+        <div style="font-size:15px;font-style:italic;color:var(--accent2)" id="quoteText"></div>
+      </div>
+    </div>
+    <!-- PLAN -->
+    <div class="tab-page" id="page-plan">
+      <div class="card">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="planMonth(-1)">‹</button>
+          <h3 id="planMonthTitle"></h3>
+          <button class="cal-nav" onclick="planMonth(1)">›</button>
+        </div>
+        <div class="cal-grid" id="planCalendar"></div>
+      </div>
+      <div id="planList"></div>
+    </div>
+    <!-- WORK -->
+    <div class="tab-page" id="page-work">
+      <div class="stats" id="workStats"></div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📝</span> 记录班次</div>
+        <div class="form-row">
+          <div class="form-group"><label>日期</label><input type="date" id="workDate"></div>
+          <div class="form-group"><label>班次</label><select id="workShift"><option value="night">夜班</option><option value="day">白班</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>日薪（元）</label><input type="number" id="workPay" placeholder="240"></div>
+          <div class="form-group"><label>备注</label><input type="text" id="workNote" placeholder="可选"></div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addWork()">打卡记录</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📋</span> 班次记录</div>
+        <div id="workList"></div>
+      </div>
+    </div>
+    <!-- BUDGET -->
+    <div class="tab-page" id="page-budget">
+      <div class="stats" id="budgetStats"></div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">💸</span> 记一笔</div>
+        <div class="form-group"><label>金额（元）</label><input type="number" id="expAmount" placeholder="0.00" step="0.01"></div>
+        <div class="form-row">
+          <div class="form-group"><label>类型</label><select id="expType"><option value="expense">支出</option><option value="income">收入</option></select></div>
+          <div class="form-group"><label>分类</label><select id="expCategory"><option value="饭">🍚 饭</option><option value="交通">🚌 交通</option><option value="日用品">🧴 日用品</option><option value="学习">📚 学习</option><option value="其他">📌 其他</option></select></div>
+        </div>
+        <div class="form-group"><label>备注</label><input type="text" id="expNote" placeholder="可选"></div>
+        <button class="btn btn-primary btn-block" onclick="addExpense()">记上</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📊</span> 账单</div>
+        <div id="budgetList"></div>
+      </div>
+    </div>
+    <!-- STUDY -->
+    <div class="tab-page" id="page-study">
+      <div class="card">
+        <div class="card-title"><span class="emoji">🎯</span> 学习进度 <span style="margin-left:auto;font-size:11px;color:var(--text3)">滑动调整</span></div>
+        <div class="slider-row"><label>📐 数学</label><input type="range" min="0" max="100" value="0" id="mathSlider" oninput="updateProgress()"><span class="slider-val" id="mathPct">0%</span></div>
+        <div class="progress"><div class="progress-bar green" id="mathBar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin:4px 0 12px" id="mathDesc">还没开始</div>
+        <div class="slider-row"><label>💻 C语言</label><input type="range" min="0" max="100" value="0" id="cSlider" oninput="updateProgress()"><span class="slider-val" id="cPct">0%</span></div>
+        <div class="progress"><div class="progress-bar blue" id="cBar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin:4px 0 12px" id="cDesc">还没开始</div>
+        <div class="slider-row"><label>📖 英语背词</label><input type="range" min="0" max="100" value="0" id="wordSlider" oninput="updateProgress()"><span class="slider-val" id="wordPct">0%</span></div>
+        <div class="progress"><div class="progress-bar orange" id="wordBar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin:4px 0 12px" id="wordDesc">还没开始</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📝</span> 记录学习</div>
+        <div class="form-row">
+          <div class="form-group"><label>科目</label><select id="studySubject"><option value="数学">📐 数学</option><option value="C语言">💻 C语言</option><option value="英语">📖 英语背词</option></select></div>
+          <div class="form-group"><label>时长（分钟）</label><input type="number" id="studyDuration" placeholder="30" min="1"></div>
+        </div>
+        <div class="form-group"><label>学了什么</label><input type="text" id="studyContent" placeholder="一句话总结"></div>
+        <button class="btn btn-primary btn-block" onclick="addStudy()">记录</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📚</span> 学习记录</div>
+        <div id="studyList"></div>
+      </div>
+    </div>
+    <!-- COUNTDOWN -->
+    <div class="tab-page" id="page-countdown">
+      <div class="card">
+        <div class="card-title"><span class="emoji">⏰</span> 倒计时</div>
+        <div id="countdownList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">💰</span> 储蓄进度</div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span>目标 <span id="savingsTargetDisplay">15,000</span>元</span><span id="savingsPct">0%</span></div>
+          <div class="progress"><div class="progress-bar purple" id="savingsBar" style="width:0%"></div></div>
+        </div>
+        <div style="text-align:center;font-size:13px;color:var(--text2)">
+          已攒 <span id="savingsAmount" style="color:var(--green);font-weight:700">0</span> 元 · 还差 <span id="savingsRemain" style="color:var(--orange)">15000</span> 元
+        </div>
+      </div>
+    </div>
+    <!-- SETTINGS -->
+    <div class="tab-page" id="page-settings">
+      <div class="card">
+        <div class="card-title"><span class="emoji">👤</span> 个人信息</div>
+        <div class="form-group"><label>你的名字</label><input type="text" id="setName" placeholder="Finn"></div>
+        <div class="form-row">
+          <div class="form-group"><label>生日</label><input type="date" id="setBirthday"></div>
+          <div class="form-group"><label>入学日期</label><input type="date" id="setEnroll"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">💰</span> 工资与储蓄</div>
+        <div class="form-row">
+          <div class="form-group"><label>夜班日薪（元）</label><input type="number" id="setNightPay" placeholder="240"></div>
+          <div class="form-group"><label>白班日薪（元）</label><input type="number" id="setDayPay" placeholder="220"></div>
+        </div>
+        <div class="form-group"><label>储蓄目标（元）</label><input type="number" id="setSavingsTarget" placeholder="15000"></div>
+        <div class="form-group"><label>月支出预算（元）</label><input type="number" id="setMonthlyBudget" placeholder="1200"></div>
+        <div class="form-group"><label>当前手头现金（元）</label><input type="number" id="setCashOnHand" placeholder="0"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📅</span> 重要日期</div>
+        <div class="form-row">
+          <div class="form-group"><label>下次发工资</label><input type="date" id="setPayday"></div>
+          <div class="form-group"><label>目标考试日期</label><input type="date" id="setExam"></div>
+        </div>
+        <div class="form-group"><label>目标考试名称</label><input type="text" id="setExamName" placeholder="如：专升本考试"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">📚</span> 学习目标</div>
+        <div class="form-group"><label>数学目标</label><input type="text" id="setMathGoal" placeholder="集合+函数基础"></div>
+        <div class="form-group"><label>C语言目标</label><input type="text" id="setCGoal" placeholder="翁恺1-5节"></div>
+        <div class="form-group"><label>背词目标</label><input type="text" id="setWordGoal" placeholder="390个"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">☁️</span> 数据同步</div>
+        <div class="form-group"><label>同步密钥（用于多设备同步）</label><input type="text" id="setSyncKey" placeholder="留空则仅本地存储"></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:-8px">在同一密钥的设备间同步数据</div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="syncData()">同步</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData()">导出备份</button>
+          <button class="btn btn-outline btn-sm" onclick="importData()">导入恢复</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:12px">
+        <button class="btn btn-primary btn-block" onclick="saveSettings()">保存设置</button>
+        <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:8px 0">v3.0 PWA · 山高万仞，只登一步</div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" data-tab="home"><div class="icon">🏠</div><div class="text">首页</div></div>
+    <div class="tab-btn" data-tab="plan"><div class="icon">📅</div><div class="text">计划</div></div>
+    <div class="tab-btn" data-tab="work"><div class="icon">👷</div><div class="text">工作</div></div>
+    <div class="tab-btn" data-tab="budget"><div class="icon">💰</div><div class="text">记账</div></div>
+    <div class="tab-btn" data-tab="study"><div class="icon">📚</div><div class="text">学习</div></div>
+  </div>
+</div>
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="position:relative">
+    <h3 id="modalTitle">确认</h3>
+    <p id="modalMsg" style="font-size:14px;color:var(--text2);margin-bottom:20px"></p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" style="flex:1" id="modalConfirm">确认</button>
+    </div>
+  </div>
+</div>
+<input type="file" id="importFileInput" accept=".json" style="display:none" onchange="handleImport(event)">
+<script>
+// === PWA Registration ===
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+
+// === Database ===
+const DB={
+  get(k){try{return JSON.parse(localStorage.getItem('sgw_'+k))||[]}catch{return[]}},
+  set(k,v){localStorage.setItem('sgw_'+k,JSON.stringify(v))},
+  getObj(k){try{return JSON.parse(localStorage.getItem('sgw_'+k))||{}}catch{return{}}},
+  setObj(k,v){localStorage.setItem('sgw_'+k,JSON.stringify(v))}
+};
+const today=()=>new Date().toISOString().slice(0,10);
+const daysDiff=d=>Math.ceil((new Date(d+'T00:00:00')-new Date(new Date().toISOString().slice(0,10)+'T00:00:00'))/(864e5));
+const fmtDate=d=>{const dt=new Date(d+'T00:00:00');return(dt.getMonth()+1)+'/'+dt.getDate()};
+const dayName=['日','一','二','三','四','五','六'];
+
+const defaultSettings={
+  name:'',birthday:'2008-06-09',enroll:'2026-09-05',
+  nightPay:240,dayPay:220,savingsTarget:15000,monthlyBudget:1200,cashOnHand:0,
+  payday:'2026-06-10',exam:'',examName:'专升本考试',
+  mathGoal:'集合+函数基础',cGoal:'翁恺1-5节',wordGoal:'390个',
+  mathPct:0,cPct:0,wordPct:0,syncKey:''
+};
+function getSettings(){return{...defaultSettings,...DB.getObj('settings')}}
+
+// === Tabs ===
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('page-'+btn.dataset.tab).classList.add('active');
+    renderAll();
+  });
+});
+
+function updateHeader(){
+  const now=new Date();const s=getSettings();
+  const m=now.getMonth()+1,d=now.getDate(),w=dayName[now.getDay()];
+  const h=now.getHours(),mi=String(now.getMinutes()).padStart(2,'0');
+  const name=s.name?' · '+s.name:'';
+  document.getElementById('dateDisplay').innerHTML=m+'月'+d+'日 周'+w+' '+h+':'+mi+name+'<span class="sync-status" id="syncStatus"></span>';
+}
+updateHeader();setInterval(updateHeader,60000);
+
+// === Goals ===
+function getGoals(){
+  const d=today();let g=DB.getObj('goals_'+d);
+  if(!g.items){g={items:['上班赚钱','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};DB.setObj('goals_'+d,g)}
+  return g;
+}
+function toggleGoal(i){const g=getGoals();g.done[i]=!g.done[i];DB.setObj('goals_'+today(),g);renderGoals();renderHomeStats()}
+function editGoal(i){
+  const g=getGoals();const old=g.items[i];
+  const el=document.getElementById('goalText'+i);
+  el.innerHTML='<input class="goal-input" id="goalEdit'+i+'" value="'+old+'" onblur="saveGoalEdit('+i+')" onkeydown="if(event.key===\'Enter\')this.blur()">';
+  document.getElementById('goalEdit'+i).focus();
+}
+function saveGoalEdit(i){
+  const g=getGoals();const v=document.getElementById('goalEdit'+i).value.trim();
+  if(v)g.items[i]=v;DB.setObj('goals_'+today(),g);renderGoals();
+}
+function renderGoals(){
+  const g=getGoals();
+  document.getElementById('dailyGoals').innerHTML=g.items.map((item,i)=>
+    '<div class="goal-item"><div class="goal-check '+(g.done[i]?'done':'')+'" onclick="toggleGoal('+i+')"></div><div class="goal-text '+(g.done[i]?'done':'')+'" id="goalText'+i+'" onclick="editGoal('+i+')">'+item+'</div></div>'
+  ).join('');
+}
+
+// === Work ===
+function addWork(){
+  const s=getSettings();const date=document.getElementById('workDate').value||today();
+  const shift=document.getElementById('workShift').value;
+  const pay=parseFloat(document.getElementById('workPay').value)||(shift==='night'?s.nightPay:s.dayPay);
+  const note=document.getElementById('workNote').value;
+  const works=DB.get('works');works.unshift({date,shift,pay,note,id:Date.now()});
+  DB.set('works',works);document.getElementById('workPay').value='';document.getElementById('workNote').value='';
+  renderWork();renderHomeStats();renderCountdown();
+}
+function deleteWork(id){showModal('删除记录','确定删除这条班次记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown()})}
+function renderWork(){
+  const works=DB.get('works');const el=document.getElementById('workList');
+  if(!works.length){el.innerHTML='<div class="empty"><div class="emoji">👷</div><div class="msg">还没有记录</div></div>';renderWorkStats();return}
+  el.innerHTML=works.slice(0,30).map(w=>
+    '<div class="list-item"><div class="list-icon" style="background:'+(w.shift==='night'?'rgba(108,92,231,.15)':'rgba(253,203,110,.15)')+'">'+(w.shift==='night'?'🌙':'☀️')+'</div><div class="list-info"><div class="title">'+(w.shift==='night'?'夜班':'白班')+(w.note?' · '+w.note:'')+'</div><div class="meta">'+fmtDate(w.date)+'</div></div><div class="list-amount income">+'+w.pay+'</div><button class="btn btn-danger" onclick="deleteWork('+w.id+')" style="margin-left:6px">✕</button></div>'
+  ).join('');renderWorkStats();
+}
+function renderWorkStats(){
+  const works=DB.get('works');const s=getSettings();
+  const total=works.reduce((s,w)=>s+w.pay,0);
+  const expenses=DB.get('expenses');const spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
+  const net=(s.cashOnHand||0)+total-spent;
+  document.getElementById('workStats').innerHTML=
+    '<div class="stat blue"><div class="val">'+works.length+'</div><div class="label">总班次</div></div><div class="stat green"><div class="val">'+total+'</div><div class="label">应得(元)</div></div><div class="stat '+(net>=0?'orange':'red')+'"><div class="val">'+net+'</div><div class="label">手头(元)</div></div>';
+}
+
+// === Budget ===
+function addExpense(){
+  const amount=parseFloat(document.getElementById('expAmount').value);if(!amount||amount<=0)return;
+  const type=document.getElementById('expType').value;const category=document.getElementById('expCategory').value;
+  const note=document.getElementById('expNote').value;const items=DB.get('expenses');
+  items.unshift({amount,type,category,note,date:today(),id:Date.now()});
+  DB.set('expenses',items);document.getElementById('expAmount').value='';document.getElementById('expNote').value='';
+  renderBudget();renderHomeStats();renderCountdown();
+}
+function deleteExpense(id){showModal('删除','确定删除这条记录？',()=>{const i=DB.get('expenses').filter(e=>e.id!==id);DB.set('expenses',i);renderBudget();renderHomeStats();renderCountdown()})}
+function renderBudget(){
+  const items=DB.get('expenses');const el=document.getElementById('budgetList');
+  const catEmoji={'饭':'🍚','交通':'🚌','日用品':'🧴','学习':'📚','其他':'📌'};
+  if(!items.length){el.innerHTML='<div class="empty"><div class="emoji">💰</div><div class="msg">还没有记录</div></div>';renderBudgetStats();return}
+  el.innerHTML=items.slice(0,30).map(e=>
+    '<div class="list-item"><div class="list-icon" style="background:rgba(108,92,231,.1)">'+(catEmoji[e.category]||'📌')+'</div><div class="list-info"><div class="title">'+e.category+(e.note?' · '+e.note:'')+'</div><div class="meta">'+fmtDate(e.date)+'</div></div><div class="list-amount '+e.type+'">'+(e.type==='income'?'+':'-')+e.amount.toFixed(0)+'</div><button class="btn btn-danger" onclick="deleteExpense('+e.id+')" style="margin-left:6px">✕</button></div>'
+  ).join('');renderBudgetStats();
+}
+function renderBudgetStats(){
+  const items=DB.get('expenses');const month=today().slice(0,7);
+  const mi=items.filter(e=>e.date.startsWith(month));
+  const spent=mi.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
+  const income=mi.filter(e=>e.type==='income').reduce((a,e)=>a+e.amount,0);
+  const remain=income-spent;
+  document.getElementById('budgetStats').innerHTML=
+    '<div class="stat red"><div class="val">'+spent.toFixed(0)+'</div><div class="label">本月支出</div></div><div class="stat green"><div class="val">'+income.toFixed(0)+'</div><div class="label">本月收入</div></div><div class="stat '+(remain>=0?'blue':'red')+'"><div class="val">'+remain.toFixed(0)+'</div><div class="label">结余</div></div>';
+}
+
+// === Study ===
+function addStudy(){
+  const subject=document.getElementById('studySubject').value;
+  const duration=parseInt(document.getElementById('studyDuration').value);
+  const content=document.getElementById('studyContent').value;if(!duration)return;
+  const items=DB.get('studies');items.unshift({subject,duration,content,date:today(),id:Date.now()});
+  DB.set('studies',items);document.getElementById('studyDuration').value='';document.getElementById('studyContent').value='';
+  renderStudy();renderHomeStats();
+}
+function deleteStudy(id){showModal('删除','确定删除这条学习记录？',()=>{const i=DB.get('studies').filter(s=>s.id!==id);DB.set('studies',i);renderStudy();renderHomeStats()})}
+function updateProgress(){
+  const m=document.getElementById('mathSlider').value;
+  const c=document.getElementById('cSlider').value;
+  const w=document.getElementById('wordSlider').value;
+  document.getElementById('mathPct').textContent=m+'%';document.getElementById('mathBar').style.width=m+'%';
+  document.getElementById('cPct').textContent=c+'%';document.getElementById('cBar').style.width=c+'%';
+  document.getElementById('wordPct').textContent=w+'%';document.getElementById('wordBar').style.width=w+'%';
+  const desc=v=>v==0?'还没开始':v<25?'刚起步':v<50?'进行中':v<75?'过半了':v<100?'快完了':'搞定！';
+  document.getElementById('mathDesc').textContent=desc(parseInt(m));
+  document.getElementById('cDesc').textContent=desc(parseInt(c));
+  document.getElementById('wordDesc').textContent=desc(parseInt(w));
+  const s=getSettings();s.mathPct=parseInt(m);s.cPct=parseInt(c);s.wordPct=parseInt(w);DB.setObj('settings',s);
+}
+function renderStudy(){
+  const items=DB.get('studies');const el=document.getElementById('studyList');
+  const se={'数学':'📐','C语言':'💻','英语':'📖'};const st={'数学':'tag-green','C语言':'tag-blue','英语':'tag-orange'};
+  if(!items.length){el.innerHTML='<div class="empty"><div class="emoji">📚</div><div class="msg">还没有记录</div></div>';return}
+  el.innerHTML=items.slice(0,30).map(s=>
+    '<div class="list-item"><div class="list-icon" style="background:rgba(108,92,231,.1)">'+(se[s.subject]||'📖')+'</div><div class="list-info"><div class="title"><span class="tag '+(st[s.subject]||'tag-purple')+'">'+s.subject+'</span> '+(s.content||'')+'</div><div class="meta">'+fmtDate(s.date)+' · '+s.duration+'分钟</div></div><button class="btn btn-danger" onclick="deleteStudy('+s.id+')">✕</button></div>'
+  ).join('');
+  const s=getSettings();
+  document.getElementById('mathSlider').value=s.mathPct||0;
+  document.getElementById('cSlider').value=s.cPct||0;
+  document.getElementById('wordSlider').value=s.wordPct||0;
+  updateProgress();
+}
+
+// === Plan (Calendar + Monthly Plan) ===
+let planYear, planMonth;
+(function(){const n=new Date();planYear=n.getFullYear();planMonth=n.getMonth()})();
+
+function planMonth(dir){
+  planMonth+=dir;
+  if(planMonth<0){planMonth=11;planYear--}
+  if(planMonth>11){planMonth=0;planYear++}
+  renderPlan();
+}
+function renderPlan(){
+  const y=planYear,m=planMonth;
+  document.getElementById('planMonthTitle').textContent=y+'年'+(m+1)+'月';
+  // Calendar grid
+  const firstDay=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const daysInPrev=new Date(y,m,0).getDate();
+  const todayStr=today();
+  const works=DB.get('works');const expenses=DB.get('expenses');const studies=DB.get('studies');
+  let cal='<div class="cal-dow">日</div><div class="cal-dow">一</div><div class="cal-dow">二</div><div class="cal-dow">三</div><div class="cal-dow">四</div><div class="cal-dow">五</div><div class="cal-dow">六</div>';
+  // Prev month padding
+  for(let i=firstDay-1;i>=0;i--){
+    cal+='<div class="cal-day other-month">'+(daysInPrev-i)+'</div>';
+  }
+  // Current month
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isToday=dateStr===todayStr;
+    const hasWork=works.some(w=>w.date===dateStr);
+    const hasExpense=expenses.some(e=>e.date===dateStr);
+    const hasStudy=studies.some(s=>s.date===dateStr);
+    let dots='';
+    if(hasWork)dots+='<div class="cal-dot work"></div>';
+    if(hasExpense)dots+='<div class="cal-dot expense"></div>';
+    if(hasStudy)dots+='<div class="cal-dot study"></div>';
+    cal+='<div class="cal-day'+(isToday?' today':'')+'" onclick="selectPlanDay(\''+dateStr+'\')">'+d+'<div class="cal-dots">'+dots+'</div></div>';
+  }
+  // Next month padding
+  const totalCells=firstDay+daysInMonth;
+  const remaining=7-totalCells%7;
+  if(remaining<7){
+    for(let i=1;i<=remaining;i++){
+      cal+='<div class="cal-day other-month">'+i+'</div>';
+    }
+  }
+  document.getElementById('planCalendar').innerHTML=cal;
+  // Plan list for the month
+  renderPlanList(y,m);
+}
+function selectPlanDay(dateStr){
+  let plan=DB.getObj('plan_'+dateStr);
+  if(!plan.items){plan={items:['上班','吃饭','学习1小时'],done:[false,false,false]};DB.setObj('plan_'+dateStr,plan)}
+  // Scroll to that day in the list or highlight
+  const el=document.getElementById('plan-'+dateStr);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(()=>{el.style.boxShadow=''},1500)}
+}
+function renderPlanList(y,m){
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const s=getSettings();
+  let html='';
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    let plan=DB.getObj('plan_'+dateStr);
+    if(!plan.items){
+      // Auto-generate plan based on settings
+      const dow=new Date(y,m,d).getDay();
+      const isWeekend=dow===0||dow===6;
+      plan={
+        items:isWeekend?['上班/休息','好好吃饭','学习4.5小时','背单词30个']:['上班赚钱','好好吃饭','数学30分钟','C语言30分钟','背单词30个'],
+        done:isWeekend?[false,false,false,false]:[false,false,false,false,false]
+      };
+    }
+    const todayStr=today();
+    const isPast=dateStr<todayStr;
+    const isToday=dateStr===todayStr;
+    const doneCount=plan.done.filter(Boolean).length;
+    html+='<div class="plan-day" id="plan-'+dateStr+'" style="'+(isToday?'border-color:var(--accent)':'')+'">';
+    html+='<div class="plan-date">'+(m+1)+'/'+d+' 周'+dayName[new Date(y,m,d).getDay()]+(isToday?' · 今天':'')+(isPast&&doneCount===plan.items.length?' ✅':'')+'</div>';
+    plan.items.forEach((item,i)=>{
+      html+='<div class="plan-item"><div class="plan-check '+(plan.done[i]?'done':'')+'" onclick="togglePlanItem(\''+dateStr+'\','+i+')"></div><div class="plan-text '+(plan.done[i]?'done':'')+'" onclick="editPlanItem(\''+dateStr+'\','+i+')">'+item+'</div></div>';
+    });
+    html+='<div style="margin-top:8px"><button class="btn btn-outline btn-sm" onclick="addPlanItem(\''+dateStr+'\')">+ 添加</button>';
+    html+='</div></div>';
+  }
+  document.getElementById('planList').innerHTML=html;
+}
+function togglePlanItem(dateStr,i){
+  let plan=DB.getObj('plan_'+dateStr);
+  if(!plan.items)return;
+  plan.done[i]=!plan.done[i];DB.setObj('plan_'+dateStr,plan);
+  const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;
+  renderPlanList(y,m);
+}
+function editPlanItem(dateStr,i){
+  let plan=DB.getObj('plan_'+dateStr);
+  if(!plan.items)return;
+  const old=plan.items[i];
+  const newPlan=prompt('修改计划项：',old);
+  if(newPlan!==null&&newPlan.trim()){plan.items[i]=newPlan.trim();DB.setObj('plan_'+dateStr,plan);const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;renderPlanList(y,m)}
+}
+function addPlanItem(dateStr){
+  const newPlan=prompt('添加计划项：');
+  if(!newPlan||!newPlan.trim())return;
+  let plan=DB.getObj('plan_'+dateStr);
+  if(!plan.items){plan={items:[],done:[]}}
+  plan.items.push(newPlan.trim());plan.done.push(false);
+  DB.setObj('plan_'+dateStr,plan);
+  const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;
+  renderPlanList(y,m);
+}
+
+// === Countdown ===
+function renderCountdown(){
+  const s=getSettings();
+  const events=[];
+  if(s.birthday){
+    // Auto-advance birthday to next occurrence
+    let bd=new Date(s.birthday);const now=new Date();
+    let nextBd=new Date(now.getFullYear(),bd.getMonth(),bd.getDate());
+    if(nextBd<now)nextBd=new Date(now.getFullYear()+1,bd.getMonth(),bd.getDate());
+    events.push({name:'🎂 生日',date:nextBd.toISOString().slice(0,10),color:'orange'});
+  }
+  if(s.payday){
+    // Auto-advance payday
+    let pd=new Date(s.payday);const now=new Date();
+    let nextPd=new Date(pd);
+    if(nextPd<now){nextPd.setMonth(nextPd.getMonth()+1)}
+    events.push({name:'💰 发工资',date:nextPd.toISOString().slice(0,10),color:'green'});
+  }
+  if(s.enroll)events.push({name:'🎓 开学',date:s.enroll,color:'blue'});
+  if(s.exam&&s.examName)events.push({name:'📝 '+s.examName,date:s.exam,color:'purple'});
+  const el=document.getElementById('countdownList');
+  if(!events.length){el.innerHTML='<div class="empty"><div class="emoji">⏰</div><div class="msg">去设置页添加日期</div></div>';return}
+  el.innerHTML=events.map(e=>{
+    const d=daysDiff(e.date);
+    return '<div class="countdown-item"><div class="cd-num '+e.color+'">'+(d>0?d:0)+'</div><div class="cd-info"><div class="cd-label">'+e.name+'</div><div class="cd-date">'+e.date+(d<=0?' · 已到！':' 天后')+'</div></div></div>';
+  }).join('');
+  // Savings
+  const works=DB.get('works');const expenses=DB.get('expenses');
+  const earned=works.reduce((a,w)=>a+w.pay,0);
+  const spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
+  const savings=(s.cashOnHand||0)+earned-spent;
+  const target=s.savingsTarget||15000;
+  const pct=Math.min(100,Math.max(0,Math.round(savings/target*100)));
+  document.getElementById('savingsTargetDisplay').textContent=target.toLocaleString();
+  document.getElementById('savingsPct').textContent=pct+'%';
+  document.getElementById('savingsBar').style.width=pct+'%';
+  document.getElementById('savingsAmount').textContent=Math.max(0,savings).toFixed(0);
+  document.getElementById('savingsRemain').textContent=Math.max(0,target-savings).toFixed(0);
+}
+
+// === Home Stats ===
+function renderHomeStats(){
+  const works=DB.get('works');const expenses=DB.get('expenses');const studies=DB.get('studies');const s=getSettings();
+  const earned=works.reduce((a,w)=>a+w.pay,0);
+  const spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
+  const net=(s.cashOnHand||0)+earned-spent;
+  const todayStudy=studies.filter(x=>x.date===today()).reduce((a,x)=>a+x.duration,0);
+  document.getElementById('homeStats').innerHTML=
+    '<div class="stat '+(net>=0?'green':'red')+'"><div class="val">'+net+'</div><div class="label">手头(元)</div></div><div class="stat blue"><div class="val">'+works.length+'</div><div class="label">上班天数</div></div><div class="stat orange"><div class="val">'+todayStudy+'m</div><div class="label">今日学习</div></div>';
+  renderHomeCountdown();
+}
+function renderHomeCountdown(){
+  const s=getSettings();const events=[];
+  // Auto-advance payday
+  if(s.payday){let pd=new Date(s.payday);const now=new Date();if(pd<now)pd.setMonth(pd.getMonth()+1);events.push({name:'💰 发工资',date:pd.toISOString().slice(0,10),color:'green'})}
+  if(s.enroll)events.push({name:'🎓 开学',date:s.enroll,color:'blue'});
+  if(!events.length){document.getElementById('homeCountdown').innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">去设置页添加日期</div>';return}
+  document.getElementById('homeCountdown').innerHTML=events.map(e=>{
+    const d=daysDiff(e.date);
+    return '<div class="countdown-item"><div class="cd-num '+e.color+'">'+(d>0?d:0)+'</div><div class="cd-info"><div class="cd-label">'+e.name+'</div><div class="cd-date">'+(d>0?'天后':'已到！')+'</div></div></div>';
+  }).join('');
+}
+
+// === Settings ===
+function loadSettings(){
+  const s=getSettings();
+  document.getElementById('setName').value=s.name||'';
+  document.getElementById('setBirthday').value=s.birthday||'';
+  document.getElementById('setEnroll').value=s.enroll||'';
+  document.getElementById('setNightPay').value=s.nightPay||'';
+  document.getElementById('setDayPay').value=s.dayPay||'';
+  document.getElementById('setSavingsTarget').value=s.savingsTarget||'';
+  document.getElementById('setMonthlyBudget').value=s.monthlyBudget||'';
+  document.getElementById('setCashOnHand').value=s.cashOnHand||'';
+  document.getElementById('setPayday').value=s.payday||'';
+  document.getElementById('setExam').value=s.exam||'';
+  document.getElementById('setExamName').value=s.examName||'';
+  document.getElementById('setMathGoal').value=s.mathGoal||'';
+  document.getElementById('setCGoal').value=s.cGoal||'';
+  document.getElementById('setWordGoal').value=s.wordGoal||'';
+  document.getElementById('setSyncKey').value=s.syncKey||'';
+  document.getElementById('workPay').placeholder=s.nightPay||'240';
+}
+function saveSettings(){
+  const s={
+    name:document.getElementById('setName').value,
+    birthday:document.getElementById('setBirthday').value,
+    enroll:document.getElementById('setEnroll').value,
+    nightPay:parseInt(document.getElementById('setNightPay').value)||240,
+    dayPay:parseInt(document.getElementById('setDayPay').value)||220,
+    savingsTarget:parseInt(document.getElementById('setSavingsTarget').value)||15000,
+    monthlyBudget:parseInt(document.getElementById('setMonthlyBudget').value)||1200,
+    cashOnHand:parseInt(document.getElementById('setCashOnHand').value)||0,
+    payday:document.getElementById('setPayday').value,
+    exam:document.getElementById('setExam').value,
+    examName:document.getElementById('setExamName').value,
+    mathGoal:document.getElementById('setMathGoal').value,
+    cGoal:document.getElementById('setCGoal').value,
+    wordGoal:document.getElementById('setWordGoal').value,
+    mathPct:parseInt(document.getElementById('mathSlider').value)||0,
+    cPct:parseInt(document.getElementById('cSlider').value)||0,
+    wordPct:parseInt(document.getElementById('wordSlider').value)||0,
+    syncKey:document.getElementById('setSyncKey').value
+  };
+  DB.setObj('settings',s);updateHeader();renderAll();
+  alert('设置已保存 ✓');
+}
+function resetAll(){
+  showModal('⚠️ 清除所有数据','这会删掉你的所有记录，确定？',()=>{
+    const keys=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))keys.push(k)}
+    keys.forEach(k=>localStorage.removeItem(k));renderAll();loadSettings();
+  });
+}
+
+// === Sync (localStorage-based key sync via JSONBin or similar) ===
+function syncData(){
+  const s=getSettings();
+  if(!s.syncKey){alert('请先设置同步密钥');return}
+  const el=document.getElementById('syncStatus');
+  // Gather all data
+  const allData={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))allData[k]=localStorage.getItem(k)}
+  // Use a simple GitHub Gist approach or JSONBin
+  // For now, use export/import with key as filename hint
+  const blob=new Blob([JSON.stringify(allData)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='sgw-backup-'+s.syncKey+'.json';a.click();
+  URL.revokeObjectURL(url);
+}
+function exportData(){
+  const allData={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))allData[k]=localStorage.getItem(k)}
+  const blob=new Blob([JSON.stringify(allData,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='sgw-backup-'+today()+'.json';a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(){
+  document.getElementById('importFileInput').click();
+}
+function handleImport(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      Object.keys(data).forEach(k=>localStorage.setItem(k,data[k]));
+      renderAll();loadSettings();
+      alert('数据导入成功 ✓');
+    }catch(err){alert('导入失败：文件格式错误')}
+  };
+  reader.readAsText(file);
+  event.target.value='';
+}
+
+// === Modal ===
+let modalCb=null;
+function showModal(title,msg,cb){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalMsg').textContent=msg;
+  document.getElementById('confirmModal').classList.add('show');
+  modalCb=cb;
+  document.getElementById('modalConfirm').onclick=()=>{closeModal();if(modalCb)modalCb()};
+}
+function closeModal(){document.getElementById('confirmModal').classList.remove('show');modalCb=null}
+document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+
+// === Quote ===
+const quotes=['山高万仞，只登一步','今天做成了什么？','不是撑，是往前走','走在清华大道上','一步一步来','你在变强的路上'];
+
+// === Render All ===
+function renderAll(){renderGoals();renderWork();renderBudget();renderStudy();renderCountdown();renderHomeStats();renderPlan();loadSettings()}
+
+document.getElementById('workDate').value=today();
+document.getElementById('workShift').addEventListener('change',function(){
+  const s=getSettings();document.getElementById('workPay').placeholder=this.value==='night'?s.nightPay:s.dayPay;
+});
+renderAll();
+document.getElementById('quoteText').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+</script>
+</body>
+</html>
