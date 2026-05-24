@@ -459,17 +459,17 @@ function renderStudy(){
 }
 
 // === Plan (Calendar + Monthly Plan) ===
-let planYear, planMonth;
-(function(){const n=new Date();planYear=n.getFullYear();planMonth=n.getMonth()})();
+let planYear, planM;
+(function(){const n=new Date();planYear=n.getFullYear();planM=n.getMonth()})();
 
 function planMonth(dir){
-  planMonth+=dir;
-  if(planMonth<0){planMonth=11;planYear--}
-  if(planMonth>11){planMonth=0;planYear++}
+  planM+=dir;
+  if(planM<0){planM=11;planYear--}
+  if(planM>11){planM=0;planYear++}
   renderPlan();
 }
 function renderPlan(){
-  const y=planYear,m=planMonth;
+  const y=planYear,m=planM;
   document.getElementById('planMonthTitle').textContent=y+'年'+(m+1)+'月';
   // Calendar grid
   const firstDay=new Date(y,m,1).getDay();
