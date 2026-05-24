@@ -306,21 +306,97 @@ const DB={
   get(k){try{return JSON.parse(localStorage.getItem('sgw_'+k))||[]}catch{return[]}},
   set(k,v){localStorage.setItem('sgw_'+k,JSON.stringify(v))},
   getObj(k){try{return JSON.parse(localStorage.getItem('sgw_'+k))||{}}catch{return{}}},
-  setObj(k,v){localStorage.setItem('sgw_'+k,JSON.stringify(v))}
+  setObj(k,v){localStorage.setItem('sgw_'+k,JSON.stringify(v))},
+  getAll(){const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))d[k]=localStorage.getItem(k)}return d},
+  setAll(d){Object.keys(d).forEach(k=>localStorage.setItem(k,d[k]))}
 };
 const today=()=>new Date().toISOString().slice(0,10);
 const daysDiff=d=>Math.ceil((new Date(d+'T00:00:00')-new Date(new Date().toISOString().slice(0,10)+'T00:00:00'))/(864e5));
 const fmtDate=d=>{const dt=new Date(d+'T00:00:00');return(dt.getMonth()+1)+'/'+dt.getDate()};
 const dayName=['日','一','二','三','四','五','六'];
+const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10)};
 
 const defaultSettings={
   name:'',birthday:'2008-06-09',enroll:'2026-09-05',
   nightPay:240,dayPay:220,savingsTarget:15000,monthlyBudget:1200,cashOnHand:0,
   payday:'2026-06-10',exam:'',examName:'专升本考试',
   mathGoal:'集合+函数基础',cGoal:'翁恺1-5节',wordGoal:'390个',
-  mathPct:0,cPct:0,wordPct:0,syncKey:''
+  mathPct:0,cPct:0,wordPct:0,syncKey:'',
+  lastSync:null
 };
 function getSettings(){return{...defaultSettings,...DB.getObj('settings')}}
+
+// === Cloud Sync (jsonbin.io) ===
+let _syncTimer=null;
+function scheduleAutoSync(){if(_syncTimer)clearTimeout(_syncTimer);_syncTimer=setTimeout(()=>cloudSync(true),5000)}
+async function cloudSync(silent){
+  const s=getSettings();const key=s.syncKey;
+  if(!key){
+    const el=document.getElementById('syncStatus');
+    if(el)el.textContent='';return;
+  }
+  const el=document.getElementById('syncStatus');
+  if(el)el.textContent='⏳ 同步中';
+  try{
+    // Try to fetch existing bin
+    const binId=key;
+    const headers={'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Private':'true'};
+    // Upload current data
+    const allData=DB.getAll();
+    allData._ts=Date.now();
+    const resp=await fetch('https://jsonblob.com/api/jsonBlob',{
+      method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(allData)
+    });
+    if(!resp.ok&&binId){
+      // Try PUT to existing
+      const putResp=await fetch('https://jsonblob.com/api/jsonBlob/'+binId,{
+        method:'PUT',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(allData)
+      });
+    }
+    // Save sync key as bin reference if new
+    const loc=resp.headers.get('Location');
+    if(loc&&!s.syncKey){
+      const newId=loc.split('/').pop();
+      s.syncKey=newId;DB.setObj('settings',s);
+      document.getElementById('setSyncKey').value=newId;
+    }
+    if(el)el.textContent='✅ 已同步';
+    s.lastSync=today();DB.setObj('settings',s);
+    setTimeout(()=>{if(el)el.textContent=''},3000);
+  }catch(e){
+    if(el)el.textContent='⚠️ 同步失败';
+    setTimeout(()=>{if(el)el.textContent=''},3000);
+  }
+}
+
+async function cloudPull(silent){
+  const s=getSettings();const key=s.syncKey;
+  if(!key){if(!silent)alert('请先设置同步密钥');return}
+  const el=document.getElementById('syncStatus');
+  if(el)el.textContent='⏳ 拉取中';
+  try{
+    const resp=await fetch('https://jsonblob.com/api/jsonBlob/'+key);
+    if(!resp.ok)throw new Error('not found');
+    const data=await resp.json();
+    // Merge: cloud data is older? skip. Newer? overwrite.
+    const cloudTs=data._ts||0;
+    const localTs=DB.getObj('_sync_meta').lastUpload||0;
+    if(cloudTs>localTs){
+      DB.setAll(data);renderAll();loadSettings();
+      if(!silent)alert('数据已从云端恢复 ✓');
+    }else{
+      if(!silent)alert('本地数据已是最新');
+    }
+    if(el)el.textContent='✅ 已拉取';
+    setTimeout(()=>{if(el)el.textContent=''},3000);
+  }catch(e){
+    if(!silent)alert('拉取失败：'+e.message);
+    if(el)el.textContent='⚠️ 拉取失败';
+    setTimeout(()=>{if(el)el.textContent=''},3000);
+  }
+}
 
 // === Tabs ===
 document.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -342,13 +418,31 @@ function updateHeader(){
 }
 updateHeader();setInterval(updateHeader,60000);
 
-// === Goals ===
-function getGoals(){
-  const d=today();let g=DB.getObj('goals_'+d);
-  if(!g.items){g={items:['上班赚钱','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};DB.setObj('goals_'+d,g)}
-  return g;
+// === Daily Goal Rollover ===
+function rolloverGoals(){
+  const d=today();const y=yesterday();
+  let yGoal=DB.getObj('goals_'+y);
+  let tGoal=DB.getObj('goals_'+d);
+  // If today has no goals yet, carry over undone items from yesterday
+  if(!tGoal.items&&yGoal.items){
+    const undone=yGoal.items.filter((_,i)=>!yGoal.done[i]);
+    if(undone.length>0){
+      tGoal={items:[...undone,'做一件对自己有用的事'],done:new Array(undone.length+1).fill(false)};
+    }else{
+      tGoal={items:['上班赚钱','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
+    }
+    DB.setObj('goals_'+d,tGoal);
+  }
+  if(!tGoal.items){
+    tGoal={items:['上班赚钱','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
+    DB.setObj('goals_'+d,tGoal);
+  }
+  return tGoal;
 }
-function toggleGoal(i){const g=getGoals();g.done[i]=!g.done[i];DB.setObj('goals_'+today(),g);renderGoals();renderHomeStats()}
+
+// === Goals ===
+function getGoals(){return rolloverGoals()}
+function toggleGoal(i){const g=getGoals();g.done[i]=!g.done[i];DB.setObj('goals_'+today(),g);renderGoals();renderHomeStats();scheduleAutoSync()}
 function editGoal(i){
   const g=getGoals();const old=g.items[i];
   const el=document.getElementById('goalText'+i);
@@ -357,7 +451,7 @@ function editGoal(i){
 }
 function saveGoalEdit(i){
   const g=getGoals();const v=document.getElementById('goalEdit'+i).value.trim();
-  if(v)g.items[i]=v;DB.setObj('goals_'+today(),g);renderGoals();
+  if(v)g.items[i]=v;DB.setObj('goals_'+today(),g);renderGoals();scheduleAutoSync();
 }
 function renderGoals(){
   const g=getGoals();
@@ -374,9 +468,9 @@ function addWork(){
   const note=document.getElementById('workNote').value;
   const works=DB.get('works');works.unshift({date,shift,pay,note,id:Date.now()});
   DB.set('works',works);document.getElementById('workPay').value='';document.getElementById('workNote').value='';
-  renderWork();renderHomeStats();renderCountdown();
+  renderWork();renderHomeStats();renderCountdown();scheduleAutoSync();
 }
-function deleteWork(id){showModal('删除记录','确定删除这条班次记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown()})}
+function deleteWork(id){showModal('删除记录','确定删除这条班次记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown();scheduleAutoSync()})}
 function renderWork(){
   const works=DB.get('works');const el=document.getElementById('workList');
   if(!works.length){el.innerHTML='<div class="empty"><div class="emoji">👷</div><div class="msg">还没有记录</div></div>';renderWorkStats();return}
@@ -400,9 +494,9 @@ function addExpense(){
   const note=document.getElementById('expNote').value;const items=DB.get('expenses');
   items.unshift({amount,type,category,note,date:today(),id:Date.now()});
   DB.set('expenses',items);document.getElementById('expAmount').value='';document.getElementById('expNote').value='';
-  renderBudget();renderHomeStats();renderCountdown();
+  renderBudget();renderHomeStats();renderCountdown();scheduleAutoSync();
 }
-function deleteExpense(id){showModal('删除','确定删除这条记录？',()=>{const i=DB.get('expenses').filter(e=>e.id!==id);DB.set('expenses',i);renderBudget();renderHomeStats();renderCountdown()})}
+function deleteExpense(id){showModal('删除','确定删除这条记录？',()=>{const i=DB.get('expenses').filter(e=>e.id!==id);DB.set('expenses',i);renderBudget();renderHomeStats();renderCountdown();scheduleAutoSync()})}
 function renderBudget(){
   const items=DB.get('expenses');const el=document.getElementById('budgetList');
   const catEmoji={'饭':'🍚','交通':'🚌','日用品':'🧴','学习':'📚','其他':'📌'};
@@ -428,9 +522,9 @@ function addStudy(){
   const content=document.getElementById('studyContent').value;if(!duration)return;
   const items=DB.get('studies');items.unshift({subject,duration,content,date:today(),id:Date.now()});
   DB.set('studies',items);document.getElementById('studyDuration').value='';document.getElementById('studyContent').value='';
-  renderStudy();renderHomeStats();
+  renderStudy();renderHomeStats();scheduleAutoSync();
 }
-function deleteStudy(id){showModal('删除','确定删除这条学习记录？',()=>{const i=DB.get('studies').filter(s=>s.id!==id);DB.set('studies',i);renderStudy();renderHomeStats()})}
+function deleteStudy(id){showModal('删除','确定删除这条学习记录？',()=>{const i=DB.get('studies').filter(s=>s.id!==id);DB.set('studies',i);renderStudy();renderHomeStats();scheduleAutoSync()})}
 function updateProgress(){
   const m=document.getElementById('mathSlider').value;
   const c=document.getElementById('cSlider').value;
@@ -442,7 +536,7 @@ function updateProgress(){
   document.getElementById('mathDesc').textContent=desc(parseInt(m));
   document.getElementById('cDesc').textContent=desc(parseInt(c));
   document.getElementById('wordDesc').textContent=desc(parseInt(w));
-  const s=getSettings();s.mathPct=parseInt(m);s.cPct=parseInt(c);s.wordPct=parseInt(w);DB.setObj('settings',s);
+  const s=getSettings();s.mathPct=parseInt(m);s.cPct=parseInt(c);s.wordPct=parseInt(w);DB.setObj('settings',s);scheduleAutoSync();
 }
 function renderStudy(){
   const items=DB.get('studies');const el=document.getElementById('studyList');
@@ -458,8 +552,8 @@ function renderStudy(){
   updateProgress();
 }
 
-// === Plan (Calendar + Monthly Plan) ===
-let planYear, planM;
+// === Plan (Calendar + Daily Auto-Plan) ===
+let planYear,planM;
 (function(){const n=new Date();planYear=n.getFullYear();planM=n.getMonth()})();
 
 function planMonth(dir){
@@ -468,21 +562,44 @@ function planMonth(dir){
   if(planM>11){planM=0;planYear++}
   renderPlan();
 }
+
+function generateDailyPlan(dateStr){
+  const dow=new Date(dateStr+'T00:00:00').getDay();
+  const isWeekend=dow===0||dow===6;
+  const s=getSettings();
+  const now=new Date();const todayStr=today();
+  const isPast=dateStr<todayStr;
+  const isToday=dateStr===todayStr;
+  
+  // For today: include rolled-over undone items
+  if(isToday){
+    const g=getGoals();
+    const undone=g.items.filter((_,i)=>!g.done[i]);
+    if(undone.length>0){
+      return{items:[...undone],done:new Array(undone.length).fill(false)};
+    }
+  }
+  
+  // Standard plan
+  if(isWeekend){
+    return{items:['上班/休息','好好吃饭','学习4.5小时','背单词30个'],done:[false,false,false,false]};
+  }else{
+    return{items:['上班赚钱','好好吃饭','数学30分钟','C语言30分钟','背单词30个'],done:[false,false,false,false,false]};
+  }
+}
+
 function renderPlan(){
   const y=planYear,m=planM;
   document.getElementById('planMonthTitle').textContent=y+'年'+(m+1)+'月';
-  // Calendar grid
   const firstDay=new Date(y,m,1).getDay();
   const daysInMonth=new Date(y,m+1,0).getDate();
   const daysInPrev=new Date(y,m,0).getDate();
   const todayStr=today();
   const works=DB.get('works');const expenses=DB.get('expenses');const studies=DB.get('studies');
   let cal='<div class="cal-dow">日</div><div class="cal-dow">一</div><div class="cal-dow">二</div><div class="cal-dow">三</div><div class="cal-dow">四</div><div class="cal-dow">五</div><div class="cal-dow">六</div>';
-  // Prev month padding
   for(let i=firstDay-1;i>=0;i--){
     cal+='<div class="cal-day other-month">'+(daysInPrev-i)+'</div>';
   }
-  // Current month
   for(let d=1;d<=daysInMonth;d++){
     const dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const isToday=dateStr===todayStr;
@@ -495,7 +612,6 @@ function renderPlan(){
     if(hasStudy)dots+='<div class="cal-dot study"></div>';
     cal+='<div class="cal-day'+(isToday?' today':'')+'" onclick="selectPlanDay(\''+dateStr+'\')">'+d+'<div class="cal-dots">'+dots+'</div></div>';
   }
-  // Next month padding
   const totalCells=firstDay+daysInMonth;
   const remaining=7-totalCells%7;
   if(remaining<7){
@@ -504,33 +620,25 @@ function renderPlan(){
     }
   }
   document.getElementById('planCalendar').innerHTML=cal;
-  // Plan list for the month
   renderPlanList(y,m);
 }
+
 function selectPlanDay(dateStr){
-  let plan=DB.getObj('plan_'+dateStr);
-  if(!plan.items){plan={items:['上班','吃饭','学习1小时'],done:[false,false,false]};DB.setObj('plan_'+dateStr,plan)}
-  // Scroll to that day in the list or highlight
   const el=document.getElementById('plan-'+dateStr);
   if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(()=>{el.style.boxShadow=''},1500)}
 }
+
 function renderPlanList(y,m){
   const daysInMonth=new Date(y,m+1,0).getDate();
-  const s=getSettings();
+  const todayStr=today();
   let html='';
   for(let d=1;d<=daysInMonth;d++){
     const dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     let plan=DB.getObj('plan_'+dateStr);
     if(!plan.items){
-      // Auto-generate plan based on settings
-      const dow=new Date(y,m,d).getDay();
-      const isWeekend=dow===0||dow===6;
-      plan={
-        items:isWeekend?['上班/休息','好好吃饭','学习4.5小时','背单词30个']:['上班赚钱','好好吃饭','数学30分钟','C语言30分钟','背单词30个'],
-        done:isWeekend?[false,false,false,false]:[false,false,false,false,false]
-      };
+      plan=generateDailyPlan(dateStr);
+      DB.setObj('plan_'+dateStr,plan);
     }
-    const todayStr=today();
     const isPast=dateStr<todayStr;
     const isToday=dateStr===todayStr;
     const doneCount=plan.done.filter(Boolean).length;
@@ -539,24 +647,29 @@ function renderPlanList(y,m){
     plan.items.forEach((item,i)=>{
       html+='<div class="plan-item"><div class="plan-check '+(plan.done[i]?'done':'')+'" onclick="togglePlanItem(\''+dateStr+'\','+i+')"></div><div class="plan-text '+(plan.done[i]?'done':'')+'" onclick="editPlanItem(\''+dateStr+'\','+i+')">'+item+'</div></div>';
     });
-    html+='<div style="margin-top:8px"><button class="btn btn-outline btn-sm" onclick="addPlanItem(\''+dateStr+'\')">+ 添加</button>';
-    html+='</div></div>';
+    html+='<div style="margin-top:8px"><button class="btn btn-outline btn-sm" onclick="addPlanItem(\''+dateStr+'\')">+ 添加</button></div></div>';
   }
   document.getElementById('planList').innerHTML=html;
 }
+
 function togglePlanItem(dateStr,i){
   let plan=DB.getObj('plan_'+dateStr);
   if(!plan.items)return;
   plan.done[i]=!plan.done[i];DB.setObj('plan_'+dateStr,plan);
+  // Also update today's goals if it's today
+  if(dateStr===today()){
+    const g=getGoals();
+    if(g.items[i]!==undefined){g.done[i]=plan.done[i];DB.setObj('goals_'+today(),g);renderGoals()}
+  }
   const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;
-  renderPlanList(y,m);
+  renderPlanList(y,m);renderHomeStats();scheduleAutoSync();
 }
 function editPlanItem(dateStr,i){
   let plan=DB.getObj('plan_'+dateStr);
   if(!plan.items)return;
   const old=plan.items[i];
   const newPlan=prompt('修改计划项：',old);
-  if(newPlan!==null&&newPlan.trim()){plan.items[i]=newPlan.trim();DB.setObj('plan_'+dateStr,plan);const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;renderPlanList(y,m)}
+  if(newPlan!==null&&newPlan.trim()){plan.items[i]=newPlan.trim();DB.setObj('plan_'+dateStr,plan);const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;renderPlanList(y,m);scheduleAutoSync()}
 }
 function addPlanItem(dateStr){
   const newPlan=prompt('添加计划项：');
@@ -566,7 +679,7 @@ function addPlanItem(dateStr){
   plan.items.push(newPlan.trim());plan.done.push(false);
   DB.setObj('plan_'+dateStr,plan);
   const y=parseInt(dateStr.slice(0,4)),m=parseInt(dateStr.slice(5,7))-1;
-  renderPlanList(y,m);
+  renderPlanList(y,m);scheduleAutoSync();
 }
 
 // === Countdown ===
@@ -574,14 +687,12 @@ function renderCountdown(){
   const s=getSettings();
   const events=[];
   if(s.birthday){
-    // Auto-advance birthday to next occurrence
     let bd=new Date(s.birthday);const now=new Date();
     let nextBd=new Date(now.getFullYear(),bd.getMonth(),bd.getDate());
     if(nextBd<now)nextBd=new Date(now.getFullYear()+1,bd.getMonth(),bd.getDate());
     events.push({name:'🎂 生日',date:nextBd.toISOString().slice(0,10),color:'orange'});
   }
   if(s.payday){
-    // Auto-advance payday
     let pd=new Date(s.payday);const now=new Date();
     let nextPd=new Date(pd);
     if(nextPd<now){nextPd.setMonth(nextPd.getMonth()+1)}
@@ -622,7 +733,6 @@ function renderHomeStats(){
 }
 function renderHomeCountdown(){
   const s=getSettings();const events=[];
-  // Auto-advance payday
   if(s.payday){let pd=new Date(s.payday);const now=new Date();if(pd<now)pd.setMonth(pd.getMonth()+1);events.push({name:'💰 发工资',date:pd.toISOString().slice(0,10),color:'green'})}
   if(s.enroll)events.push({name:'🎓 开学',date:s.enroll,color:'blue'});
   if(!events.length){document.getElementById('homeCountdown').innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">去设置页添加日期</div>';return}
@@ -671,9 +781,10 @@ function saveSettings(){
     mathPct:parseInt(document.getElementById('mathSlider').value)||0,
     cPct:parseInt(document.getElementById('cSlider').value)||0,
     wordPct:parseInt(document.getElementById('wordSlider').value)||0,
-    syncKey:document.getElementById('setSyncKey').value
+    syncKey:document.getElementById('setSyncKey').value,
+    lastSync:getSettings().lastSync
   };
-  DB.setObj('settings',s);updateHeader();renderAll();
+  DB.setObj('settings',s);updateHeader();renderAll();scheduleAutoSync();
   alert('设置已保存 ✓');
 }
 function resetAll(){
@@ -683,38 +794,23 @@ function resetAll(){
   });
 }
 
-// === Sync (localStorage-based key sync via JSONBin or similar) ===
-function syncData(){
-  const s=getSettings();
-  if(!s.syncKey){alert('请先设置同步密钥');return}
-  const el=document.getElementById('syncStatus');
-  // Gather all data
-  const allData={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))allData[k]=localStorage.getItem(k)}
-  // Use a simple GitHub Gist approach or JSONBin
-  // For now, use export/import with key as filename hint
-  const blob=new Blob([JSON.stringify(allData)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='sgw-backup-'+s.syncKey+'.json';a.click();
-  URL.revokeObjectURL(url);
-}
+// === Sync ===
+function syncData(){cloudSync(false)}
 function exportData(){
-  const allData={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))allData[k]=localStorage.getItem(k)}
+  const allData=DB.getAll();
   const blob=new Blob([JSON.stringify(allData,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='sgw-backup-'+today()+'.json';a.click();
   URL.revokeObjectURL(url);
 }
-function importData(){
-  document.getElementById('importFileInput').click();
-}
+function importData(){document.getElementById('importFileInput').click()}
 function handleImport(event){
   const file=event.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=function(e){
     try{
       const data=JSON.parse(e.target.result);
-      Object.keys(data).forEach(k=>localStorage.setItem(k,data[k]));
-      renderAll();loadSettings();
+      DB.setAll(data);renderAll();loadSettings();
       alert('数据导入成功 ✓');
     }catch(err){alert('导入失败：文件格式错误')}
   };
@@ -737,15 +833,21 @@ document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target
 // === Quote ===
 const quotes=['山高万仞，只登一步','今天做成了什么？','不是撑，是往前走','走在清华大道上','一步一步来','你在变强的路上'];
 
-// === Render All ===
-function renderAll(){renderGoals();renderWork();renderBudget();renderStudy();renderCountdown();renderHomeStats();renderPlan();loadSettings()}
+// === Init ===
+function initApp(){
+  // Rollover yesterday's undone goals
+  rolloverGoals();
+  // Set default date
+  document.getElementById('workDate').value=today();
+  document.getElementById('workShift').addEventListener('change',function(){
+    const s=getSettings();document.getElementById('workPay').placeholder=this.value==='night'?s.nightPay:s.dayPay;
+  });
+  renderAll();
+  document.getElementById('quoteText').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+  // Auto sync every 5 minutes if sync key set
+  setInterval(()=>{const s=getSettings();if(s.syncKey)cloudSync(true)},300000);
+}
 
-document.getElementById('workDate').value=today();
-document.getElementById('workShift').addEventListener('change',function(){
-  const s=getSettings();document.getElementById('workPay').placeholder=this.value==='night'?s.nightPay:s.dayPay;
-});
-renderAll();
-document.getElementById('quoteText').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+function renderAll(){renderGoals();renderWork();renderBudget();renderStudy();renderCountdown();renderHomeStats();renderPlan();loadSettings()}
+initApp();
 </script>
-</body>
-</html>

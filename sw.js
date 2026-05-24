@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sgw-v3';
+const CACHE_NAME = 'sgw-v4';
 const ASSETS = [
   '/index.html',
   '/manifest.json'
