@@ -12,15 +12,17 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a25;--bg4:#222230;
-  --accent:#6c5ce7;--accent2:#a29bfe;--green:#00b894;--red:#e17055;--orange:#fdcb6e;--blue:#74b9ff;
-  --text:#e8e8f0;--text2:#9999aa;--text3:#666677;
+  --bg:#0c0f16;--bg2:#151a24;--bg3:#1e2432;--bg4:#28303f;
+  --accent:#c68b59;--accent2:#e2b07a;--green:#34d399;--red:#f87171;--orange:#fbbf24;--blue:#60a5fa;
+  --text:#eae8e4;--text2:#9ca3af;--text3:#6b7280;
   --radius:12px;--radius2:8px;
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-tap-highlight-color:transparent}
 .app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
 .header{padding:16px 20px 12px;flex-shrink:0}
-.header h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header{background:linear-gradient(180deg,rgba(198,139,89,.08) 0%,transparent 100%);border-bottom:1px solid var(--bg4)}
+.header h1{font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.header h1::after{content:'  🏔️';-webkit-text-fill-color:initial;font-size:18px}
 .header .sub{font-size:12px;color:var(--text3);margin-top:2px}
 .header .sub .sync-status{float:right;font-size:10px}
 .content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
@@ -49,7 +51,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .form-group textarea{resize:none;height:60px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius2);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
-.btn-primary{background:var(--accent);color:#fff}.btn-primary:active{background:var(--accent2);transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.btn-primary:active{filter:brightness(1.2);transform:scale(.97)}
 .btn-outline{background:transparent;border:1px solid var(--bg4);color:var(--text2)}.btn-outline:active{background:var(--bg3)}
 .btn-danger{background:var(--red);color:#fff;font-size:12px;padding:6px 10px;border-radius:6px}
 .btn-block{width:100%}
@@ -92,7 +94,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .plan-item .plan-check.done::after{content:'✓';color:#fff;font-size:10px}
 .plan-item .plan-text.done{text-decoration:line-through;color:var(--text3)}
 .plan-item .plan-time{color:var(--text3);font-size:11px;margin-left:auto;flex-shrink:0}
-.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:var(--bg2);border-top:1px solid var(--bg4);padding:8px 0 env(safe-area-inset-bottom,8px);flex-shrink:0}
+.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;background:var(--bg2);border-top:1px solid var(--bg4);padding:8px 0 env(safe-area-inset-bottom,8px);flex-shrink:0}
 .tab-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
 .tab-btn .icon{font-size:20px}.tab-btn .text{font-size:9px;color:var(--text3)}
 .tab-btn.active .icon{transform:scale(1.1)}.tab-btn.active .text{color:var(--accent2)}
@@ -108,7 +110,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .slider-row input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .slider-row .slider-val{font-size:14px;font-weight:600;min-width:40px;text-align:right}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.fade-in{animation:fadeIn .3s ease}
-.install-banner{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:14px;font-weight:600;z-index:200;display:none;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(108,92,231,.4);max-width:90%}
+.install-banner{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:14px;font-weight:600;z-index:200;display:none;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(108,92,231,.4);max-width:90%}
 .install-banner.show{display:flex}
 .install-banner .install-close{margin-left:auto;cursor:pointer;opacity:.7;font-size:18px}
 .install-banner .install-close:hover{opacity:1}
@@ -132,8 +134,18 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
         <div class="card-title"><span class="emoji">⏰</span> 倒计时</div>
         <div id="homeCountdown"></div>
       </div>
-      <div class="card" id="homeQuote" style="text-align:center;padding:20px">
+      <div class="card" style="text-align:center;padding:20px">
         <div style="font-size:15px;font-style:italic;color:var(--accent2)" id="quoteText"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">💰</span> 储蓄进度</div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span>目标 <span id="savingsTargetDisplay">15,000</span>元</span><span id="savingsPct">0%</span></div>
+          <div class="progress"><div class="progress-bar purple" id="savingsBar" style="width:0%"></div></div>
+        </div>
+        <div style="text-align:center;font-size:13px;color:var(--text2)">
+          已攒 <span id="savingsAmount" style="color:var(--green);font-weight:700">0</span> 元 · 还差 <span id="savingsRemain" style="color:var(--orange)">15000</span> 元
+        </div>
       </div>
     </div>
     <!-- PLAN -->
@@ -214,23 +226,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
         <div id="studyList"></div>
       </div>
     </div>
-    <!-- COUNTDOWN -->
-    <div class="tab-page" id="page-countdown">
-      <div class="card">
-        <div class="card-title"><span class="emoji">⏰</span> 倒计时</div>
-        <div id="countdownList"></div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="emoji">💰</span> 储蓄进度</div>
-        <div style="margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;font-size:12px"><span>目标 <span id="savingsTargetDisplay">15,000</span>元</span><span id="savingsPct">0%</span></div>
-          <div class="progress"><div class="progress-bar purple" id="savingsBar" style="width:0%"></div></div>
-        </div>
-        <div style="text-align:center;font-size:13px;color:var(--text2)">
-          已攒 <span id="savingsAmount" style="color:var(--green);font-weight:700">0</span> 元 · 还差 <span id="savingsRemain" style="color:var(--orange)">15000</span> 元
-        </div>
-      </div>
-    </div>
     <!-- SETTINGS -->
     <div class="tab-page" id="page-settings">
       <div class="card">
@@ -279,15 +274,16 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
         <button class="btn btn-primary btn-block" onclick="saveSettings()">保存设置</button>
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:8px 0">v3.0 PWA · 山高万仞，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:8px 0">v6.0 Mountain · 山高万仞，只登一步</div>
     </div>
   </div>
   <div class="tab-bar">
-    <div class="tab-btn active" data-tab="home"><div class="icon">🏠</div><div class="text">首页</div></div>
+    <div class="tab-btn active" data-tab="home"><div class="icon">🏔️</div><div class="text">首页</div></div>
     <div class="tab-btn" data-tab="plan"><div class="icon">📅</div><div class="text">计划</div></div>
     <div class="tab-btn" data-tab="work"><div class="icon">👷</div><div class="text">工作</div></div>
     <div class="tab-btn" data-tab="budget"><div class="icon">💰</div><div class="text">记账</div></div>
     <div class="tab-btn" data-tab="study"><div class="icon">📚</div><div class="text">学习</div></div>
+    <div class="tab-btn" data-tab="settings"><div class="icon">⚙️</div><div class="text">设置</div></div>
   </div>
 </div>
 <div class="modal-overlay" id="confirmModal">
