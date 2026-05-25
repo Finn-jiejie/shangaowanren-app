@@ -338,10 +338,11 @@ function dismissInstall(){
 window.addEventListener('appinstalled',()=>{document.getElementById('installBanner').classList.remove('show');_deferredPrompt=null});
 
 // === Cross-Day Auto Refresh ===
-let _lastActiveDate=today();
+let _lastActiveDate=null;
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible'){
     const now=today();
+    if(_lastActiveDate===null){_lastActiveDate=now;return}
     if(now!==_lastActiveDate){
       _lastActiveDate=now;
       rolloverGoals();
