@@ -1,7 +1,11 @@
-const CACHE_NAME = 'sgw-v4';
+const CACHE_NAME = 'sgw-v5';
 const ASSETS = [
-  '/index.html',
-  '/manifest.json'
+  '/shangaowanren-app/',
+  '/shangaowanren-app/index.html',
+  '/shangaowanren-app/manifest.json',
+  '/shangaowanren-app/icons/icon-192x192.png',
+  '/shangaowanren-app/icons/icon-512x512.png',
+  '/shangaowanren-app/sw.js'
 ];
 
 self.addEventListener('install', e => {

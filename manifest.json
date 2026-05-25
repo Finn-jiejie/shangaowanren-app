@@ -1,18 +1,38 @@
 {
   "name": "山高万仞",
   "short_name": "山高万仞",
-  "description": "Finn的个人成长助手",
-  "start_url": "/index.html",
+  "description": "Finn的个人成长助手 - 山高万仞，只登一步",
+  "start_url": "/shangaowanren-app/",
+  "scope": "/shangaowanren-app/",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#6c5ce7",
   "orientation": "portrait",
+  "categories": ["productivity", "lifestyle"],
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏔️</text></svg>",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

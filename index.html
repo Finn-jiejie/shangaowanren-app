@@ -108,6 +108,10 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .slider-row input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .slider-row .slider-val{font-size:14px;font-weight:600;min-width:40px;text-align:right}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.fade-in{animation:fadeIn .3s ease}
+.install-banner{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:14px;font-weight:600;z-index:200;display:none;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(108,92,231,.4);max-width:90%}
+.install-banner.show{display:flex}
+.install-banner .install-close{margin-left:auto;cursor:pointer;opacity:.7;font-size:18px}
+.install-banner .install-close:hover{opacity:1}
 </style>
 </head>
 <body>
@@ -297,9 +301,46 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   </div>
 </div>
 <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="handleImport(event)">
+<div class="install-banner" id="installBanner"><span>🏔️ 添加到主屏幕，像APP一样用</span><button class="btn btn-sm" style="background:#fff;color:var(--accent)" onclick="installApp()" id="installBtn">安装</button><span class="install-close" onclick="dismissInstall()">✕</span></div>
 <script>
 // === PWA Registration ===
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+
+// === PWA Install ===
+let _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();_deferredPrompt=e;
+  const dismissed=localStorage.getItem('sgw_install_dismissed');
+  if(!dismissed)document.getElementById('installBanner').classList.add('show');
+});
+function installApp(){
+  if(_deferredPrompt){
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(r=>{
+      if(r.outcome==='accepted')document.getElementById('installBanner').classList.remove('show');
+      _deferredPrompt=null;
+    });
+  }
+}
+function dismissInstall(){
+  document.getElementById('installBanner').classList.remove('show');
+  localStorage.setItem('sgw_install_dismissed','1');
+}
+window.addEventListener('appinstalled',()=>{document.getElementById('installBanner').classList.remove('show');_deferredPrompt=null});
+
+// === Cross-Day Auto Refresh ===
+let _lastActiveDate=today();
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    const now=today();
+    if(now!==_lastActiveDate){
+      _lastActiveDate=now;
+      rolloverGoals();
+      renderAll();
+      document.getElementById('quoteText').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+    }
+  }
+});
 
 // === Database ===
 const DB={
