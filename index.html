@@ -275,6 +275,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
 
       <div class="card">
+        <div class="card-title">&#x1F4CB; 今日计划</div>
+        <div id="homeTodayPlan"></div>
+      </div>
+
+      <div class="card">
         <div class="card-title">&#x23F0; 重要日子</div>
         <div id="homeCountdown"></div>
       </div>
@@ -1169,7 +1174,19 @@ function renderHomeStats(){
   const todayStudy=studies.filter(x=>x.date===today()).reduce((a,x)=>a+(x.duration||0),0);
   document.getElementById('homeStats').innerHTML=
     `<div class="stat ${net>=0?'green':'red'}"><div class="val">${net}</div><div class="label">手头(元)</div></div><div class="stat blue"><div class="val">${works.length}</div><div class="label">上班天数</div></div><div class="stat orange"><div class="val">${todayStudy}</div><div class="label">今日学习(分)</div></div>`;
-  renderStreak();updateHeroStatus();
+  renderStreak();updateHeroStatus();renderHomeTodayPlan();
+}
+
+function renderHomeTodayPlan(){
+  const ts=today();
+  let plan=DB.getObj('plan_'+ts);if(!plan||!plan.items||plan.planVer!==2){plan=generateDailyPlan(ts);DB.setObj('plan_'+ts,plan)}
+  const el=document.getElementById('homeTodayPlan');
+  if(!plan.items.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">今天暂无计划</div>';return}
+  let html='';
+  plan.items.forEach((item,i)=>{
+    html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:20px;height:20px;border-radius:50%;border:2px solid ${plan.done[i]?'var(--green)':'var(--text3)'};background:${plan.done[i]?'var(--green)':'transparent'};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:#fff" onclick="togglePlanItem('${ts}',${i})">${plan.done[i]?'✓':''}</div><div style="flex:1;font-size:14px;color:${plan.done[i]?'var(--text3)':'var(--text)'};${plan.done[i]?'text-decoration:line-through':''}">${item}</div></div>`;
+  });
+  el.innerHTML=html;
 }
 
 // === PROFILE / SETTINGS ===
