@@ -1,14 +1,17 @@
 {
-  "name": "山高万仞",
-  "short_name": "山高万仞",
-  "description": "Finn的个人成长助手 - 山高万仞，只登一步",
+  "name": "学就",
+  "short_name": "学就",
+  "description": "Finn的个人成长助手 - 学就，只登一步",
   "start_url": "/shangaowanren-app/",
   "scope": "/shangaowanren-app/",
   "display": "standalone",
   "background_color": "#0c0f16",
   "theme_color": "#c68b59",
   "orientation": "portrait",
-  "categories": ["productivity", "lifestyle"],
+  "categories": [
+    "productivity",
+    "lifestyle"
+  ],
   "icons": [
     {
       "src": "icons/icon-192x192.png",
