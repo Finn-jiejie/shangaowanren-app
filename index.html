@@ -1040,11 +1040,47 @@ let planYear,planM;
 (function(){const n=new Date();planYear=n.getFullYear();planM=n.getMonth()})();
 function planMonth(dir){planM+=dir;if(planM<0){planM=11;planYear--}if(planM>11){planM=0;planYear++}renderPlan()}
 function generateDailyPlan(dateStr){
-  const dow=new Date(dateStr+'T00:00:00').getDay(),isWeekend=dow===0||dow===6;
+  const d=new Date(dateStr+'T00:00:00');
+  const m=d.getMonth()+1;
+  const dow=d.getDay();
+  const isWeekend=dow===0||dow===6;
+  let phase='';
+  if(m>=5&&m<=8){if(m===5)phase='night1';else if(m===6)phase='day1';else if(m===7)phase='night2';else if(m===8)phase='day2'}
+  let items=[];
+  if(phase==='night1'){
+    if(dow===0)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','C语言翁恺跟敲1h','背单词20个']
+    else if(dow===1)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','数学：集合+例题1h','背单词20个']
+    else if(dow===2)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','英语：时态专题1h','背单词20个']
+    else if(dow===3)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','数学：集合运算+习题1h','背单词20个']
+    else if(dow===4)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','C语言翁恺跟敲1h','背单词20个']
+    else if(dow===5)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','数学：函数概念+定义域1h','背单词20个']
+    else if(dow===6)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','英语：语态+从句入门1h','背单词20个']
+  }else if(phase==='day1'){
+    if(isWeekend){items=['好好休息（周末）','数学2h（本周综合）','英语1.5h（词汇+阅读）','C语言1h（翁恺跟敲）','背单词30个']}
+    else{if(dow===1)items=['上白班(08:00-18:00)','吃饭休息','数学1h（函数/三角）','英语30min（词汇/阅读）','C语言30min（翁恺）','背单词30个']
+    else if(dow===2)items=['上白班(08:00-18:00)','吃饭休息','英语1h（词汇+语法）','听力15min','C语言30min（翁恺）','背单词30个']
+    else if(dow===3)items=['上白班(08:00-18:00)','吃饭休息','数学1h（三角/向量）','英语30min（阅读）','C语言30min（翁恺）','背单词30个']
+    else if(dow===4)items=['上白班(08:00-18:00)','吃饭休息','数学1h（数列/不等式）','英语30min（完形）','C语言30min（翁恺）','背单词30个']
+    else if(dow===5)items=['上白班(08:00-18:00)','吃饭休息','英语1h（语法+阅读）','听力15min','C语言30min（翁恺）','背单词30个']}
+  }else if(phase==='night2'){
+    if(dow===0)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','C语言指针+数组1h','背单词30个']
+    else if(dow===1)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','数学：不等式1h','背单词30个']
+    else if(dow===2)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','英语：词汇+阅读1h','背单词30个']
+    else if(dow===3)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','数学：立体几何①1h','背单词30个']
+    else if(dow===4)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','C语言指针+数组综合1h','背单词30个']
+    else if(dow===5)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','英语：词汇+完形1h','背单词30个']
+    else if(dow===6)items=['上夜班(20:00-06:00)','睡觉恢复','好好吃饭','数学：立体几何②1h','背单词30个']
+  }else if(phase==='day2'){
+    if(isWeekend){items=['好好休息（周末）','数学2h（高考真题分模块）','英语1.5h（真题阅读+完形）','C语言项目1.5h（学生管理系统）','背单词30个']}
+    else{if(dow===1)items=['上白班(08:00-18:00)','吃饭休息','数学1.5h（导数/函数）','英语1h（阅读+完形）','C语言30min（项目）','背单词30个']
+    else if(dow===2)items=['上白班(08:00-18:00)','吃饭休息','数学1.5h（三角/数列）','英语1h（语法+写作）','C语言30min（项目）','背单词30个']
+    else if(dow===3)items=['上白班(08:00-18:00)','吃饭休息','英语1.5h（真题）','数学1h（刷题）','C语言30min（项目）','背单词30个']
+    else if(dow===4)items=['上白班(08:00-18:00)','吃饭休息','数学1.5h（立体几何+导数）','英语1h（完形+词汇）','C语言30min（项目）','背单词30个']
+    else if(dow===5)items=['上白班(08:00-18:00)','吃饭休息','C语言1.5h（项目：增删改查）','数学1h（综合卷）','英语30min（真题）','背单词30个']}
+  }else{items=isWeekend?['好好休息','吃饭','学习','背单词']:['上班','吃饭','学习','背单词']}
   const isToday=dateStr===today();
-  if(isToday){const g=getGoals();const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0)return{items:[...undone],done:new Array(undone.length).fill(false)}}
-  return isWeekend?{items:['上班/休息','好好吃饭','学习4.5小时','背单词30个'],done:[false,false,false,false]}:
-    {items:['上班赚钱','好好吃饭','数学30分钟','C语言30分钟','背单词30个'],done:[false,false,false,false,false]};
+  if(isToday){const g=getGoals();if(g&&g.items&&g.items.length>0){const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0){const undoneTexts=undone.map(it=>it.replace(/^\[.\] /,''));const merged=[...new Set([...undoneTexts,...items])];return{items:merged,done:new Array(merged.length).fill(false)}}}}
+  return{items:items,done:new Array(items.length).fill(false)};
 }
 function renderPlan(){
   const y=planYear,m=planM;
