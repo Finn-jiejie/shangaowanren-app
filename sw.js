@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sgw-v10';
+const CACHE_NAME = 'sgw-v11';
 const ASSETS = [
   '/shangaowanren-app/',
   '/shangaowanren-app/index.html',
