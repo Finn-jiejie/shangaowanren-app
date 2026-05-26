@@ -1080,7 +1080,7 @@ function generateDailyPlan(dateStr){
   }else{items=isWeekend?['好好休息','吃饭','学习','背单词']:['上班','吃饭','学习','背单词']}
   const isToday=dateStr===today();
   if(isToday){const g=getGoals();if(g&&g.items&&g.items.length>0){const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0){const undoneTexts=undone.map(it=>it.replace(/^\[.\] /,''));const merged=[...new Set([...undoneTexts,...items])];return{items:merged,done:new Array(merged.length).fill(false)}}}}
-  return{items:items,done:new Array(items.length).fill(false)};
+  return{items:items,done:new Array(items.length).fill(false),planVer:2};
 }
 function renderPlan(){
   const y=planYear,m=planM;
@@ -1108,7 +1108,7 @@ function renderPlanList(y,m){
   let html='';
   for(let d=1;d<=dim;d++){
     const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    let plan=DB.getObj('plan_'+ds);if(!plan.items){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
+    let plan=DB.getObj('plan_'+ds);if(!plan.items||plan.planVer!==2){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
     const isPast=ds<ts,isToday=ds===ts;
     const doneCount=plan.done.filter(Boolean).length;
     html+=`<div class="plan-day" id="plan-${ds}" style="${isToday?'border-color:var(--accent)':''}"><div class="plan-date">${(m+1)}/${d} 周${dayName[new Date(y,m,d).getDay()]}${isToday?' · 今天':''}${isPast&&doneCount===plan.items.length?' ✅':''}</div>`;
