@@ -511,6 +511,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 
       <div style="display:flex;gap:10px;margin:14px 0">
         <button class="btn btn-primary btn-block" onclick="saveSettings()">保存所有设置</button>
+        <button class="btn btn-outline btn-block" onclick="forceRefresh()" style="color:var(--green)">🔄 更新APP（清缓存刷新）</button>
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
@@ -1254,6 +1255,7 @@ function saveSettings(){
   document.body.appendChild(toast);
   setTimeout(()=>toast.remove(),2000);
 }
+function forceRefresh(){if('caches' in window){caches.keys().then(names=>{names.forEach(n=>caches.delete(n));location.reload()})}else{location.reload()}}
 function resetAll(){showModal('⚠️ 清除所有数据','这会删掉你的所有记录，确定？',()=>{const keys=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sgw_'))keys.push(k)}keys.forEach(k=>localStorage.removeItem(k));renderAll();loadSettings()})}
 
 // === SYNC ===
