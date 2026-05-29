@@ -702,13 +702,13 @@ function updateHeroStatus(){
   let status='新的一天',sub='今天也要只登一步';
   if(todayWork.length>0){
     const w=todayWork[0];
-    status=w.shift==='night'?'🌙 今晚夜班':'☀️ 今天白班';
-    sub='日薪 '+w.pay+' 元 · 加油';
+    status='💼 '+w.note;
+    sub='日薪 '+w.pay+' 元';
   }else{
     const hour=new Date().getHours();
-    if(hour>=8&&hour<16){status='☀️ 白天时间';sub='适合学习或休息';}
-    else if(hour>=16&&hour<22){status='🌆 傍晚时分';sub='准备上班或学习';}
-    else{status='🌙 夜晚时光';sub='夜班辛苦，注意休息';}
+    if(hour>=8&&hour<12){status='☀️ 上午好';sub='数学时间，脑子最清醒';}
+    else if(hour>=12&&hour<15){status='🌤️ 下午好';sub='编程时间，动手练习';}
+    else{status='🌙 晚上好';sub='复盘+自由时间';}
   }
   document.getElementById('heroStatus').textContent=status;
   document.getElementById('heroSub').textContent=sub;
@@ -1025,86 +1025,62 @@ let planYear,planM;
 (function(){const n=new Date();planYear=n.getFullYear();planM=n.getMonth()})();
 function planMonth(dir){planM+=dir;if(planM<0){planM=11;planYear--}if(planM>11){planM=0;planYear++}renderPlan()}
 function generateDailyPlan(dateStr){
-  // 根据日期判断阶段和班次，生成带时间段的详细计划
+  // 利川版学习计划 2026.5.31-9.4（96天）
   const d=new Date(dateStr), y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate(), dow=d.getDay();
+  const isSunday=(dow===0);
   const isWeekend=(dow===0||dow===6);
   let items=[];
 
-  if(m===5){ // 5月：夜班 20:00-8:00
-    if(isWeekend){
+  if(m===5 && day>=31 || m===6 || m===7 || m===8 || m===9 && day<=4){
+    // 利川学习期 5/31-9/4
+    if(isSunday){
+      // 周日轻量日
       items=[
-        '🕐 09:00-16:00  💤 睡觉（保证9小时）',
-        '🕐 16:00-16:30  🍜 吃饭+休息',
-        '🕐 16:30-18:00  📚 学习1.5h（数学+英语混合）',
-        '🕐 18:00-20:00  🍜 吃饭+准备上班',
-        '🕐 20:00-8:00   💼 夜班上班',
-        '📱 碎片时间      背单词30个（不背单词APP）'
+        '🕐 09:00  🌅 起床+早餐',
+        '🕐 10:00  📖 复习本周错题 30min',
+        '🕐 10:30  🔤 背单词 30min（不背单词）',
+        '🕐 11:00  💻 GitHub提交 1次',
+        '🕐 11:30  ✅ 今日学习结束！强制休息',
+        '🎉 今天不学新东西，休息就是任务'
+      ];
+    } else if(isWeekend){
+      // 周六加量 4-5h
+      items=[
+        '🕐 08:00  🌅 起床+早餐',
+        '🕐 09:00  📐 数学 2h（脑子最清醒）',
+        '🕐 11:00  ☕ 休息+活动',
+        '🕐 11:15  🔤 英语 1h（单词+阅读）',
+        '🕐 12:15  🍜 午饭+休息',
+        '🕐 14:00  💻 编程 1.5h（Python项目实战）',
+        '🕐 15:30  🏃 运动 30min',
+        '🕐 16:00  📝 复盘 10min+自由时间'
       ];
     } else {
-      // 工作日按星期几轮科
-      if(dow===1)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  📐 数学：集合基础（课本P1-20）','🕐 17:00-17:30  💻 C语言：变量与数据类型（翁恺1-2集）','🕐 17:30-18:00  🔤 英语：词汇list1-2（30个）','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词20个'];
-      else if(dow===2)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  🔤 英语：语法入门（时态）','🕐 17:00-17:30  📐 数学：函数概念','🕐 17:30-18:00  💻 C语言：运算符（翁恺3-4集）','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词20个'];
-      else if(dow===3)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  📐 数学：函数基础练习','🕐 17:00-17:30  💻 C语言：条件语句if（翁恺5集）','🕐 17:30-18:00  🔤 英语：词汇list3-4','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词20个'];
-      else if(dow===4)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  💻 C语言：循环for/while（翁恺6-7集）','🕐 17:00-17:30  📐 数学：函数图像','🕐 17:30-18:00  🔤 英语：语法练习','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词20个'];
-      else if(dow===5)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  📐 数学：函数综合','🕐 17:00-17:30  🔤 英语：词汇list5-6','🕐 17:30-18:00  💻 C语言：数组入门（翁恺8集）','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词20个'];
+      // 工作日 3h/天
+      // 按星期轮换科目顺序，避免枯燥
+      if(dow===1)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（集合→函数）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+语法）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：变量→循环）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===2)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（函数性质）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+听力）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：if/elif）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===3)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（三角函数）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+阅读）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：循环/函数）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===4)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（数列）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+写作）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：列表/字典）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===5)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（不等式/导数）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+语法）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：文件/项目）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===6)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 2h（综合练习）','🕐 11:00  ☕ 休息','🕐 11:15  🔤 英语 1h（单词+阅读）','🕐 12:15  🍜 午饭','🕐 14:00  💻 编程 1.5h（项目实战）','🕐 15:30  🏃 运动 30min','🕐 16:00  📝 复盘 10min+自由时间'];
     }
-  } else if(m===6){ // 6月：白班 8:00-18:00
-    if(isWeekend){
-      items=[
-        '🕐 8:00-18:00   💼 上白班',
-        '🕐 18:30-19:00  🍜 吃饭',
-        '🕐 19:00-20:30  📐 数学1.5h（函数体系）',
-        '🕐 20:30-21:00  ☕ 休息',
-        '🕐 21:00-22:30  🔤 英语1.5h（词汇+阅读）',
-        '🕐 22:30-23:00  💻 C语言30min（翁恺9-12集）',
-        '📱 碎片时间      背单词30个'
-      ];
-    } else {
-      if(dow===1)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  📐 数学1h（函数基础）','🕐 20:00-21:00  🔤 英语1h（词汇list7-11）','🕐 21:00-22:00  💻 C语言1h（翁恺9-10集）','📱 碎片  工间背单词20个'];
-      else if(dow===2)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  🔤 英语1h（语法：从句）','🕐 20:00-21:00  📐 数学1h（三角入门）','🕐 21:00-22:00  💻 C语言1h（翁恺11-12集）','📱 碎片  工间背单词20个'];
-      else if(dow===3)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  📐 数学1h（三角函数）','🕐 20:00-21:00  💻 C语言1h（翁恺13-14集）','🕐 21:00-22:00  🔤 英语1h（词汇list12-16）','📱 碎片  工间背单词20个'];
-      else if(dow===4)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  💻 C语言1h（指针入门）','🕐 20:00-21:00  📐 数学1h（数列入门）','🕐 21:00-22:00  🔤 英语1h（阅读训练）','📱 碎片  工间背单词20个'];
-      else if(dow===5)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  📐 数学1h（不等式）','🕐 20:00-21:00  🔤 英语1h（词汇list17-21）','🕐 21:00-22:00  💻 C语言1h（翁恺15-16集）','📱 碎片  工间背单词20个'];
-    }
-  } else if(m===7){ // 7月：夜班 20:00-8:00
-    if(isWeekend){
-      items=[
-        '🕐 09:00-16:00  💤 睡觉',
-        '🕐 16:00-16:30  🍜 吃饭',
-        '🕐 16:30-18:00  📚 学习1.5h（数学+英语）',
-        '🕐 18:00-20:00  🍜 吃饭+准备上班',
-        '🕐 20:00-8:00   💼 夜班上班',
-        '📱 碎片时间      背单词30个'
-      ];
-    } else {
-      if(dow===1)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  📐 数学：不等式基础','🕐 17:00-17:30  💻 C语言：指针进阶（翁恺17-18集）','🕐 17:30-18:00  🔤 英语：词汇list22-26','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词30个'];
-      else if(dow===2)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  🔤 英语：长难句分析','🕐 17:00-17:30  📐 数学：立体几何入门','🕐 17:30-18:00  💻 C语言：结构体（翁恺19-20集）','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词30个'];
-      else if(dow===3)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  📐 数学：立体几何练习','🕐 17:00-17:30  💻 C语言：文件操作（翁恺21-22集）','🕐 17:30-18:00  🔤 英语：词汇list27-31','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词30个'];
-      else if(dow===4)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  💻 C语言：项目实战（100行）','🕐 17:00-17:30  📐 数学：导数入门','🕐 17:30-18:00  🔤 英语：阅读真题','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词30个'];
-      else if(dow===5)items=['🕐 09:00-16:00  💤 睡觉','🕐 16:00-16:30  🍜 吃饭','🕐 16:30-17:00  📐 数学：导数应用','🕐 17:00-17:30  🔤 英语：词汇list32-36','🕐 17:30-18:00  💻 C语言：项目实战（150行）','🕐 18:00-20:00  🍜 吃饭+准备上班','🕐 20:00-8:00   💼 夜班上班','📱 碎片  背单词30个'];
-    }
-  } else if(m===8){ // 8月：白班 8:00-18:00 冲刺
-    if(isWeekend){
-      items=[
-        '🕐 8:00-18:00   💼 上白班',
-        '🕐 18:30-19:00  🍜 吃饭',
-        '🕐 19:00-21:00  📐 数学2h（综合刷题）',
-        '🕐 21:00-21:30  ☕ 休息',
-        '🕐 21:30-23:00  💻 C语言1.5h（项目冲刺300行）',
-        '📱 碎片时间      背单词30个'
-      ];
-    } else {
-      if(dow===1)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  📐 数学1h（高考真题）','🕐 20:00-21:00  💻 C语言1h（项目：记账功能）','🕐 21:00-22:00  🔤 英语1h（真题模拟）','📱 碎片  工间背单词30个'];
-      else if(dow===2)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  🔤 英语1h（完形填空）','🕐 20:00-21:00  📐 数学1h（错题回顾）','🕐 21:00-22:00  💻 C语言1h（项目：数据可视化）','📱 碎片  工间背单词30个'];
-      else if(dow===3)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  📐 数学1h（压轴题训练）','🕐 20:00-21:00  💻 C语言1h（项目收尾）','🕐 21:00-22:00  🔤 英语1h（写作训练）','📱 碎片  工间背单词30个'];
-      else if(dow===4)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  💻 C语言1h（项目测试+文档）','🕐 20:00-21:00  📐 数学1h（最后冲刺）','🕐 21:00-22:00  🔤 英语1h（词汇复盘）','📱 碎片  工间背单词30个'];
-      else if(dow===5)items=['🕐 8:00-18:00   💼 上白班','🕐 18:30-19:00  🍜 吃饭','🕐 19:00-20:00  📐 数学1h（考前回顾）','🕐 20:00-21:00  🔤 英语1h（考前回顾）','🕐 21:00-22:00  💻 C语言1h（项目最终版）','📱 碎片  工间背单词30个'];
-    }
+  } else {
+    // 9月5日后（开学版，待后续更新）
+    items=[
+      '🕐 08:00  🌅 起床+早餐',
+      '🕐 09:00  📐 数学 1.5h',
+      '🕐 10:30  ☕ 休息',
+      '🕐 10:45  🔤 英语 45min（不背单词）',
+      '🕐 11:30  🍜 午饭',
+      '🕐 14:00  💻 编程 45min（Python）',
+      '🕐 14:45  📝 复盘 10min'
+    ];
   }
   // 今日未完成goals保留
   const isToday=dateStr===today();
-  if(isToday){const g=getGoals();if(g&&g.items&&g.items.length>0){const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0){const undoneTexts=undone.map(it=>it.replace(/^\[.\] /,''));const merged=[...new Set([...undoneTexts,...items])];return{items:merged,done:new Array(merged.length).fill(false),planVer:3}}}}
-  return{items:items,done:new Array(items.length).fill(false),planVer:3};
+  if(isToday){const g=getGoals();if(g&&g.items&&g.items.length>0){const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0){const undoneTexts=undone.map(it=>it.replace(/^\[.\] /,''));const merged=[...new Set([...undoneTexts,...items])];return{items:merged,done:new Array(merged.length).fill(false),planVer:4}}}}
+  return{items:items,done:new Array(items.length).fill(false),planVer:4};
 }
 function renderPlan(){
   const y=planYear,m=planM;
@@ -1132,7 +1108,7 @@ function renderPlanList(y,m){
   let html='';
   for(let d=1;d<=dim;d++){
     const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    let plan=DB.getObj('plan_'+ds);if(!plan||!plan.items||plan.planVer !== 2){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
+    let plan=DB.getObj('plan_'+ds);if(!plan||!plan.items||plan.planVer!==4){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
     const isPast=ds<ts,isToday=ds===ts;
     const doneCount=plan.done.filter(Boolean).length;
     html+=`<div class="plan-day" id="plan-${ds}" style="${isToday?'border-color:var(--accent)':''}"><div class="plan-date">${(m+1)}/${d} 周${dayName[new Date(y,m,d).getDay()]}${isToday?' · 今天':''}${isPast&&doneCount===plan.items.length?' ✅':''}</div>`;
@@ -1179,7 +1155,7 @@ function renderHomeStats(){
 
 function renderHomeTodayPlan(){
   const ts=today();
-  let plan=DB.getObj('plan_'+ts);if(!plan||!plan.items||plan.planVer!==2){plan=generateDailyPlan(ts);DB.setObj('plan_'+ts,plan)}
+  let plan=DB.getObj('plan_'+ts);if(!plan||!plan.items||plan.planVer!==4){plan=generateDailyPlan(ts);DB.setObj('plan_'+ts,plan)}
   const el=document.getElementById('homeTodayPlan');
   if(!plan.items.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">今天暂无计划</div>';return}
   let html='';
