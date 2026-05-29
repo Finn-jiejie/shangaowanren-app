@@ -1106,18 +1106,36 @@ function renderPlan(){
   // 自动滚动到今天
   const todayDs=todayStr;
   const todayEl=document.getElementById('plan-'+todayDs);
-  if(todayEl){setTimeout(()=>{todayEl.scrollIntoView({behavior:'smooth',block:'center'});todayEl.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(()=>{todayEl.style.boxShadow=''},2000)},200)}
+  if(todayEl){
+    setTimeout(()=>{
+      try{todayEl.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}
+      try{document.getElementById('planList').scrollTop=todayEl.offsetTop-10}catch(e){}
+      todayEl.style.boxShadow='0 0 0 2px var(--accent)';
+      setTimeout(()=>{todayEl.style.boxShadow=''},2000);
+    },300);
+  }
 }
 function selectPlanDay(ds){const el=document.getElementById('plan-'+ds);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(()=>{el.style.boxShadow=''},1500)}}
 function renderPlanList(y,m){
   const dim=new Date(y,m+1,0).getDate(),ts=today();
   let html='';
+  // 先渲染今天，再渲染其他日期（今天置顶）
+  const days=[];
   for(let d=1;d<=dim;d++){
     const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isToday=ds===ts;
+    days.push({d,ds,isToday});
+  }
+  // 排序：今天排第一
+  days.sort((a,b)=>{
+    if(a.isToday)return -1;if(b.isToday)return 1;return a.d-b.d;
+  });
+  for(const day of days){
+    const {d,ds,isToday}=day;
     let plan=DB.getObj('plan_'+ds);if(!plan||!plan.items||plan.planVer!==4){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
-    const isPast=ds<ts,isToday=ds===ts;
+    const isPast=ds<ts;
     const doneCount=plan.done.filter(Boolean).length;
-    html+=`<div class="plan-day" id="plan-${ds}" style="${isToday?'border-color:var(--accent)':''}"><div class="plan-date">${(m+1)}/${d} 周${dayName[new Date(y,m,d).getDay()]}${isToday?' · 今天':''}${isPast&&doneCount===plan.items.length?' ✅':''}</div>`;
+    html+=`<div class="plan-day" id="plan-${ds}" style="${isToday?'border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)':''}"><div class="plan-date">${(m+1)}/${d} 周${dayName[new Date(y,m,d).getDay()]}${isToday?' · 今天':''}${isPast&&doneCount===plan.items.length?' ✅':''}</div>`;
     plan.items.forEach((item,i)=>{html+=`<div class="plan-item"><div class="plan-check ${plan.done[i]?'done':''}" onclick="togglePlanItem('${ds}',${i})"></div><div class="plan-text ${plan.done[i]?'done':''}" onclick="editPlanItem('${ds}',${i})">${item}</div></div>`});
     html+=`<div style="margin-top:8px"><button class="btn btn-outline btn-sm" onclick="addPlanItem('${ds}')">+ 添加</button></div></div>`;
   }
