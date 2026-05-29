@@ -444,16 +444,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
 
-      <div class="section-header">工资与储蓄</div>
-      <div class="card">
-        <div class="form-row">
-          <div class="form-group"><label>夜班日薪（元）</label><input type="number" id="setNightPay" placeholder="240"></div>
-          <div class="form-group"><label>白班日薪（元）</label><input type="number" id="setDayPay" placeholder="220"></div>
+      <div class="section-header">&#x1F4C5; 今日状态</div>
+      <div class="card" id="versionCard">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v17 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
-        <div class="form-group"><label>储蓄目标（元）</label><input type="number" id="setSavingsTarget" placeholder="15000"></div>
-        <div class="form-group"><label>月支出预算（元）</label><input type="number" id="setMonthlyBudget" placeholder="1200"></div>
-        <div class="form-group"><label>当前手头现金（元）</label><input type="number" id="setCashOnHand" placeholder="0"></div>
       </div>
+
+      <div class="section-header">学习目标</div>
 
       <div class="section-header">重要日期</div>
       <div class="card">
@@ -467,7 +467,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">学习目标</div>
       <div class="card">
         <div class="form-group"><label>数学目标</label><input type="text" id="setMathGoal" placeholder="集合+函数基础"></div>
-        <div class="form-group"><label>C语言目标</label><input type="text" id="setCGoal" placeholder="翁恺1-5节"></div>
+        <div class="form-group"><label>编程目标</label><input type="text" id="setCGoal" placeholder="Python基础+1个小项目"></div>
         <div class="form-group"><label>背词目标</label><input type="text" id="setWordGoal" placeholder="390个"></div>
       </div>
 
@@ -488,7 +488,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v13 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v17 · 学就，只登一步</div>
     </div>
   </div>
 
@@ -1214,6 +1214,15 @@ function loadSettings(){
   document.getElementById('profileName').textContent=name;
   document.getElementById('profileAvatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('profileMeta').textContent='重庆智能工程职业学院 · AI专业';
+  
+  // 版本检测
+  if(document.getElementById('cacheVer')){
+    document.getElementById('cacheVer').textContent='v17';
+    document.getElementById('cacheVer').style.color='var(--green)';
+  }
+  if(document.getElementById('lastUpdate')){
+    document.getElementById('lastUpdate').textContent=new Date().toLocaleDateString('zh-CN');
+  }
 }
 function saveSettings(){
   const s={
