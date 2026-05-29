@@ -670,6 +670,8 @@ function switchTab(tab){
   if(btn)btn.classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   renderAll();
+  // 切到计划Tab时自动跳到今天
+  if(tab==='plan'){planYear=new Date().getFullYear();planM=new Date().getMonth();renderPlan()}
   // Show/hide FAB save button
   document.getElementById('fabSave').style.display=tab==='profile'?'flex':'none';
 }
@@ -1101,6 +1103,10 @@ function renderPlan(){
   const totalC=firstDay+daysInMonth,rem=7-totalC%7;
   if(rem<7){for(let i=1;i<=rem;i++)cal+=`<div class="cal-day other-month">${i}</div>`}
   document.getElementById('planCalendar').innerHTML=cal;renderPlanList(y,m);
+  // 自动滚动到今天
+  const todayDs=todayStr;
+  const todayEl=document.getElementById('plan-'+todayDs);
+  if(todayEl){setTimeout(()=>{todayEl.scrollIntoView({behavior:'smooth',block:'center'});todayEl.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(()=>{todayEl.style.boxShadow=''},2000)},200)}
 }
 function selectPlanDay(ds){const el=document.getElementById('plan-'+ds);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(()=>{el.style.boxShadow=''},1500)}}
 function renderPlanList(y,m){
