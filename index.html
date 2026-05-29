@@ -1031,7 +1031,7 @@ function generateDailyPlan(dateStr){
   const isWeekend=(dow===0||dow===6);
   let items=[];
 
-  if(m===5 && day>=31 || m===6 || m===7 || m===8 || m===9 && day<=4){
+  if(m===5 || m===6 || m===7 || m===8 || (m===9 && day<=4)){
     // 利川学习期 5/31-9/4
     if(isSunday){
       // 周日轻量日
