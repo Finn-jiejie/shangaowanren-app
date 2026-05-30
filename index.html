@@ -724,12 +724,12 @@ function rolloverGoals(){
     if(undone.length>0){
       tGoal={items:[...undone,'做一件对自己有用的事'],done:new Array(undone.length+1).fill(false)};
     }else{
-      tGoal={items:['上班赚钱','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
+      tGoal={items:['学习3小时','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
     }
     DB.setObj('goals_'+d,tGoal);
   }
   if(!tGoal.items){
-    tGoal={items:['上班赚钱','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
+    tGoal={items:['学习3小时','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
     DB.setObj('goals_'+d,tGoal);
   }
   return tGoal;
@@ -763,11 +763,13 @@ function renderGoals(){
 function quickAction(type){
   if(type==='checkin'){
     const s=getSettings();
-    document.getElementById('quickTitle').textContent='快速打卡';
+    document.getElementById('quickTitle').textContent='今日打卡';
     document.getElementById('quickContent').innerHTML=
-      '<div class="form-group"><label>班次</label><select id="quickShift"><option value="night">🌙 夜班</option><option value="day">☀️ 白班</option></select></div>'+
-      '<div class="form-group"><label>日薪</label><input type="number" id="quickPay" value="'+(s.nightPay||240)+'"></div>'+
-      '<button class="btn btn-primary btn-block" onclick="quickAddWork()">确认打卡</button>';
+      '<div style="text-align:center;padding:20px 0">'+
+      '<div style="font-size:48px;margin-bottom:12px">✅</div>'+
+      '<div style="font-size:16px;color:var(--text2);margin-bottom:16px">今天也坚持了，不错</div>'+
+      '<button class="btn btn-primary btn-block" onclick="quickCheckin()">打卡！</button>'+
+      '</div>';
     document.getElementById('quickModal').classList.add('show');
   }else if(type==='expense'){
     document.getElementById('quickTitle').textContent='快速记账';
@@ -779,13 +781,18 @@ function quickAction(type){
   }
 }
 function closeQuickModal(){document.getElementById('quickModal').classList.remove('show')}
-function quickAddWork(){
-  const shift=document.getElementById('quickShift').value;
-  const pay=parseFloat(document.getElementById('quickPay').value)||(shift==='night'?240:220);
-  const works=DB.get('works');works.unshift({date:today(),shift,pay,note:'',id:Date.now()});
-  DB.set('works',works);closeQuickModal();
-  renderWork();renderHomeStats();renderCountdown();scheduleAutoSync();checkWorkAchievements();
-  switchTab('work');
+function quickCheckin(){
+  const checkins=DB.get('checkins')||[];
+  const todayStr=today();
+  if(checkins.includes(todayStr)){closeQuickModal();return}
+  checkins.push(todayStr);
+  DB.set('checkins',checkins);closeQuickModal();
+  renderHomeStats();scheduleAutoSync();
+  // toast
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-weight:600;z-index:200';
+  toast.textContent='✓ 打卡成功！连续'+checkins.length+'天';
+  document.body.appendChild(toast);setTimeout(()=>toast.remove(),2000);
 }
 function quickAddExpense(){
   const amount=parseFloat(document.getElementById('quickAmount').value);if(!amount||amount<=0)return;
@@ -802,9 +809,8 @@ function addWork(){
 function deleteWork(id){showModal('删除记录','确定删除这条班次记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown();scheduleAutoSync()})}
 function renderWork(){
   const works=DB.get('works');const el=document.getElementById('workList');
-  if(!works.length){el.innerHTML='<div class="empty"><div class="emoji">👷</div><div class="msg">还没有记录</div></div>';renderWorkStats();return}
-  // Combine work and expense records, sort by date
   const expenses=DB.get('expenses');
+  if(!works.length && !expenses.length){el.innerHTML='<div class="empty"><div class="emoji">💰</div><div class="msg">还没有记录</div></div>';renderWorkStats();return}
   const allRecords=[
     ...works.map(w=>({...w,type:'work',ts:w.id})),
     ...expenses.map(e=>({...e,type:'exp',ts:e.id}))
@@ -812,7 +818,7 @@ function renderWork(){
   
   el.innerHTML=allRecords.map(r=>{
     if(r.type==='work'){
-      return '<div class="list-item"><div class="list-icon" style="background:'+(r.shift==='night'?'rgba(245,158,11,.12)':'rgba(251,191,36,.12)')+'">'+(r.shift==='night'?'🌙':'☀️')+'</div><div class="list-info"><div class="title">'+(r.shift==='night'?'夜班':'白班')+(r.note?' · '+r.note:'')+'</div><div class="meta">'+fmtDate(r.date)+'</div></div><div class="list-amount income">+'+r.pay+'</div><button class="btn btn-danger" onclick="deleteWork('+r.id+')" style="margin-left:6px">✕</button></div>';
+      return '<div class="list-item"><div class="list-icon" style="background:rgba(16,185,129,.12)">💰</div><div class="list-info"><div class="title">'+(r.note||'收入')+'</div><div class="meta">'+fmtDate(r.date)+'</div></div><div class="list-amount income">+'+r.pay+'</div><button class="btn btn-danger" onclick="deleteWork('+r.id+')" style="margin-left:6px">✕</button></div>';
     }else{
       const catEmoji={'饭':'🍚','交通':'🚌','日用品':'🧴','学习':'📚','其他':'📌'};
       return '<div class="list-item"><div class="list-icon" style="background:rgba(239,68,68,.1)">'+(catEmoji[r.category]||'📌')+'</div><div class="list-info"><div class="title">'+r.category+(r.note?' · '+r.note:'')+'</div><div class="meta">'+fmtDate(r.date)+'</div></div><div class="list-amount expense">-'+r.amount.toFixed(0)+'</div><button class="btn btn-danger" onclick="deleteExpense('+r.id+')" style="margin-left:6px">✕</button></div>';
@@ -822,11 +828,11 @@ function renderWork(){
 }
 function renderWorkStats(){
   const works=DB.get('works');const s=getSettings();
-  const total=works.reduce((s,w)=>s+w.pay,0);
+  const total=works.reduce((s,w)=>s+(w.pay||0),0);
   const expenses=DB.get('expenses');const spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
   const net=(s.cashOnHand||0)+total-spent;
   document.getElementById('workStats').innerHTML=
-    '<div class="stat blue"><div class="val">'+works.length+'</div><div class="label">总班次</div></div><div class="stat green"><div class="val">'+total+'</div><div class="label">应得(元)</div></div><div class="stat '+(net>=0?'orange':'red')+'"><div class="val">'+net+'</div><div class="label">手头(元)</div></div>';
+    '<div class="stat blue"><div class="val">'+expenses.length+'</div><div class="label">记账笔数</div></div><div class="stat green"><div class="val">'+total+'</div><div class="label">收入(元)</div></div><div class="stat '+(net>=0?'orange':'red')+'"><div class="val">'+net+'</div><div class="label">手头(元)</div></div>';
 }
 function checkWorkAchievements(){
   const works=DB.get('works').length;const unlocked=DB.getObj('achievements')||{};
@@ -1272,7 +1278,7 @@ function closeModal(){document.getElementById('confirmModal').classList.remove('
 document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
 
 // === QUOTES ===
-const quotes=['山高万仞，只登一步','今天做成了什么？','不是撑，是往前走','走在清华大道上','一步一步来','你在变强的路上','每一天的积累都算数','夜班之后的晨光，最珍贵'];
+const quotes=['山高万仞，只登一步','今天做成了什么？','不是撑，是往前走','走在清华大道上','一步一步来','你在变强的路上','每一天的积累都算数','只登一步，不问终点'];
 
 // === INIT ===
 function initApp(){
