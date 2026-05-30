@@ -117,6 +117,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .plan-item .plan-time{color:var(--text3);font-size:11px;margin-left:auto;flex-shrink:0}
 
 .pomo-card{text-align:center;padding:24px 18px}
+.pomo-settings{margin-bottom:16px}
+.pomo-setting-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pomo-dur-btns{display:flex;gap:4px;flex:1}
+.pomo-dur-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:5px 10px;font-size:12px;cursor:pointer;transition:all .2s}
+.pomo-dur-btn.active{background:rgba(251,146,60,.15);border-color:var(--accent2);color:var(--accent2);font-weight:600}
+.pomo-subject-tag{font-size:11px;margin-top:2px;padding:2px 8px;border-radius:6px;display:inline-block}
 .pomo-timer{position:relative;width:180px;height:180px;margin:0 auto 18px}
 .pomo-timer svg{transform:rotate(-90deg)}
 .pomo-timer .ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:8}
@@ -376,18 +382,58 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
       <div class="sub-page" id="sub-pomo">
         <div class="card pomo-card">
+          <!-- 时长设置 -->
+          <div class="pomo-settings" id="pomoSettings">
+            <div class="pomo-setting-row">
+              <span style="color:var(--text2);font-size:13px">专注</span>
+              <div class="pomo-dur-btns" id="pomoWorkDur">
+                <button class="pomo-dur-btn active" data-min="25">25m</button>
+                <button class="pomo-dur-btn" data-min="30">30m</button>
+                <button class="pomo-dur-btn" data-min="45">45m</button>
+                <button class="pomo-dur-btn" data-min="60">60m</button>
+              </div>
+            </div>
+            <div class="pomo-setting-row">
+              <span style="color:var(--text2);font-size:13px">休息</span>
+              <div class="pomo-dur-btns" id="pomoBreakDur">
+                <button class="pomo-dur-btn active" data-min="5">5m</button>
+                <button class="pomo-dur-btn" data-min="10">10m</button>
+                <button class="pomo-dur-btn" data-min="15">15m</button>
+              </div>
+            </div>
+            <div class="pomo-setting-row">
+              <span style="color:var(--text2);font-size:13px">科目</span>
+              <select id="pomoSubject" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--text1);padding:6px 10px;font-size:13px;flex:1">
+                <option value="">不选科目</option>
+                <option value="数学">📐 数学</option>
+                <option value="Python">🐍 Python</option>
+                <option value="英语">📖 英语</option>
+                <option value="其他">📝 其他</option>
+              </select>
+            </div>
+          </div>
+          <!-- 计时器 -->
           <div class="pomo-timer" id="pomoTimer">
             <svg width="180" height="180" viewBox="0 0 180 180">
               <circle class="ring-bg" cx="90" cy="90" r="82"/>
               <circle class="ring-fg" id="pomoArc" cx="90" cy="90" r="82" stroke="var(--accent2)" stroke-dasharray="515.22" stroke-dashoffset="0"/>
             </svg>
-            <div class="pomo-center"><div class="pomo-time" id="pomoTime">25:00</div><div class="pomo-label" id="pomoLabel">专注模式</div></div>
+            <div class="pomo-center">
+              <div class="pomo-time" id="pomoTime">25:00</div>
+              <div class="pomo-label" id="pomoLabel">专注模式</div>
+              <div class="pomo-subject-tag" id="pomoSubjectTag" style="display:none"></div>
+            </div>
           </div>
           <div class="pomo-btns">
             <button class="btn btn-primary" style="padding:12px 28px;font-size:15px" id="pomoStart" onclick="togglePomo()">&#x25B6; 开始</button>
             <button class="btn btn-outline" onclick="resetPomo()">&#x21BA; 重置</button>
           </div>
-          <div style="font-size:12px;color:var(--text3)">今日番茄 <span id="pomoCount" style="color:var(--accent2);font-weight:700">0</span> 个 · 累计 <span id="pomoTotal" style="color:var(--green);font-weight:700">0</span> 个</div>
+          <div style="font-size:12px;color:var(--text3)">今日 <span id="pomoCount" style="color:var(--accent2);font-weight:700">0</span> 个 · 累计 <span id="pomoTotal" style="color:var(--green);font-weight:700">0</span> 个 · 专注 <span id="pomoMinToday" style="color:var(--blue);font-weight:700">0</span> 分钟</div>
+        </div>
+        <!-- 今日番茄记录 -->
+        <div class="card" style="margin-top:10px">
+          <div class="card-title">📋 今日记录</div>
+          <div id="pomoLog" style="font-size:13px;color:var(--text2)"></div>
         </div>
       </div>
 
@@ -472,7 +518,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v20 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v21 · 学就，只登一步</div>
     </div>
   </div>
 
@@ -931,35 +977,88 @@ function checkStudyAchievements(){
 
 // === POMODORO ===
 let _pomoInterval=null,_pomoRunning=false,_pomoSec=1500,_pomoMode='work',_pomoCount=0,_pomoTotal=0;
+let _pomoWorkMin=25,_pomoBreakMin=5;
+function getPomoLogs(){return DB.get('pomoLogs_'+today())||[]}
+function savePomoLog(subj,dur){const logs=getPomoLogs();logs.push({subj,dur,time:Date.now()});DB.set('pomoLogs_'+today(),logs)}
+function renderPomoLog(){
+  const logs=getPomoLogs();const el=document.getElementById('pomoLog');
+  if(!logs.length){el.innerHTML='<div style="color:var(--text3);padding:8px 0">还没有番茄记录</div>';return}
+  const colors={'数学':'var(--blue)','Python':'var(--green)','英语':'var(--orange)','其他':'var(--purple)'};
+  el.innerHTML=logs.map(l=>{
+    const c=colors[l.subj]||'var(--text3)';
+    const t=new Date(l.time);const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
+    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)"><div style="width:3px;height:16px;border-radius:2px;background:${c}"></div><span style="flex:1">${l.subj||'未选科目'}</span><span style="color:var(--text3)">${l.dur}分钟</span><span style="color:var(--text3);font-size:11px">${ts}</span></div>`
+  }).join('');
+}
 function renderPomo(){
-  const total=_pomoMode==='work'?1500:300;
+  const total=_pomoMode==='work'?_pomoWorkMin*60:_pomoBreakMin*60;
   const done=total-_pomoSec;
   const circumference=515.22,offset=circumference*(1-done/total);
-  document.getElementById('pomoArc').style.strokeDashoffset=offset;
+  const arc=document.getElementById('pomoArc');
+  arc.style.strokeDashoffset=offset;
+  arc.setAttribute('stroke',_pomoMode==='work'?'var(--accent2)':'var(--green)');
   const m=Math.floor(_pomoSec/60),s=String(_pomoSec%60).padStart(2,'0');
   document.getElementById('pomoTime').textContent=m+':'+s;
   document.getElementById('pomoLabel').textContent=_pomoMode==='work'?'专注模式':'休息时间';
   document.getElementById('pomoCount').textContent=_pomoCount;
   document.getElementById('pomoTotal').textContent=_pomoTotal;
+  // 计算今日专注总分钟
+  const logs=getPomoLogs();const minToday=logs.reduce((a,l)=>a+l.dur,0);
+  document.getElementById('pomoMinToday').textContent=minToday;
+  // 科目标签
+  const tagEl=document.getElementById('pomoSubjectTag');
+  const subj=document.getElementById('pomoSubject').value;
+  if(subj&&_pomoMode==='work'){tagEl.style.display='inline-block';tagEl.textContent=subj;const colors={'数学':'rgba(59,130,246,.15);color:var(--blue)','Python':'rgba(16,185,129,.15);color:var(--green)','英语':'rgba(249,115,22,.15);color:var(--orange)','其他':'rgba(139,92,246,.15);color:var(--purple)'};tagEl.style.background=((colors[subj]||'').split(';')[0]||'rgba(255,255,255,.08)');tagEl.style.color=((colors[subj]||'').split('color:')[1]||'var(--text3)')}else{tagEl.style.display='none'}
+  // 运行中隐藏设置
+  const setEl=document.getElementById('pomoSettings');if(setEl)setEl.style.display=_pomoRunning?'none':'block';
+  renderPomoLog();
 }
 function togglePomo(){
   if(_pomoRunning){clearInterval(_pomoInterval);_pomoRunning=false;document.getElementById('pomoStart').textContent='▶ 继续';return}
+  // 读取时长设置
+  const workActive=document.querySelector('#pomoWorkDur .pomo-dur-btn.active');
+  const breakActive=document.querySelector('#pomoBreakDur .pomo-dur-btn.active');
+  if(workActive)_pomoWorkMin=parseInt(workActive.dataset.min);
+  if(breakActive)_pomoBreakMin=parseInt(breakActive.dataset.min);
+  if(_pomoSec===_pomoWorkMin*60||_pomoSec===_pomoBreakMin*60){/* 刚重置或刚切换，保持 */}
   _pomoRunning=true;document.getElementById('pomoStart').textContent='⏸ 暂停';
   _pomoInterval=setInterval(()=>{
     _pomoSec--;
     renderPomo();
     if(_pomoSec<=0){
       clearInterval(_pomoInterval);_pomoRunning=false;
-      if(_pomoMode==='work'){_pomoCount++;_pomoTotal++;_pomoMode='break';_pomoSec=300;checkPomoAchievements()}
-      else{_pomoMode='work';_pomoSec=1500}
+      if(_pomoMode==='work'){_pomoCount++;_pomoTotal++;savePomoLog(document.getElementById('pomoSubject').value,_pomoWorkMin);_pomoMode='break';_pomoSec=_pomoBreakMin*60;checkPomoAchievements()}
+      else{_pomoMode='work';_pomoSec=_pomoWorkMin*60}
+      // 振动提醒
+      if(navigator.vibrate)navigator.vibrate([200,100,200]);
+      // 音频提醒
+      try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=_pomoMode==='work'?880:660;osc.type='sine';gain.gain.value=0.3;osc.start();osc.stop(ctx.currentTime+0.3)}catch(e){}
       renderPomo();
       document.getElementById('pomoStart').textContent='▶ 开始';
-      if(typeof Notification!=='undefined')new Notification(`${_pomoMode==='work'?'休息结束':'专注结束'}！`);
+      // 弹窗提醒
+      const msg=_pomoMode==='work'?'休息结束，继续专注！':'专注完成，休息一下！';
+      showModal(_pomoMode==='work'?'休息结束':'番茄完成',msg,()=>{});
     }
   },1000);
 }
-function resetPomo(){clearInterval(_pomoInterval);_pomoRunning=false;_pomoMode='work';_pomoSec=1500;document.getElementById('pomoStart').textContent='▶ 开始';renderPomo()}
+function resetPomo(){clearInterval(_pomoInterval);_pomoRunning=false;_pomoMode='work';_pomoSec=_pomoWorkMin*60;document.getElementById('pomoStart').textContent='▶ 开始';renderPomo()}
 function checkPomoAchievements(){const u=DB.getObj('achievements')||{};if(_pomoTotal>=10)u['pomo_10']=true;if(_pomoTotal>=50)u['pomo_50']=true;DB.setObj('achievements',u)}
+// 时长按钮点击
+setTimeout(()=>{
+  document.querySelectorAll('.pomo-dur-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const parent=btn.parentElement;
+      parent.querySelectorAll('.pomo-dur-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      if(!_pomoRunning){
+        const isWork=parent.id==='pomoWorkDur';
+        if(isWork){_pomoWorkMin=parseInt(btn.dataset.min);if(_pomoMode==='work'){_pomoSec=_pomoWorkMin*60}}
+        else{_pomoBreakMin=parseInt(btn.dataset.min);if(_pomoMode==='break'){_pomoSec=_pomoBreakMin*60}}
+        renderPomo();
+      }
+    });
+  });
+},0);
 
 // === JOURNAL ===
 function saveJournal(){
@@ -1264,7 +1363,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v20';
+    document.getElementById('cacheVer').textContent='v21';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
