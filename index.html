@@ -40,43 +40,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .card:active{transform:scale(.99);transition:transform .1s}
 .card-title{font-size:12px;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
 
-.hero-card{background:var(--bg2);border:1px solid rgba(245,158,11,.18);border-radius:var(--radius);padding:22px 18px;margin-bottom:14px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 8px 40px rgba(245,158,11,.1),var(--shadow);position:relative;overflow:hidden}
-.hero-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(245,158,11,.08) 0%,transparent 70%);border-radius:50%;pointer-events:none}
-.hero-card::after{content:'';position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;background:radial-gradient(circle,rgba(139,92,246,.06) 0%,transparent 70%);border-radius:50%;pointer-events:none}
-.hero-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
-.hero-streak{text-align:center}
-.hero-streak .num{font-size:42px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.hero-streak .label{font-size:11px;color:var(--text3);margin-top:2px}
-.hero-status{text-align:right}
-.hero-status .status-text{font-size:14px;color:var(--text2);font-weight:500}
-.hero-status .status-sub{font-size:11px;color:var(--text3);margin-top:2px}
-.hero-ring{position:relative;width:72px;height:72px;margin:0 auto}
-.hero-ring svg{transform:rotate(-90deg)}
-.hero-ring .ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:5}
-.hero-ring .ring-fg{fill:none;stroke:var(--accent2);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .8s ease;filter:drop-shadow(0 0 6px rgba(251,191,36,.4))}
+/* hero-card removed in v19 */
 
-.quick-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
-.qa-btn{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius2);padding:14px 8px;text-align:center;cursor:pointer;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.qa-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,158,11,.08),transparent);opacity:0;transition:opacity .25s}
-.qa-btn:hover::before{opacity:1}
-.qa-btn:hover{border-color:rgba(245,158,11,.2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
-.qa-btn:active{transform:scale(.96)}
-.qa-btn .icon{font-size:24px;margin-bottom:4px;display:block}
-.qa-btn .label{font-size:11px;color:var(--text2);font-weight:500;display:block}
-
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.fs-quick-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
 .stat{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius2);padding:14px 10px;text-align:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
 .stat .val{font-size:24px;font-weight:800;margin-bottom:2px}
 .stat .label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
 .stat.green .val{color:var(--green)}.stat.blue .val{color:var(--blue)}.stat.orange .val{color:var(--orange)}.stat.red .val{color:var(--red)}.stat.purple .val{color:var(--accent2)}
 
-.goal-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03)}
-.goal-item:last-child{border-bottom:none}
-.goal-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .3s}
-.goal-check.done{background:var(--green);border-color:var(--green);box-shadow:0 0 12px rgba(16,185,129,.3)}
-.goal-check.done::after{content:'';width:5px;height:8px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block}
-.goal-text{font-size:14px;flex:1;cursor:pointer}.goal-text.done{text-decoration:line-through;color:var(--text3)}
-.goal-input{background:var(--bg3);border:1px solid var(--accent);border-radius:var(--radius2);padding:8px 10px;color:var(--text);font-size:13px;width:100%;outline:none}
+/* goal-item removed in v19 */
 
 .countdown-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.03)}
 .countdown-item:last-child{border-bottom:none}
@@ -377,9 +349,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="progress"><div class="progress-bar green" id="mathBar" style="width:0%"></div></div>
           <div style="font-size:11px;color:var(--text3);margin:4px 0 14px" id="mathDesc">还没开始</div>
 
-          <div class="slider-row"><label>&#x1F4BB; Python</label><input type="range" min="0" max="100" value="0" id="cSlider" oninput="updateProgress()"><span class="slider-val" id="cPct">0%</span></div>
-          <div class="progress"><div class="progress-bar blue" id="cBar" style="width:0%"></div></div>
-          <div style="font-size:11px;color:var(--text3);margin:4px 0 14px" id="cDesc">还没开始</div>
+          <div class="slider-row"><label>&#x1F4BB; Python</label><input type="range" min="0" max="100" value="0" id="pySlider" oninput="updateProgress()"><span class="slider-val" id="pyPct">0%</span></div>
+          <div class="progress"><div class="progress-bar blue" id="pyBar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--text3);margin:4px 0 14px" id="pyDesc">还没开始</div>
 
           <div class="slider-row"><label>&#x1F4D6; 英语背词</label><input type="range" min="0" max="100" value="0" id="wordSlider" oninput="updateProgress()"><span class="slider-val" id="wordPct">0%</span></div>
           <div class="progress"><div class="progress-bar orange" id="wordBar" style="width:0%"></div></div>
@@ -472,17 +444,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
       <div class="section-header">重要日期</div>
       <div class="card">
-        <div class="form-row">
-          <div class="form-group"><label>下次发工资</label><input type="date" id="setPayday"></div>
-          <div class="form-group"><label>目标考试日期</label><input type="date" id="setExam"></div>
-        </div>
+        <div class="form-group"><label>目标考试日期</label><input type="date" id="setExam"></div>
         <div class="form-group"><label>目标考试名称</label><input type="text" id="setExamName" placeholder="如：专升本考试"></div>
       </div>
 
       <div class="section-header">学习目标</div>
       <div class="card">
         <div class="form-group"><label>数学目标</label><input type="text" id="setMathGoal" placeholder="集合+函数基础"></div>
-        <div class="form-group"><label>编程目标</label><input type="text" id="setCGoal" placeholder="Python基础+1个小项目"></div>
+        <div class="form-group"><label>编程目标</label><input type="text" id="setPyGoal" placeholder="Python基础+1个小项目"></div>
         <div class="form-group"><label>背词目标</label><input type="text" id="setWordGoal" placeholder="390个"></div>
       </div>
 
@@ -642,10 +611,9 @@ const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.toISOS
 
 const defaultSettings={
   name:'Finn',birthday:'2008-06-09',enroll:'2026-09-05',
-  cashOnHand:0,
-  payday:'2026-06-10',exam:'',examName:'专升本考试',
-  mathGoal:'集合+函数基础',cGoal:'翁恺1-5节',wordGoal:'390个',
-  mathPct:0,cPct:0,wordPct:0,syncKey:'',
+  exam:'',examName:'专升本考试',
+  mathGoal:'集合+函数基础',pyGoal:'Python基础+1个小项目',wordGoal:'390个',
+  mathPct:0,pyPct:0,wordPct:0,syncKey:'',
   lastSync:null
 };
 function getSettings(){return{...defaultSettings,...DB.getObj('settings')}}
@@ -869,12 +837,12 @@ function renderWork(){
   renderWorkStats();
 }
 function renderWorkStats(){
-  const works=DB.get('works');const s=getSettings();
+  const works=DB.get('works');
   const total=works.reduce((s,w)=>s+(w.pay||0),0);
   const expenses=DB.get('expenses');const spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
-  const net=(s.cashOnHand||0)+total-spent;
+  const net=total-spent;
   document.getElementById('workStats').innerHTML=
-    '<div class="stat blue"><div class="val">'+expenses.length+'</div><div class="label">记账笔数</div></div><div class="stat green"><div class="val">'+total+'</div><div class="label">收入(元)</div></div><div class="stat '+(net>=0?'orange':'red')+'"><div class="val">'+net+'</div><div class="label">手头(元)</div></div>';
+    '<div class="stat blue"><div class="val">'+expenses.length+'</div><div class="label">记账笔数</div></div><div class="stat green"><div class="val">'+total+'</div><div class="label">收入(元)</div></div><div class="stat '+(net>=0?'orange':'red')+'"><div class="val">'+net+'</div><div class="label">结余(元)</div></div>';
 }
 function checkWorkAchievements(){
   const works=DB.get('works').length;const unlocked=DB.getObj('achievements')||{};
@@ -898,10 +866,10 @@ function renderBudget(){
   renderWork();
 }
 function checkBudgetAchievements(){
-  const s=getSettings();const items=DB.get('expenses');const month=today().slice(0,7);
+  const items=DB.get('expenses');const month=today().slice(0,7);
   const spent=items.filter(e=>e.date.startsWith(month)&&e.type==='expense').reduce((a,e)=>a+e.amount,0);
   const unlocked=DB.getObj('achievements')||{};
-  if(s.monthlyBudget&&spent<=s.monthlyBudget)unlocked['budget_on_track']=true;
+  if(spent<=1200)unlocked['budget_on_track']=true;
   DB.setObj('achievements',unlocked);
 }
 
@@ -917,16 +885,16 @@ function addStudy(){
 function deleteStudy(id){showModal('删除','确定删除这条学习记录？',()=>{const i=DB.get('studies').filter(s=>s.id!==id);DB.set('studies',i);renderStudy();renderHomeStats();scheduleAutoSync()})}
 function updateProgress(){
   const m=document.getElementById('mathSlider').value;
-  const c=document.getElementById('cSlider').value;
+  const c=document.getElementById('pySlider').value;
   const w=document.getElementById('wordSlider').value;
   document.getElementById('mathPct').textContent=m+'%';document.getElementById('mathBar').style.width=m+'%';
-  document.getElementById('cPct').textContent=c+'%';document.getElementById('cBar').style.width=c+'%';
+  document.getElementById('pyPct').textContent=c+'%';document.getElementById('pyBar').style.width=c+'%';
   document.getElementById('wordPct').textContent=w+'%';document.getElementById('wordBar').style.width=w+'%';
   const desc=v=>v==0?'还没开始':v<25?'刚起步':v<50?'进行中':v<75?'过半了':v<100?'快完了':'搞定！';
   document.getElementById('mathDesc').textContent=desc(parseInt(m));
-  document.getElementById('cDesc').textContent=desc(parseInt(c));
+  document.getElementById('pyDesc').textContent=desc(parseInt(c));
   document.getElementById('wordDesc').textContent=desc(parseInt(w));
-  const s=getSettings();s.mathPct=parseInt(m);s.cPct=parseInt(c);s.wordPct=parseInt(w);DB.setObj('settings',s);scheduleAutoSync();
+  const s=getSettings();s.mathPct=parseInt(m);s.pyPct=parseInt(c);s.wordPct=parseInt(w);DB.setObj('settings',s);scheduleAutoSync();
 }
 function renderStudy(){
   const items=DB.get('studies');const el=document.getElementById('studyList');
@@ -937,7 +905,7 @@ function renderStudy(){
   ).join('');
   const s=getSettings();
   document.getElementById('mathSlider').value=s.mathPct||0;
-  document.getElementById('cSlider').value=s.cPct||0;
+  document.getElementById('pySlider').value=s.pyPct||0;
   document.getElementById('wordSlider').value=s.wordPct||0;
   updateProgress();
 }
@@ -1002,7 +970,7 @@ function checkJournalAchievements(){const j=DB.get('journals').length;const u=DB
 
 // === ACHIEVEMENTS ===
 function checkFirstGoal(){const g=getGoals();if(g.done&&g.done.some(Boolean)){const u=DB.getObj('achievements')||{};u['first_goal']=true;DB.setObj('achievements',u)}}
-function checkGeneral(){const w=DB.get('works'),e=DB.get('expenses');const s=getSettings();const saved=(s.cashOnHand||0)+w.reduce((a,x)=>a+x.pay,0)-e.filter(x=>x.type==='expense').reduce((a,x)=>a+x.amount,0);const u=DB.getObj('achievements')||{};if(saved>=5000)u['savings_5k']=true;if(saved>=10000)u['savings_10k']=true;if(saved>=15000)u['savings_15k']=true;DB.setObj('achievements',u)}
+function checkGeneral(){const w=DB.get('works'),e=DB.get('expenses');const saved=w.reduce((a,x)=>a+x.pay,0)-e.filter(x=>x.type==='expense').reduce((a,x)=>a+x.amount,0);const u=DB.getObj('achievements')||{};if(saved>=5000)u['savings_5k']=true;if(saved>=10000)u['savings_10k']=true;if(saved>=15000)u['savings_15k']=true;DB.setObj('achievements',u)}
 function renderAchievements(){
   const u=DB.getObj('achievements')||{};
   document.getElementById('achieveGrid').innerHTML=ACHIEVEMENTS.map(a=>`
@@ -1046,7 +1014,7 @@ function generateDailyPlan(dateStr){
   
   // 读取进度滑块
   const s=getSettings();
-  const mathPct=s.mathPct||0, pyPct=s.cPct||0, wordPct=s.wordPct||0;
+  const mathPct=s.mathPct||0, pyPct=s.pyPct||0, wordPct=s.wordPct||0;
   
   // 判断阶段
   let phase='basic', phaseName='基础期';
@@ -1258,11 +1226,10 @@ function loadSettings(){
   document.getElementById('setName').value=s.name||'';
   document.getElementById('setBirthday').value=s.birthday||'';
   document.getElementById('setEnroll').value=s.enroll||'';
-  document.getElementById('setPayday').value=s.payday||'';
   document.getElementById('setExam').value=s.exam||'';
   document.getElementById('setExamName').value=s.examName||'';
   document.getElementById('setMathGoal').value=s.mathGoal||'';
-  document.getElementById('setCGoal').value=s.cGoal||'';
+  document.getElementById('setPyGoal').value=s.pyGoal||'';
   document.getElementById('setWordGoal').value=s.wordGoal||'';
   document.getElementById('setSyncKey').value=s.syncKey||'';
   
@@ -1286,14 +1253,13 @@ function saveSettings(){
     name:document.getElementById('setName').value,
     birthday:document.getElementById('setBirthday').value,
     enroll:document.getElementById('setEnroll').value,
-    payday:document.getElementById('setPayday').value,
     exam:document.getElementById('setExam').value,
     examName:document.getElementById('setExamName').value,
     mathGoal:document.getElementById('setMathGoal').value,
-    cGoal:document.getElementById('setCGoal').value,
+    pyGoal:document.getElementById('setPyGoal').value,
     wordGoal:document.getElementById('setWordGoal').value,
     mathPct:parseInt(document.getElementById('mathSlider').value)||0,
-    cPct:parseInt(document.getElementById('cSlider').value)||0,
+    pyPct:parseInt(document.getElementById('pySlider').value)||0,
     wordPct:parseInt(document.getElementById('wordSlider').value)||0,
     syncKey:document.getElementById('setSyncKey').value,
     lastSync:getSettings().lastSync
