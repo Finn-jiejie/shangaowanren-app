@@ -727,19 +727,30 @@ function checkStreakAchievements(){
 // === GOAL ROLLOVER ===
 function rolloverGoals(){
   const d=today();const y=yesterday();
+  const defaultGoals=['学习3小时','好好吃饭','早睡早起'];
   let yGoal=DB.getObj('goals_'+y);
   let tGoal=DB.getObj('goals_'+d);
+  // 过滤旧版目标中的工厂内容
+  const blacklist=['上班','赚钱','打卡','夜班','白班','班次','工资','储蓄','存款'];
+  function filterOld(arr){return arr.filter(it=>!blacklist.some(k=>it.includes(k)))}
   if(!tGoal.items&&yGoal.items){
-    const undone=yGoal.items.filter((_,i)=>!yGoal.done[i]);
+    const undone=filterOld(yGoal.items.filter((_,i)=>!yGoal.done[i]));
     if(undone.length>0){
-      tGoal={items:[...undone,'做一件对自己有用的事'],done:new Array(undone.length+1).fill(false)};
+      tGoal={items:[...undone],done:new Array(undone.length).fill(false)};
     }else{
-      tGoal={items:['学习3小时','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
+      tGoal={items:[...defaultGoals],done:new Array(defaultGoals.length).fill(false)};
     }
     DB.setObj('goals_'+d,tGoal);
   }
   if(!tGoal.items){
-    tGoal={items:['学习3小时','好好吃饭','做一件对自己有用的事'],done:[false,false,false]};
+    tGoal={items:[...defaultGoals],done:new Array(defaultGoals.length).fill(false)};
+    DB.setObj('goals_'+d,tGoal);
+  }
+  // 强制过滤当天目标中的工厂残留
+  if(tGoal.items.some(it=>blacklist.some(k=>it.includes(k)))){
+    tGoal.items=filterOld(tGoal.items);
+    tGoal.done=new Array(tGoal.items.length).fill(false);
+    if(tGoal.items.length===0){tGoal.items=[...defaultGoals];tGoal.done=new Array(defaultGoals.length).fill(false)}
     DB.setObj('goals_'+d,tGoal);
   }
   return tGoal;
