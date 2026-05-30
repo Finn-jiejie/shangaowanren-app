@@ -16,36 +16,36 @@
   --accent:#f59e0b;--accent2:#fbbf24;--accent3:#d97706;
   --green:#10b981;--red:#ef4444;--orange:#f97316;--blue:#3b82f6;--purple:#8b5cf6;--pink:#ec4899;
   --text:#f1f5f9;--text2:#94a3b8;--text3:#4a5580;
-  --radius:24px;--radius2:14px;
-  --shadow:0 8px 32px rgba(0,0,0,.4);--shadow-sm:0 2px 8px rgba(0,0,0,.25);
-  --glow:0 0 20px rgba(245,158,11,.15);
+  --radius:16px;--radius2:12px;
+  --shadow:0 2px 12px rgba(0,0,0,.25);--shadow-sm:0 1px 4px rgba(0,0,0,.15);
+  --glow:0 0 20px rgba(245,158,11,.1);
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-tap-highlight-color:transparent}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 120% 80% at 20% 0%,#1a1060 0%,transparent 60%),radial-gradient(ellipse 100% 60% at 80% 100%,#0d2040 0%,transparent 55%),radial-gradient(ellipse 80% 50% at 50% 50%,#0a1428 0%,var(--bg) 100%);z-index:0;pointer-events:none}
 .app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative;z-index:1}
 
-.header{padding:22px 20px 8px;flex-shrink:0;position:relative;z-index:1}
+.header{padding:16px 20px 4px;flex-shrink:0;position:relative;z-index:1}
 .header-top{display:flex;align-items:center;justify-content:space-between}
-.header h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
-.header .date{font-size:13px;color:var(--text2);margin-top:4px}
-.header .sync{font-size:10px;color:var(--text3);margin-top:2px}
+.header h1{font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.header .date{font-size:12px;color:var(--text2);margin-top:2px}
+.header .sync{font-size:10px;color:var(--text3);margin-top:1px}
 
 .content{flex:1;overflow-y:auto;padding:0 16px 110px;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
 .content::-webkit-scrollbar{display:none}
 .tab-page{display:none;animation:fadeUp .3s ease}.tab-page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-.card{background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:relative;overflow:hidden;transition:border-color .3s}
-.card::before{content:'';position:absolute;inset:0;border-radius:var(--radius);padding:1px;background:linear-gradient(135deg,rgba(255,255,255,.06),transparent 60%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none}
+.card{background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:relative;overflow:hidden;transition:border-color .3s}
+.card::before{display:none}
 .card:active{transform:scale(.99);transition:transform .1s}
-.card-title{font-size:12px;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.card-title{font-size:13px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px;font-weight:600;letter-spacing:.3px}
 
 /* hero-card removed in v19 */
 
 .fs-quick-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
-.stat{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius2);padding:14px 10px;text-align:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
-.stat .val{font-size:24px;font-weight:800;margin-bottom:2px}
-.stat .label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.stat{background:var(--bg2);border:1px solid rgba(255,255,255,.04);border-radius:var(--radius2);padding:12px 8px;text-align:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
+.stat .val{font-size:22px;font-weight:800;margin-bottom:2px}
+.stat .label{font-size:9px;color:var(--text3);letter-spacing:.3px}
 .stat.green .val{color:var(--green)}.stat.blue .val{color:var(--blue)}.stat.orange .val{color:var(--orange)}.stat.red .val{color:var(--red)}.stat.purple .val{color:var(--accent2)}
 
 /* goal-item removed in v19 */
@@ -72,15 +72,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);opacity:0;transition:opacity .2s}
 .btn:hover::before{opacity:1}
 .btn:active{transform:scale(.97);transition-duration:.1s}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;box-shadow:0 4px 16px rgba(245,158,11,.35)}
-.btn-primary:hover{box-shadow:0 6px 24px rgba(245,158,11,.5);filter:brightness(1.08)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;box-shadow:0 2px 10px rgba(245,158,11,.25)}
+.btn-primary:hover{box-shadow:0 4px 16px rgba(245,158,11,.35);filter:brightness(1.05)}
 .btn-outline{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--text2)}
 .btn-outline:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
 .btn-danger{background:var(--red);color:#fff;font-size:12px;padding:6px 10px;border-radius:6px}
 .btn-block{width:100%}.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
 
-.fab-save{position:fixed;bottom:88px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 24px rgba(245,158,11,.45);z-index:50;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.4,0,.2,1)}
-.fab-save:hover{transform:scale(1.08);box-shadow:0 6px 30px rgba(245,158,11,.55)}
+.fab-save{position:fixed;bottom:80px;right:16px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border:none;font-size:20px;cursor:pointer;box-shadow:0 2px 16px rgba(245,158,11,.35);z-index:50;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.fab-save:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(245,158,11,.45)}
 .fab-save:active{transform:scale(.92)}
 
 .list-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.03);gap:10px}
@@ -142,13 +142,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .journal-area{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius2);padding:14px;color:var(--text);font-size:14px;outline:none;resize:none;height:90px;transition:border .3s,box-shadow .3s}
 .journal-area:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
 
-.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:rgba(8,12,36,.85);border-top:1px solid rgba(255,255,255,.06);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0;position:relative;z-index:10;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.tab-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;-webkit-tap-highlight-color:transparent}
-.tab-btn svg{width:22px;height:22px;transition:transform .25s,filter .25s}
-.tab-btn .text{font-size:10px;color:var(--text3);transition:color .25s;font-weight:500}
-.tab-btn.active svg{transform:translateY(-2px);filter:drop-shadow(0 0 6px rgba(245,158,11,.4))}
+.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:rgba(8,12,36,.9);border-top:1px solid rgba(255,255,255,.04);padding:4px 0 env(safe-area-inset-bottom,6px);flex-shrink:0;position:relative;z-index:10;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.tab-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent}
+.tab-btn svg{width:20px;height:20px;transition:transform .2s,filter .2s}
+.tab-btn .text{font-size:10px;color:var(--text3);transition:color .2s;font-weight:500}
+.tab-btn.active svg{transform:translateY(-1px);filter:drop-shadow(0 0 4px rgba(245,158,11,.3))}
 .tab-btn.active .text{color:var(--accent2);font-weight:600}
-.tab-btn.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:22px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:0 0 2px 2px}
+.tab-btn.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:2.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:0 0 2px 2px}
 
 .sub-tabs{display:flex;gap:6px;margin-bottom:14px;background:var(--bg2);border-radius:var(--radius2);padding:4px;border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .sub-tab{padding:7px 16px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;flex:1;text-align:center;color:var(--text2)}
@@ -203,15 +203,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fs-streak-badge svg{flex-shrink:0}
 
 .fs-quick-row{display:flex;gap:8px;margin-bottom:16px}
-.fs-quick-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:14px;cursor:pointer;transition:all .2s}
+.fs-quick-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;background:var(--bg2);border:1px solid rgba(255,255,255,.04);border-radius:var(--radius2);cursor:pointer;transition:all .2s}
 .fs-quick-btn:active{transform:scale(.96);background:var(--bg3)}
-.fs-qicon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center}
-.fs-quick-btn span{font-size:11px;color:var(--text2);font-weight:500}
+.fs-qicon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.fs-quick-btn span{font-size:10px;color:var(--text2);font-weight:500}
 
-.fs-card{background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:16px;margin-bottom:12px}
-.fs-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.fs-card-title{font-size:15px;font-weight:600;color:var(--text)}
-.fs-card-tag{font-size:11px;padding:3px 10px;border-radius:10px;background:rgba(59,130,246,.1);color:var(--blue);font-weight:500}
+.fs-card{background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.fs-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.fs-card-title{font-size:14px;font-weight:600;color:var(--text)}
+.fs-card-tag{font-size:11px;padding:3px 10px;border-radius:10px;background:rgba(59,130,246,.08);color:var(--blue);font-weight:500}
 
 /* 飞书风格计划项 */
 .fs-plan-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);position:relative}
@@ -251,7 +251,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="fs-sub" id="heroSub">山高万仞，只登一步</div>
         </div>
         <div class="fs-streak-badge" onclick="quickAction('checkin')">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           <span id="streakNum">0</span>
         </div>
       </div>
@@ -259,19 +259,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <!-- 飞书风格：快捷操作 -->
       <div class="fs-quick-row">
         <div class="fs-quick-btn" onclick="quickAction('checkin')">
-          <div class="fs-qicon" style="background:rgba(16,185,129,.12);color:var(--green)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="fs-qicon" style="background:rgba(16,185,129,.1);color:var(--green)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
           <span>签到</span>
         </div>
         <div class="fs-quick-btn" onclick="quickAction('expense')">
-          <div class="fs-qicon" style="background:rgba(245,158,11,.12);color:var(--accent)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="fs-qicon" style="background:rgba(245,158,11,.1);color:var(--accent)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg></div>
           <span>记账</span>
         </div>
         <div class="fs-quick-btn" onclick="switchTab('study');switchSub('pomo',document.querySelectorAll('.sub-tab')[1])">
-          <div class="fs-qicon" style="background:rgba(239,68,68,.12);color:var(--red)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="fs-qicon" style="background:rgba(239,68,68,.1);color:var(--red)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           <span>番茄</span>
         </div>
         <div class="fs-quick-btn" onclick="switchTab('study');switchSub('journal',document.querySelectorAll('.sub-tab')[2])">
-          <div class="fs-qicon" style="background:rgba(139,92,246,.12);color:var(--purple)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="fs-qicon" style="background:rgba(139,92,246,.1);color:var(--purple)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
           <span>日记</span>
         </div>
       </div>
@@ -436,7 +436,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">&#x1F4C5; 今日状态</div>
       <div class="card" id="versionCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v19 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v20 · 利川版</div></div>
           <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
           <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
@@ -472,7 +472,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v19 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v20 · 学就，只登一步</div>
     </div>
   </div>
 
@@ -480,23 +480,23 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
   <div class="tab-bar">
     <div class="tab-btn active" data-tab="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <div class="text">首页</div>
     </div>
     <div class="tab-btn" data-tab="plan">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
       <div class="text">计划</div>
     </div>
     <div class="tab-btn" data-tab="work">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><rect x="2" y="5" width="20" height="16" rx="2"/><path d="M2 10h20"/><path d="M6 2v4"/><path d="M18 2v4"/><circle cx="12" cy="16" r="1"/></svg>
       <div class="text">记账</div>
     </div>
     <div class="tab-btn" data-tab="study">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       <div class="text">学习</div>
     </div>
     <div class="tab-btn" data-tab="profile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <div class="text">我的</div>
     </div>
   </div>
@@ -1200,22 +1200,36 @@ function renderHomeTodayPlan(){
     else if(firstItem.includes('收尾')){tagEl.textContent='收尾期';tagEl.style.background='rgba(245,158,11,.1)';tagEl.style.color='var(--accent)'}
   }
   if(!plan.items.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3);padding:12px 0">今天暂无计划</div>';return}
-  // 跳过第一项（阶段信息已显示在标签里）
-  const colorMap={'📐':'var(--blue)','🔤':'var(--orange)','💻':'var(--green)','🌅':'var(--accent)','☕':'var(--text3)','🍜':'var(--accent)','🏃':'var(--green)','📝':'var(--purple)','✅':'var(--green)'};
+  // 科目→颜色映射（按文本内容匹配，不依赖emoji）
+  const subjectColors=[
+    {match:'数学',color:'var(--blue)'},
+    {match:'Python',color:'var(--green)'},
+    {match:'编程',color:'var(--green)'},
+    {match:'英语',color:'var(--orange)'},
+    {match:'单词',color:'var(--orange)'},
+    {match:'晨读',color:'var(--orange)'},
+    {match:'复习',color:'var(--purple)'},
+    {match:'错题',color:'var(--purple)'},
+    {match:'GitHub',color:'var(--green)'},
+    {match:'运动',color:'var(--accent2)'},
+    {match:'复盘',color:'var(--purple)'}
+  ];
+  function getColor(text){for(const s of subjectColors)if(text.includes(s.match))return s.color;return 'var(--text3)'}
+  // 解析计划项："🕐 09:00  📐 数学 1.5h（集合概念）" → {time:'09:00', text:'📐 数学 1.5h（集合概念）'}
+  function parseItem(item){
+    const timeMatch=item.match(/(\d{1,2}:\d{2})/);
+    const timeStr=timeMatch?timeMatch[1]:'';
+    // 去掉🕐时钟emoji和时间戳
+    const text=item.replace(/[\u{1F550}-\u{1F567}\u{1F015}]\s*\d{1,2}:\d{2}\s*/u,'').trim();
+    return {time:timeStr, text:text};
+  }
   let html='';
   plan.items.forEach((item,i)=>{
     if(i===0)return; // 跳过阶段信息行
     const done=plan.done[i];
-    // 提取emoji确定颜色
-    const emojiMatch=item.match(/^🕐 \d+:\d+\s+([\u{1F300}-\u{1F9FF}])/u);
-    const emoji=emojiMatch?emojiMatch[1]:'';
-    const lineColor=colorMap[emoji]||'var(--blue)';
-    // 提取时间
-    const timeMatch=item.match(/^🕐 (\d+:\d+)/);
-    const timeStr=timeMatch?timeMatch[1]:'';
-    // 提取文本（去掉时间前缀）
-    const text=item.replace(/^🕐 \d+:\d+\s+/, '');
-    html+=`<div class="fs-plan-item"><div class="fs-plan-left" style="background:${done?'var(--text3)':lineColor}"></div><div class="fs-plan-check ${done?'done':''}" onclick="togglePlanItem('${ts}',${i})">${done?'':''}</div><div class="fs-plan-text ${done?'done':''}">${text}</div><div class="fs-plan-time">${timeStr}</div></div>`;
+    const parsed=parseItem(item);
+    const lineColor=done?'var(--text3)':getColor(parsed.text);
+    html+=`<div class="fs-plan-item"><div class="fs-plan-left" style="background:${lineColor}"></div><div class="fs-plan-check ${done?'done':''}" onclick="togglePlanItem('${ts}',${i})"></div><div class="fs-plan-text ${done?'done':''}">${parsed.text}</div><div class="fs-plan-time">${parsed.time}</div></div>`;
   });
   el.innerHTML=html;
 }
@@ -1241,7 +1255,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v19';
+    document.getElementById('cacheVer').textContent='v20';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
