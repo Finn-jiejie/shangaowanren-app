@@ -84,13 +84,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fab-save:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(245,158,11,.45)}
 .fab-save:active{transform:scale(.92)}
 
-.list-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.03);gap:10px}
+.list-item{display:flex;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.03);gap:12px}
 .list-item:last-child{border-bottom:none}
-.list-icon{width:38px;height:38px;border-radius:var(--radius2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--bg3)}
+.list-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--bg3)}
 .list-info{flex:1;min-width:0}
 .list-info .title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
 .list-info .meta{font-size:11px;color:var(--text3);margin-top:2px}
-.list-amount{font-size:15px;font-weight:700;flex-shrink:0}
+.list-amount{font-size:16px;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums}
 .list-amount.income{color:var(--green)}.list-amount.expense{color:var(--red)}
 
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -100,9 +100,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cal-nav:active{background:var(--accent);color:#0f172a}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
 .cal-dow{font-size:11px;color:var(--text3);padding:6px 0;font-weight:500}
-.cal-day{font-size:13px;padding:8px 4px;border-radius:10px;cursor:pointer;position:relative;min-height:40px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s}
+.cal-day{font-size:13px;padding:8px 4px;border-radius:12px;cursor:pointer;position:relative;min-height:40px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s}
 .cal-day:hover{background:var(--bg3)}
-.cal-day.today{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;font-weight:700;box-shadow:0 2px 14px rgba(245,158,11,.35)}
+.cal-day.today{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;font-weight:700;box-shadow:0 2px 16px rgba(245,158,11,.35);transform:scale(1.05)}
 .cal-day.other-month{color:var(--text3);opacity:.3}
 .cal-day .cal-dots{display:flex;gap:2px;justify-content:center;margin-top:2px}
 .cal-dot{width:4px;height:4px;border-radius:50%}
@@ -117,34 +117,35 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .plan-item .plan-text.done{text-decoration:line-through;color:var(--text3)}
 .plan-item .plan-time{color:var(--text3);font-size:11px;margin-left:auto;flex-shrink:0}
 
-.pomo-card{text-align:center;padding:24px 18px}
-.pomo-settings{margin-bottom:16px}
+.pomo-card{text-align:center;padding:28px 18px}
+.pomo-settings{margin-bottom:18px}
 .pomo-setting-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .pomo-dur-btns{display:flex;gap:4px;flex:1}
-.pomo-dur-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:5px 10px;font-size:12px;cursor:pointer;transition:all .2s}
-.pomo-dur-btn.active{background:rgba(251,146,60,.15);border-color:var(--accent2);color:var(--accent2);font-weight:600}
+.pomo-dur-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:var(--text2);padding:6px 12px;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
+.pomo-dur-btn.active{background:rgba(251,146,60,.12);border-color:rgba(245,158,11,.3);color:var(--accent2);font-weight:700;box-shadow:0 0 12px rgba(245,158,11,.1)}
 .pomo-subject-tag{font-size:11px;margin-top:2px;padding:2px 8px;border-radius:6px;display:inline-block}
 .pomo-goal-bar{margin-bottom:14px;padding:0 4px}
 .pomo-noise-panel{margin:10px 0;padding:0 4px}
 .pomo-noise-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.pomo-noise-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:8px 4px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
-.pomo-noise-btn .noise-icon{font-size:18px}
-.pomo-noise-btn .noise-label{font-size:10px;color:var(--text3)}
-.pomo-noise-btn.active{background:rgba(251,146,60,.15);border-color:var(--accent2)}
-.pomo-noise-btn.active .noise-label{color:var(--accent2);font-weight:600}
-.pomo-week-chart{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 4px}
+.pomo-noise-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 4px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.pomo-noise-btn .noise-icon{font-size:20px}
+.pomo-noise-btn .noise-label{font-size:10px;color:var(--text3);font-weight:500}
+.pomo-noise-btn.active{background:rgba(251,146,60,.12);border-color:rgba(245,158,11,.3);box-shadow:0 0 14px rgba(245,158,11,.08)}
+.pomo-noise-btn.active .noise-label{color:var(--accent2);font-weight:700}
+.pomo-week-chart{display:flex;align-items:flex-end;gap:8px;height:90px;padding:0 4px}
 .pomo-week-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.pomo-week-bar .bar{width:100%;border-radius:4px 4px 0 0;background:var(--accent2);min-height:2px;transition:height .4s}
-.pomo-week-bar .bar-label{font-size:10px;color:var(--text3)}
-.pomo-week-bar .bar-val{font-size:10px;color:var(--accent2);font-weight:600}
-.pomo-timer{position:relative;width:180px;height:180px;margin:0 auto 18px}
-.pomo-timer svg{transform:rotate(-90deg)}
-.pomo-timer .ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:8}
-.pomo-timer .ring-fg{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.pomo-week-bar .bar{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--accent2),var(--accent));min-height:2px;transition:height .4s cubic-bezier(.4,0,.2,1)}
+.pomo-week-bar .bar-label{font-size:10px;color:var(--text3);font-weight:500}
+.pomo-week-bar .bar-val{font-size:10px;color:var(--accent2);font-weight:700}
+.pomo-timer{position:relative;width:200px;height:200px;margin:0 auto 20px}
+.pomo-timer svg{transform:rotate(-90deg);filter:drop-shadow(0 0 12px rgba(245,158,11,.15))}
+.pomo-timer .ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:7}
+.pomo-timer .ring-fg{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.pomo-timer .ring-glow{fill:none;stroke-width:14;stroke-linecap:round;opacity:.15;transition:stroke-dashoffset 1s linear}
 .pomo-timer .pomo-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.pomo-timer .pomo-time{font-size:36px;font-weight:800;font-variant-numeric:tabular-nums}
-.pomo-timer .pomo-label{font-size:12px;color:var(--text3);margin-top:4px}
-.pomo-btns{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+.pomo-timer .pomo-time{font-size:42px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.pomo-timer .pomo-label{font-size:12px;color:var(--text3);margin-top:6px;font-weight:500;letter-spacing:.5px}
+.pomo-btns{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
 
 .achieve-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .achieve-card{background:var(--bg3);border-radius:14px;padding:16px 8px;text-align:center;border:1px solid rgba(255,255,255,.04);transition:all .3s}
@@ -155,9 +156,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .achieve-card.unlocked .achieve-name{color:var(--accent2)}
 
 .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.report-item{background:var(--bg3);border-radius:var(--radius2);padding:14px;text-align:center}
-.report-item .r-val{font-size:22px;font-weight:800}
-.report-item .r-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.report-item{background:var(--bg3);border-radius:14px;padding:16px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.report-item .r-val{font-size:24px;font-weight:900;letter-spacing:-.5px}
+.report-item .r-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:500;margin-top:2px}
 
 .journal-area{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;color:var(--text);font-size:14px;outline:none;resize:none;height:90px;transition:border .3s,box-shadow .3s}
 .journal-area:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
@@ -178,24 +179,26 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
 .modal-overlay.show{display:flex}
-.modal{background:var(--bg2);border-radius:var(--radius) var(--radius) 0 0;padding:24px 20px env(safe-area-inset-bottom,20px);width:100%;max-width:480px;max-height:70vh;overflow-y:auto;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08)}
-.modal h3{font-size:16px;margin-bottom:16px;font-weight:700}
+.modal{background:rgba(12,16,44,.96);border-radius:20px 20px 0 0;padding:12px 20px env(safe-area-inset-bottom,20px);width:100%;max-width:480px;max-height:75vh;overflow-y:auto;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.1);animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.modal::before{content:'';display:block;width:36px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin:0 auto 16px}
+.modal h3{font-size:17px;margin-bottom:18px;font-weight:700;letter-spacing:-.2px}
 
 .install-banner{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;padding:12px 20px;border-radius:var(--radius2);font-size:14px;font-weight:600;z-index:90;display:none;align-items:center;gap:10px;box-shadow:0 4px 24px rgba(245,158,11,.4);max-width:92%}
 .install-banner.show{display:flex}
 .install-banner .install-close{margin-left:auto;cursor:pointer;opacity:.6;font-size:18px}
 
-.tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500}
+.tag{display:inline-block;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:600;letter-spacing:.2px}
 .tag-green{background:rgba(16,185,129,.12);color:var(--green)}.tag-orange{background:rgba(249,115,22,.12);color:var(--orange)}.tag-blue{background:rgba(59,130,246,.12);color:var(--blue)}.tag-purple{background:rgba(139,92,246,.12);color:var(--purple)}
 
 .slider-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 
 /* 独立白噪音面板 */
-.noise-float{position:fixed;bottom:80px;left:8px;right:8px;background:rgba(15,20,50,.92);border-radius:16px;padding:16px;z-index:90;display:none;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .25s ease}
+.noise-float{position:fixed;bottom:80px;left:8px;right:8px;background:rgba(12,16,44,.96);border-radius:20px;padding:20px;z-index:90;display:none;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 40px rgba(0,0,0,.5);animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
 .noise-float.show{display:block}
-.noise-float-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.noise-float-title{font-size:15px;font-weight:700;color:var(--text)}
-.noise-float-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px 8px}
+.noise-float-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.noise-float-title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.noise-float-close{background:rgba(255,255,255,.06);border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:6px 10px;border-radius:10px;transition:all .2s}
+.noise-float-close:active{background:rgba(255,255,255,.12)}
 .slider-row label{font-size:12px;color:var(--text2);min-width:70px;flex-shrink:0}
 .slider-row input[type=range]{flex:1;accent-color:var(--accent);height:5px}
 .slider-row .slider-val{font-size:14px;font-weight:700;min-width:40px;text-right;color:var(--accent2)}
@@ -219,6 +222,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}.pulse{animation:pulse 2s infinite}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .card{animation:cardIn .4s ease both}
 
 /* === 飞书风格组件 === */
@@ -240,8 +244,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fs-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .fs-card-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;letter-spacing:.2px}
 .fs-card-title svg{flex-shrink:0}
-.fs-card-tag{font-size:11px;padding:4px 14px;border-radius:14px;background:rgba(59,130,246,.08);color:var(--blue);font-weight:600;letter-spacing:.3px}
-.fs-card-tag{font-size:11px;padding:3px 10px;border-radius:10px;background:rgba(59,130,246,.08);color:var(--blue);font-weight:500}
+.fs-card-tag{font-size:11px;padding:4px 12px;border-radius:10px;background:rgba(59,130,246,.08);color:var(--blue);font-weight:600;letter-spacing:.3px}
 
 /* 飞书风格计划项 */
 .fs-plan-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.03);position:relative}
@@ -469,9 +472,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
           <!-- 计时器 -->
           <div class="pomo-timer" id="pomoTimer">
-            <svg width="180" height="180" viewBox="0 0 180 180">
-              <circle class="ring-bg" cx="90" cy="90" r="82"/>
-              <circle class="ring-fg" id="pomoArc" cx="90" cy="90" r="82" stroke="var(--accent2)" stroke-dasharray="515.22" stroke-dashoffset="0"/>
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              <circle class="ring-bg" cx="100" cy="100" r="90"/>
+              <circle class="ring-glow" id="pomoGlow" cx="100" cy="100" r="90" stroke="var(--accent2)" stroke-dasharray="565.49" stroke-dashoffset="0"/>
+              <circle class="ring-fg" id="pomoArc" cx="100" cy="100" r="90" stroke="var(--accent2)" stroke-dasharray="565.49" stroke-dashoffset="0"/>
             </svg>
             <div class="pomo-center">
               <div class="pomo-time" id="pomoTime">25:00</div>
@@ -574,7 +578,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">&#x1F4C5; 今日状态</div>
       <div class="card" id="versionCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v26 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v27 · 利川版</div></div>
           <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
           <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
@@ -610,7 +614,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v26 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v27 · 学就，只登一步</div>
     </div>
   </div>
 
@@ -1196,9 +1200,11 @@ function renderPomoWeek(){
 function renderPomo(){
   const total=_pomoMode==='work'?_pomoWorkMin*60:_pomoBreakMin*60;
   const done=total-_pomoSec;
-  const circumference=515.22,offset=circumference*(1-done/total);
+  const circumference=565.49,offset=circumference*(1-done/total);
   const arc=document.getElementById('pomoArc');
   arc.style.strokeDashoffset=offset;
+  const glow=document.getElementById('pomoGlow');
+  if(glow)glow.style.strokeDashoffset=offset;
   arc.setAttribute('stroke',_pomoMode==='work'?'var(--accent2)':'var(--green)');
   const m=Math.floor(_pomoSec/60),s=String(_pomoSec%60).padStart(2,'0');
   document.getElementById('pomoTime').textContent=m+':'+s;
@@ -1610,7 +1616,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v26';
+    document.getElementById('cacheVer').textContent='v27';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
