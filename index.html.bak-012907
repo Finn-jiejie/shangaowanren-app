@@ -254,7 +254,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
 
-      <div class="quick-actions" style="grid-template-columns:1fr 1fr">
+      <div class="quick-actions">
         <div class="qa-btn" onclick="quickAction('checkin')">
           <span class="icon">&#x2705;</span>
           <span class="label">打卡</span>
@@ -262,6 +262,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="qa-btn" onclick="quickAction('expense')">
           <span class="icon">&#x1F4B8;</span>
           <span class="label">记一笔</span>
+        </div>
+        <div class="qa-btn" onclick="switchTab('study')">
+          <span class="icon">&#x1F345;</span>
+          <span class="label">番茄钟</span>
         </div>
       </div>
 
@@ -280,7 +284,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div id="homeCountdown"></div>
       </div>
 
+      <div class="card">
+        <div class="card-title">&#x1F4B0; 储蓄进度</div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>目标 <span id="savingsTargetDisplay">15,000</span>元</span><span id="savingsPct">0%</span></div>
+          <div class="progress"><div class="progress-bar purple" id="savingsBar" style="width:0%"></div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text2)">
+          <span>已攒 <span id="savingsAmount" style="color:var(--green);font-weight:700">0</span></span>
+          <span>还差 <span id="savingsRemain" style="color:var(--orange);font-weight:700">15000</span></span>
+        </div>
+      </div>
 
+      <div class="card" style="text-align:center;padding:18px">
+        <div style="font-size:14px;font-style:italic;color:var(--accent2);line-height:1.7" id="quoteText"></div>
+      </div>
     </div>
 
     <div class="tab-page" id="page-plan">
@@ -297,6 +315,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
     <div class="tab-page" id="page-work">
       <div class="stats" id="workStats"></div>
+
+      <div class="card">
+        <div class="card-title">&#x1F4DD; 记录班次</div>
+        <div class="form-row">
+          <div class="form-group"><label>日期</label><input type="date" id="workDate"></div>
+          <div class="form-group"><label>班次</label><select id="workShift"><option value="night">&#x1F319; 夜班</option><option value="day">&#x2600;&#xFE0F; 白班</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>日薪（元）</label><input type="number" id="workPay" placeholder="240"></div>
+          <div class="form-group"><label>备注</label><input type="text" id="workNote" placeholder="可选"></div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addWork()">打卡记录</button>
+      </div>
 
       <div class="card">
         <div class="card-title">&#x1F4B8; 记一笔</div>
@@ -329,7 +360,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="progress"><div class="progress-bar green" id="mathBar" style="width:0%"></div></div>
           <div style="font-size:11px;color:var(--text3);margin:4px 0 14px" id="mathDesc">还没开始</div>
 
-          <div class="slider-row"><label>&#x1F4BB; Python</label><input type="range" min="0" max="100" value="0" id="cSlider" oninput="updateProgress()"><span class="slider-val" id="cPct">0%</span></div>
+          <div class="slider-row"><label>&#x1F4BB; C语言</label><input type="range" min="0" max="100" value="0" id="cSlider" oninput="updateProgress()"><span class="slider-val" id="cPct">0%</span></div>
           <div class="progress"><div class="progress-bar blue" id="cBar" style="width:0%"></div></div>
           <div style="font-size:11px;color:var(--text3);margin:4px 0 14px" id="cDesc">还没开始</div>
 
@@ -341,7 +372,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="card">
           <div class="card-title">&#x1F4DD; 记录学习</div>
           <div class="form-row">
-            <div class="form-group"><label>科目</label><select id="studySubject"><option value="数学">&#x1F4D0; 数学</option><option value="Python">&#x1F4BB; Python</option><option value="英语">&#x1F4D6; 英语背词</option></select></div>
+            <div class="form-group"><label>科目</label><select id="studySubject"><option value="数学">&#x1F4D0; 数学</option><option value="C语言">&#x1F4BB; C语言</option><option value="英语">&#x1F4D6; 英语背词</option></select></div>
             <div class="form-group"><label>时长（分钟）</label><input type="number" id="studyDuration" placeholder="30" min="1"></div>
           </div>
           <div class="form-group"><label>学了什么</label><input type="text" id="studyContent" placeholder="一句话总结"></div>
@@ -416,7 +447,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">&#x1F4C5; 今日状态</div>
       <div class="card" id="versionCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v18 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v17 · 利川版</div></div>
           <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
           <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
@@ -457,7 +488,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v18 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v17 · 学就，只登一步</div>
     </div>
   </div>
 
@@ -473,8 +504,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="text">计划</div>
     </div>
     <div class="tab-btn" data-tab="work">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <div class="text">记账</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/></svg>
+      <div class="text">工作</div>
     </div>
     <div class="tab-btn" data-tab="study">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -797,7 +828,13 @@ function quickAddExpense(){
 }
 // === WORK ===
 function addWork(){
-  // v18: 班次打卡已移除，保留函数避免报错
+  const s=getSettings();const date=document.getElementById('workDate').value||today();
+  const shift=document.getElementById('workShift').value;
+  const pay=parseFloat(document.getElementById('workPay').value)||(shift==='night'?s.nightPay:s.dayPay);
+  const note=document.getElementById('workNote').value;
+  const works=DB.get('works');works.unshift({date,shift,pay,note,id:Date.now()});
+  DB.set('works',works);document.getElementById('workPay').value='';document.getElementById('workNote').value='';
+  renderWork();renderHomeStats();renderCountdown();scheduleAutoSync();checkWorkAchievements();
 }
 function deleteWork(id){showModal('删除记录','确定删除这条班次记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown();scheduleAutoSync()})}
 function renderWork(){
@@ -882,7 +919,7 @@ function updateProgress(){
 }
 function renderStudy(){
   const items=DB.get('studies');const el=document.getElementById('studyList');
-  const se={'数学':'📐','Python':'💻','英语':'📖'};const st={'数学':'tag-green','Python':'tag-blue','英语':'tag-orange'};
+  const se={'数学':'📐','C语言':'💻','英语':'📖'};const st={'数学':'tag-green','C语言':'tag-blue','英语':'tag-orange'};
   if(!items.length){el.innerHTML='<div class="empty"><div class="emoji">📚</div><div class="msg">还没有记录</div></div>';return}
   el.innerHTML=items.slice(0,30).map(s=>
     '<div class="list-item"><div class="list-icon" style="background:rgba(245,158,11,.1)">'+(se[s.subject]||'📖')+'</div><div class="list-info"><div class="title"><span class="tag '+(st[s.subject]||'tag-purple')+'">'+s.subject+'</span> '+(s.content||'')+'</div><div class="meta">'+fmtDate(s.date)+' · '+s.duration+'分钟</div></div><button class="btn btn-danger" onclick="deleteStudy('+s.id+')">✕</button></div>'
@@ -990,106 +1027,62 @@ let planYear,planM;
 (function(){const n=new Date();planYear=n.getFullYear();planM=n.getMonth()})();
 function planMonth(dir){planM+=dir;if(planM<0){planM=11;planYear--}if(planM>11){planM=0;planYear++}renderPlan()}
 function generateDailyPlan(dateStr){
-  // 智能版计划生成器 v18
+  // 利川版学习计划 2026.5.31-9.4（96天）
   const d=new Date(dateStr), y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate(), dow=d.getDay();
-  const isSunday=(dow===0), isWeekend=(dow===0||dow===6);
-  const ENROLL=new Date('2026-09-05T00:00:00');
-  const remainDays=Math.max(0,Math.ceil((ENROLL-d)/(864e5)));
-  
-  // 读取进度滑块
-  const s=getSettings();
-  const mathPct=s.mathPct||0, pyPct=s.cPct||0, wordPct=s.wordPct||0;
-  
-  // 判断阶段
-  let phase='basic', phaseName='基础期';
-  if(remainDays<=4){phase='wrap';phaseName='收尾期'}
-  else if(remainDays<=39){phase='sprint';phaseName='冲刺期'}
-  else if(remainDays<=67){phase='climb';phaseName='爬坡期'}
-  else if(remainDays<=96){phase='basic';phaseName='基础期'}
-  else{phase='transition';phaseName='过渡期'}
-  
-  // 根据进度确定各科目重点内容
-  const mathTopics=[
-    {max:15,text:'集合概念+运算'},
-    {max:30,text:'函数概念+定义域值域'},
-    {max:45,text:'函数性质（单调/奇偶）'},
-    {max:55,text:'指数函数+对数函数'},
-    {max:65,text:'三角函数定义+公式'},
-    {max:75,text:'三角函数图像+变换'},
-    {max:85,text:'数列（等差+等比）'},
-    {max:95,text:'不等式+导数入门'},
-    {max:100,text:'综合刷题+真题'}
-  ];
-  const pyTopics=[
-    {max:15,text:'变量+数据类型+print'},
-    {max:30,text:'if/elif/else 分支'},
-    {max:45,text:'for/while 循环'},
-    {max:55,text:'函数定义+参数'},
-    {max:65,text:'列表+字典'},
-    {max:75,text:'文件读写+异常处理'},
-    {max:85,text:'模块+包管理'},
-    {max:95,text:'小项目实战'},
-    {max:100,text:'GitHub+代码规范'}
-  ];
-  function pickTopic(pct,list){for(const t of list)if(pct<t.max)return t.text;return list[list.length-1].text}
-  const mathTopic=pickTopic(mathPct,mathTopics);
-  const pyTopic=pickTopic(pyPct,pyTopics);
-  
-  // 进度弱的科目多分配时间
-  const avgPct=(mathPct+pyPct+wordPct)/3;
-  let mathH=1.5, pyH=0.75, wordH=0.5;
-  if(mathPct<avgPct-10){mathH=2;pyH=0.5}
-  else if(pyPct<avgPct-10){mathH=1;pyH=1.25}
-  if(wordPct<20)wordH=0.75;
-  
+  const isSunday=(dow===0);
+  const isWeekend=(dow===0||dow===6);
   let items=[];
-  if(m<5 || (m===5 && day<31) || (m===9 && day>4) || y>2026){
-    // 非学习期
-    items=['🕐 09:00  🌅 起床+早餐','🕐 10:00  📖 自由学习','🕐 11:00  🏃 运动','🕐 14:00  💻 编程练习','🕐 16:00  📝 复盘'];
-  } else if(isSunday){
-    // 周日轻量
-    items=[
-      '🕐 09:00  🌅 起床+早餐',
-      '🕐 10:00  📖 复习本周错题 30min',
-      '🕐 10:30  🔤 背单词 30min（不背单词）',
-      '🕐 11:00  💻 GitHub提交 1次',
-      '🕐 11:30  ✅ 今日学习结束！休息就是任务'
-    ];
-  } else if(isWeekend){
-    // 周六加量
-    items=[
-      '🕐 08:00  🌅 起床+早餐',
-      '🕐 09:00  📐 数学 '+mathH+'h（'+mathTopic+'）',
-      '🕐 11:00  ☕ 休息+活动',
-      '🕐 11:15  🔤 英语 1h（单词+阅读）',
-      '🕐 12:15  🍜 午饭+休息',
-      '🕐 14:00  💻 Python '+pyH+'h（'+pyTopic+'）',
-      '🕐 15:30  🏃 运动 30min',
-      '🕐 16:00  📝 复盘 10min+自由时间'
-    ];
+
+  if(m===5 || m===6 || m===7 || m===8 || (m===9 && day<=4)){
+    // 利川学习期 5/31-9/4
+    if(isSunday){
+      // 周日轻量日
+      items=[
+        '🕐 09:00  🌅 起床+早餐',
+        '🕐 10:00  📖 复习本周错题 30min',
+        '🕐 10:30  🔤 背单词 30min（不背单词）',
+        '🕐 11:00  💻 GitHub提交 1次',
+        '🕐 11:30  ✅ 今日学习结束！强制休息',
+        '🎉 今天不学新东西，休息就是任务'
+      ];
+    } else if(isWeekend){
+      // 周六加量 4-5h
+      items=[
+        '🕐 08:00  🌅 起床+早餐',
+        '🕐 09:00  📐 数学 2h（脑子最清醒）',
+        '🕐 11:00  ☕ 休息+活动',
+        '🕐 11:15  🔤 英语 1h（单词+阅读）',
+        '🕐 12:15  🍜 午饭+休息',
+        '🕐 14:00  💻 编程 1.5h（Python项目实战）',
+        '🕐 15:30  🏃 运动 30min',
+        '🕐 16:00  📝 复盘 10min+自由时间'
+      ];
+    } else {
+      // 工作日 3h/天
+      // 按星期轮换科目顺序，避免枯燥
+      if(dow===1)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（集合→函数）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+语法）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：变量→循环）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===2)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（函数性质）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+听力）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：if/elif）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===3)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（三角函数）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+阅读）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：循环/函数）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===4)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（数列）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+写作）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：列表/字典）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===5)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 1.5h（不等式/导数）','🕐 10:30  ☕ 休息','🕐 10:45  🔤 英语 45min（单词+语法）','🕐 11:30  🍜 午饭','🕐 14:00  💻 编程 45min（Python：文件/项目）','🕐 14:45  🏃 运动 30min','🕐 15:15  📝 复盘 10min'];
+      else if(dow===6)items=['🕐 08:00  🌅 起床+早餐','🕐 09:00  📐 数学 2h（综合练习）','🕐 11:00  ☕ 休息','🕐 11:15  🔤 英语 1h（单词+阅读）','🕐 12:15  🍜 午饭','🕐 14:00  💻 编程 1.5h（项目实战）','🕐 15:30  🏃 运动 30min','🕐 16:00  📝 复盘 10min+自由时间'];
+    }
   } else {
-    // 工作日
-    const weekNum=Math.floor((96-remainDays)/7)%5;
+    // 9月5日后（开学版，待后续更新）
     items=[
       '🕐 08:00  🌅 起床+早餐',
-      '🕐 09:00  📐 数学 '+mathH+'h（'+mathTopic+'）',
+      '🕐 09:00  📐 数学 1.5h',
       '🕐 10:30  ☕ 休息',
-      '🕐 10:45  🔤 英语 '+wordH+'h（单词+语法）',
+      '🕐 10:45  🔤 英语 45min（不背单词）',
       '🕐 11:30  🍜 午饭',
-      '🕐 14:00  💻 Python '+pyH+'h（'+pyTopic+'）',
-      '🕐 14:45  🏃 运动 30min',
-      '🕐 15:15  📝 复盘 10min'
+      '🕐 14:00  💻 编程 45min（Python）',
+      '🕐 14:45  📝 复盘 10min'
     ];
-    // 冲刺期加量
-    if(phase==='sprint')items.splice(1,0,'🕐 06:30  🔤 晨读单词 15min');
   }
-  
-  // 头部插入阶段信息
-  items.unshift('📋 '+phaseName+' · 距开学'+remainDays+'天');
-  
+  // 今日未完成goals保留
   const isToday=dateStr===today();
-  if(isToday){const g=getGoals();if(g&&g.items&&g.items.length>0){const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0){const undoneTexts=undone.map(it=>it.replace(/^\[.\] /,''));const merged=[...new Set([...undoneTexts,...items])];return{items:merged,done:new Array(merged.length).fill(false),planVer:5}}}}
-  return{items:items,done:new Array(items.length).fill(false),planVer:5};
+  if(isToday){const g=getGoals();if(g&&g.items&&g.items.length>0){const undone=g.items.filter((_,i)=>!g.done[i]);if(undone.length>0){const undoneTexts=undone.map(it=>it.replace(/^\[.\] /,''));const merged=[...new Set([...undoneTexts,...items])];return{items:merged,done:new Array(merged.length).fill(false),planVer:4}}}}
+  return{items:items,done:new Array(items.length).fill(false),planVer:4};
 }
 function renderPlan(){
   const y=planYear,m=planM;
@@ -1139,7 +1132,7 @@ function renderPlanList(y,m){
   });
   for(const day of days){
     const {d,ds,isToday}=day;
-    let plan=DB.getObj('plan_'+ds);if(!plan||!plan.items||plan.planVer!==5){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
+    let plan=DB.getObj('plan_'+ds);if(!plan||!plan.items||plan.planVer!==4){plan=generateDailyPlan(ds);DB.setObj('plan_'+ds,plan)}
     const isPast=ds<ts;
     const doneCount=plan.done.filter(Boolean).length;
     html+=`<div class="plan-day" id="plan-${ds}" style="${isToday?'border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)':''}"><div class="plan-date">${(m+1)}/${d} 周${dayName[new Date(y,m,d).getDay()]}${isToday?' · 今天':''}${isPast&&doneCount===plan.items.length?' ✅':''}</div>`;
@@ -1186,7 +1179,7 @@ function renderHomeStats(){
 
 function renderHomeTodayPlan(){
   const ts=today();
-  let plan=DB.getObj('plan_'+ts);if(!plan||!plan.items||plan.planVer!==5){plan=generateDailyPlan(ts);DB.setObj('plan_'+ts,plan)}
+  let plan=DB.getObj('plan_'+ts);if(!plan||!plan.items||plan.planVer!==4){plan=generateDailyPlan(ts);DB.setObj('plan_'+ts,plan)}
   const el=document.getElementById('homeTodayPlan');
   if(!plan.items.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">今天暂无计划</div>';return}
   let html='';
@@ -1202,6 +1195,11 @@ function loadSettings(){
   document.getElementById('setName').value=s.name||'';
   document.getElementById('setBirthday').value=s.birthday||'';
   document.getElementById('setEnroll').value=s.enroll||'';
+  document.getElementById('setNightPay').value=s.nightPay||'';
+  document.getElementById('setDayPay').value=s.dayPay||'';
+  document.getElementById('setSavingsTarget').value=s.savingsTarget||'';
+  document.getElementById('setMonthlyBudget').value=s.monthlyBudget||'';
+  document.getElementById('setCashOnHand').value=s.cashOnHand||'';
   document.getElementById('setPayday').value=s.payday||'';
   document.getElementById('setExam').value=s.exam||'';
   document.getElementById('setExamName').value=s.examName||'';
@@ -1209,6 +1207,7 @@ function loadSettings(){
   document.getElementById('setCGoal').value=s.cGoal||'';
   document.getElementById('setWordGoal').value=s.wordGoal||'';
   document.getElementById('setSyncKey').value=s.syncKey||'';
+  document.getElementById('workPay').placeholder=s.nightPay||'240';
   
   // Update profile header
   const name=s.name||'Finn';
@@ -1218,7 +1217,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v18';
+    document.getElementById('cacheVer').textContent='v17';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
@@ -1230,6 +1229,11 @@ function saveSettings(){
     name:document.getElementById('setName').value,
     birthday:document.getElementById('setBirthday').value,
     enroll:document.getElementById('setEnroll').value,
+    nightPay:parseInt(document.getElementById('setNightPay').value)||240,
+    dayPay:parseInt(document.getElementById('setDayPay').value)||220,
+    savingsTarget:parseInt(document.getElementById('setSavingsTarget').value)||15000,
+    monthlyBudget:parseInt(document.getElementById('setMonthlyBudget').value)||1200,
+    cashOnHand:parseInt(document.getElementById('setCashOnHand').value)||0,
     payday:document.getElementById('setPayday').value,
     exam:document.getElementById('setExam').value,
     examName:document.getElementById('setExamName').value,
@@ -1277,11 +1281,14 @@ const quotes=['山高万仞，只登一步','今天做成了什么？','不是�
 // === INIT ===
 function initApp(){
   rolloverGoals();
+  document.getElementById('workDate').value=today();
+  document.getElementById('workShift').addEventListener('change',function(){const s=getSettings();document.getElementById('workPay').placeholder=this.value==='night'?s.nightPay:s.dayPay});
   renderAll();
   renderAchievements();
   renderWeeklyReport();
   renderPomo();
   renderJournal();
+  document.getElementById('quoteText').textContent=quotes[Math.floor(Math.random()*quotes.length)];
   setInterval(()=>{const s=getSettings();if(s.syncKey)cloudSync(true)},300000);
 }
 function renderAll(){renderGoals();renderWork();renderCountdown();renderHomeStats();renderPlan();loadSettings()}
