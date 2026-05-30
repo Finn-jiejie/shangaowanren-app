@@ -220,6 +220,45 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}.pulse{animation:pulse 2s infinite}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .card{animation:cardIn .4s ease both}
+
+/* === 飞书风格组件 === */
+.fs-status-bar{display:flex;align-items:center;justify-content:space-between;padding:4px 0 18px}
+.fs-status-left{flex:1}
+.fs-greeting{font-size:22px;font-weight:700;color:var(--text);line-height:1.2}
+.fs-sub{font-size:12px;color:var(--text3);margin-top:4px}
+.fs-streak-badge{display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.1);color:var(--accent2);padding:7px 14px;border-radius:20px;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s}
+.fs-streak-badge:active{transform:scale(.95)}
+.fs-streak-badge svg{flex-shrink:0}
+
+.fs-quick-row{display:flex;gap:8px;margin-bottom:16px}
+.fs-quick-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:14px;cursor:pointer;transition:all .2s}
+.fs-quick-btn:active{transform:scale(.96);background:var(--bg3)}
+.fs-qicon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.fs-quick-btn span{font-size:11px;color:var(--text2);font-weight:500}
+
+.fs-card{background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:16px;margin-bottom:12px}
+.fs-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.fs-card-title{font-size:15px;font-weight:600;color:var(--text)}
+.fs-card-tag{font-size:11px;padding:3px 10px;border-radius:10px;background:rgba(59,130,246,.1);color:var(--blue);font-weight:500}
+
+/* 飞书风格计划项 */
+.fs-plan-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);position:relative}
+.fs-plan-item:last-child{border-bottom:none}
+.fs-plan-left{width:3px;height:28px;border-radius:2px;flex-shrink:0}
+.fs-plan-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.fs-plan-check.done{background:var(--green);border-color:var(--green)}
+.fs-plan-check.done::after{content:'';width:5px;height:8px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block}
+.fs-plan-text{flex:1;font-size:13px;color:var(--text);line-height:1.4}
+.fs-plan-text.done{text-decoration:line-through;color:var(--text3)}
+.fs-plan-time{font-size:11px;color:var(--text3);flex-shrink:0;min-width:40px;text-align:right}
+
+/* 飞书风格目标项 */
+.fs-goal-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.fs-goal-item:last-child{border-bottom:none}
+.fs-goal-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.fs-goal-check.done{background:var(--green);border-color:var(--green)}
+.fs-goal-check.done::after{content:'';width:5px;height:8px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block}
+.fs-goal-text{flex:1;font-size:13px}.fs-goal-text.done{text-decoration:line-through;color:var(--text3)}
 </style>
 </head>
 <body>
@@ -233,53 +272,62 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
   <div class="content">
     <div class="tab-page active" id="page-home">
-      <div class="hero-card">
-        <div class="hero-top">
-          <div class="hero-streak">
-            <div class="hero-ring">
-              <svg width="72" height="72" viewBox="0 0 72 72">
-                <circle class="ring-bg" cx="36" cy="36" r="31"/>
-                <circle class="ring-fg" id="streakArc" cx="36" cy="36" r="31" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
-              </svg>
-              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
-                <div style="font-size:28px;font-weight:800;color:var(--accent2)" id="streakNum">0</div>
-                <div style="font-size:9px;color:var(--text3)">连续天</div>
-              </div>
-            </div>
-          </div>
-          <div class="hero-status">
-            <div class="status-text" id="heroStatus">新的一天</div>
-            <div class="status-sub" id="heroSub">今天也要只登一步</div>
-          </div>
+      <!-- 飞书风格：顶部状态栏 -->
+      <div class="fs-status-bar">
+        <div class="fs-status-left">
+          <div class="fs-greeting" id="heroStatus">新的一天</div>
+          <div class="fs-sub" id="heroSub">山高万仞，只登一步</div>
+        </div>
+        <div class="fs-streak-badge" onclick="quickAction('checkin')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span id="streakNum">0</span>
         </div>
       </div>
 
-      <div class="quick-actions" style="grid-template-columns:1fr 1fr">
-        <div class="qa-btn" onclick="quickAction('checkin')">
-          <span class="icon">&#x2705;</span>
-          <span class="label">打卡</span>
+      <!-- 飞书风格：快捷操作 -->
+      <div class="fs-quick-row">
+        <div class="fs-quick-btn" onclick="quickAction('checkin')">
+          <div class="fs-qicon" style="background:rgba(16,185,129,.12);color:var(--green)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span>签到</span>
         </div>
-        <div class="qa-btn" onclick="quickAction('expense')">
-          <span class="icon">&#x1F4B8;</span>
-          <span class="label">记一笔</span>
+        <div class="fs-quick-btn" onclick="quickAction('expense')">
+          <div class="fs-qicon" style="background:rgba(245,158,11,.12);color:var(--accent)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <span>记账</span>
+        </div>
+        <div class="fs-quick-btn" onclick="switchTab('study');switchSub('pomo',document.querySelectorAll('.sub-tab')[1])">
+          <div class="fs-qicon" style="background:rgba(239,68,68,.12);color:var(--red)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <span>番茄</span>
+        </div>
+        <div class="fs-quick-btn" onclick="switchTab('study');switchSub('journal',document.querySelectorAll('.sub-tab')[2])">
+          <div class="fs-qicon" style="background:rgba(139,92,246,.12);color:var(--purple)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <span>日记</span>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">&#x1F3AF; 今日目标</div>
-        <div id="dailyGoals"></div>
-      </div>
-
-      <div class="card" onclick="switchTab('plan')" style="cursor:pointer">
-        <div class="card-title">&#x1F4CB; 今日计划 <span style="font-size:11px;color:var(--amber)">› 点击查看完整计划</span></div>
+      <!-- 飞书风格：今日计划（核心卡片） -->
+      <div class="fs-card">
+        <div class="fs-card-header">
+          <div class="fs-card-title">📋 今日计划</div>
+          <div class="fs-card-tag" id="homePhaseTag">加载中</div>
+        </div>
         <div id="homeTodayPlan"></div>
       </div>
 
-      <div class="card">
-        <div class="card-title">&#x23F0; 重要日子</div>
-        <div id="homeCountdown"></div>
+      <!-- 飞书风格：今日目标 -->
+      <div class="fs-card">
+        <div class="fs-card-header">
+          <div class="fs-card-title">🎯 今日目标</div>
+        </div>
+        <div id="dailyGoals"></div>
       </div>
 
+      <!-- 飞书风格：倒计时 -->
+      <div class="fs-card">
+        <div class="fs-card-header">
+          <div class="fs-card-title">⏰ 重要日子</div>
+        </div>
+        <div id="homeCountdown"></div>
+      </div>
 
     </div>
 
@@ -416,13 +464,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">&#x1F4C5; 今日状态</div>
       <div class="card" id="versionCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v18 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v19 · 利川版</div></div>
           <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
           <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
       </div>
-
-      <div class="section-header">学习目标</div>
 
       <div class="section-header">重要日期</div>
       <div class="card">
@@ -457,7 +503,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v18 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v19 · 学就，只登一步</div>
     </div>
   </div>
 
@@ -700,10 +746,6 @@ function calcStreak(){
 }
 function renderStreak(){
   const streak=calcStreak();
-  const arc=document.getElementById('streakArc');
-  const circumference=194.78;
-  const offset=circumference*(1-Math.min(streak,30)/30);
-  arc.style.strokeDashoffset=Math.max(0,offset);
   document.getElementById('streakNum').textContent=streak;
 }
 function checkStreakAchievements(){
@@ -755,7 +797,7 @@ function saveGoalEdit(i){
 function renderGoals(){
   const g=getGoals();
   document.getElementById('dailyGoals').innerHTML=g.items.map((item,i)=>
-    '<div class="goal-item"><div class="goal-check '+(g.done[i]?'done':'')+'" onclick="toggleGoal('+i+')"></div><div class="goal-text '+(g.done[i]?'done':'')+'" id="goalText'+i+'" onclick="editGoal('+i+')">'+item+'</div></div>'
+    '<div class="fs-goal-item"><div class="fs-goal-check '+(g.done[i]?'done':'')+'" onclick="toggleGoal('+i+')"></div><div class="fs-goal-text '+(g.done[i]?'done':'')+'" id="goalText'+i+'" onclick="editGoal('+i+')">'+item+'</div></div>'
   ).join('');
 }
 
@@ -1161,43 +1203,51 @@ function addPlanItem(ds){const v=prompt('添加计划项：');if(!v||!v.trim())r
 function renderCountdown(){
   const s=getSettings(),events=[];
   if(s.birthday){let bd=new Date(s.birthday),now=new Date(),nbd=new Date(now.getFullYear(),bd.getMonth(),bd.getDate());if(nbd<now)nbd.setFullYear(now.getFullYear()+1);events.push({name:'🎂 生日',date:nbd.toISOString().slice(0,10),color:'orange'})}
-  if(s.payday){let pd=new Date(s.payday),now=new Date();if(pd<now)pd.setMonth(pd.getMonth()+1);events.push({name:'💰 发工资',date:pd.toISOString().slice(0,10),color:'green'})}
   if(s.enroll)events.push({name:'🎓 开学',date:s.enroll,color:'blue'});
   if(s.exam&&s.examName)events.push({name:'📝 '+s.examName,date:s.exam,color:'purple'});
   const el=document.getElementById('homeCountdown');
   if(!events.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">去"我的"页添加日期</div>';return}
   el.innerHTML=events.map(e=>{const d=daysDiff(e.date);return `<div class="countdown-item"><div class="cd-num ${e.color}">${d>0?d:0}</div><div class="cd-info"><div class="cd-label">${e.name}</div><div class="cd-date">${e.date}${d<=0?' · 已到！':' 天后'}</div></div></div>`}).join('');
-  const works=DB.get('works'),expenses=DB.get('expenses');
-  const earned=works.reduce((a,w)=>a+w.pay,0),spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
-  const savings=(s.cashOnHand||0)+earned-spent,target=s.savingsTarget||15000;
-  const pct=Math.min(100,Math.max(0,Math.round(savings/target*100)));
-  document.getElementById('savingsTargetDisplay').textContent=target.toLocaleString();
-  document.getElementById('savingsPct').textContent=pct+'%';
-  document.getElementById('savingsBar').style.width=pct+'%';
-  document.getElementById('savingsAmount').textContent=Math.max(0,savings).toFixed(0);
-  document.getElementById('savingsRemain').textContent=Math.max(0,target-savings).toFixed(0);
 }
 
 // === HOME STATS ===
 function renderHomeStats(){
   const works=DB.get('works'),expenses=DB.get('expenses'),studies=DB.get('studies'),s=getSettings();
-  const earned=works.reduce((a,w)=>a+w.pay,0);
-  const spent=expenses.filter(e=>e.type==='expense').reduce((a,e)=>a+e.amount,0);
-  const net=(s.cashOnHand||0)+earned-spent;
-  const todayStudy=studies.filter(x=>x.date===today()).reduce((a,x)=>a+(x.duration||0),0);
-  document.getElementById('homeStats').innerHTML=
-    `<div class="stat ${net>=0?'green':'red'}"><div class="val">${net}</div><div class="label">手头(元)</div></div><div class="stat blue"><div class="val">${works.length}</div><div class="label">上班天数</div></div><div class="stat orange"><div class="val">${todayStudy}</div><div class="label">今日学习(分)</div></div>`;
   renderStreak();updateHeroStatus();renderHomeTodayPlan();
+}
 }
 
 function renderHomeTodayPlan(){
   const ts=today();
   let plan=DB.getObj('plan_'+ts);if(!plan||!plan.items||plan.planVer!==5){plan=generateDailyPlan(ts);DB.setObj('plan_'+ts,plan)}
   const el=document.getElementById('homeTodayPlan');
-  if(!plan.items.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3)">今天暂无计划</div>';return}
+  // 更新阶段标签
+  const tagEl=document.getElementById('homePhaseTag');
+  if(tagEl && plan.items.length>0){
+    const firstItem=plan.items[0];
+    if(firstItem.includes('过渡')){tagEl.textContent='过渡期';tagEl.style.background='rgba(139,92,246,.1)';tagEl.style.color='var(--purple)'}
+    else if(firstItem.includes('基础')){tagEl.textContent='基础期';tagEl.style.background='rgba(16,185,129,.1)';tagEl.style.color='var(--green)'}
+    else if(firstItem.includes('爬坡')){tagEl.textContent='爬坡期';tagEl.style.background='rgba(59,130,246,.1)';tagEl.style.color='var(--blue)'}
+    else if(firstItem.includes('冲刺')){tagEl.textContent='冲刺期';tagEl.style.background='rgba(239,68,68,.1)';tagEl.style.color='var(--red)'}
+    else if(firstItem.includes('收尾')){tagEl.textContent='收尾期';tagEl.style.background='rgba(245,158,11,.1)';tagEl.style.color='var(--accent)'}
+  }
+  if(!plan.items.length){el.innerHTML='<div style="text-align:center;font-size:12px;color:var(--text3);padding:12px 0">今天暂无计划</div>';return}
+  // 跳过第一项（阶段信息已显示在标签里）
+  const colorMap={'📐':'var(--blue)','🔤':'var(--orange)','💻':'var(--green)','🌅':'var(--accent)','☕':'var(--text3)','🍜':'var(--accent)','🏃':'var(--green)','📝':'var(--purple)','✅':'var(--green)'};
   let html='';
   plan.items.forEach((item,i)=>{
-    html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:20px;height:20px;border-radius:50%;border:2px solid ${plan.done[i]?'var(--green)':'var(--text3)'};background:${plan.done[i]?'var(--green)':'transparent'};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:#fff" onclick="togglePlanItem('${ts}',${i})">${plan.done[i]?'✓':''}</div><div style="flex:1;font-size:14px;color:${plan.done[i]?'var(--text3)':'var(--text)'};${plan.done[i]?'text-decoration:line-through':''}">${item}</div></div>`;
+    if(i===0)return; // 跳过阶段信息行
+    const done=plan.done[i];
+    // 提取emoji确定颜色
+    const emojiMatch=item.match(/^🕐 \d+:\d+\s+([\u{1F300}-\u{1F9FF}])/u);
+    const emoji=emojiMatch?emojiMatch[1]:'';
+    const lineColor=colorMap[emoji]||'var(--blue)';
+    // 提取时间
+    const timeMatch=item.match(/^🕐 (\d+:\d+)/);
+    const timeStr=timeMatch?timeMatch[1]:'';
+    // 提取文本（去掉时间前缀）
+    const text=item.replace(/^🕐 \d+:\d+\s+/, '');
+    html+=`<div class="fs-plan-item"><div class="fs-plan-left" style="background:${done?'var(--text3)':lineColor}"></div><div class="fs-plan-check ${done?'done':''}" onclick="togglePlanItem('${ts}',${i})">${done?'':''}</div><div class="fs-plan-text ${done?'done':''}">${text}</div><div class="fs-plan-time">${timeStr}</div></div>`;
   });
   el.innerHTML=html;
 }
@@ -1224,7 +1274,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v18';
+    document.getElementById('cacheVer').textContent='v19';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
