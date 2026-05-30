@@ -187,6 +187,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .tag-green{background:rgba(16,185,129,.12);color:var(--green)}.tag-orange{background:rgba(249,115,22,.12);color:var(--orange)}.tag-blue{background:rgba(59,130,246,.12);color:var(--blue)}.tag-purple{background:rgba(139,92,246,.12);color:var(--purple)}
 
 .slider-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+
+/* 独立白噪音面板 */
+.noise-float{position:fixed;bottom:80px;left:8px;right:8px;background:rgba(15,20,50,.92);border-radius:16px;padding:16px;z-index:90;display:none;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .25s ease}
+.noise-float.show{display:block}
+.noise-float-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.noise-float-title{font-size:15px;font-weight:700;color:var(--text)}
+.noise-float-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px 8px}
 .slider-row label{font-size:12px;color:var(--text2);min-width:70px;flex-shrink:0}
 .slider-row input[type=range]{flex:1;accent-color:var(--accent);height:5px}
 .slider-row .slider-val{font-size:14px;font-weight:700;min-width:40px;text-right;color:var(--accent2)}
@@ -292,6 +299,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="fs-quick-btn" onclick="switchTab('study');switchSub('journal',document.querySelectorAll('.sub-tab')[2])">
           <div class="fs-qicon" style="background:rgba(139,92,246,.1);color:var(--purple)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
           <span>日记</span>
+        </div>
+        <div class="fs-quick-btn" onclick="toggleNoisePanel()">
+          <div class="fs-qicon" style="background:rgba(6,182,212,.1);color:#06b6d4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <span>白噪音</span>
         </div>
       </div>
 
@@ -595,7 +606,31 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn btn-outline btn-block" onclick="resetAll()" style="color:var(--red)">清除数据</button>
       </div>
 
-      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v23 · 学就，只登一步</div>
+      <div style="text-align:center;font-size:11px;color:var(--text3);padding:12px 0">v24 · 学就，只登一步</div>
+    </div>
+  </div>
+
+  <!-- 独立白噪音浮窗 -->
+  <div class="noise-float" id="noiseFloat">
+    <div class="noise-float-header">
+      <div class="noise-float-title">🎵 白噪音</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2);cursor:pointer"><input type="checkbox" id="noiseFloatMix" style="accent-color:var(--accent2)" onchange="document.getElementById('pomoNoiseMix').checked=this.checked"> 混合</label>
+        <span style="font-size:11px;color:var(--text3)">🔊</span><input type="range" id="noiseFloatVol" min="0" max="100" value="50" style="width:60px;accent-color:var(--accent2)" oninput="document.getElementById('pomoNoiseVol').value=this.value;if(_pomoMasterGain)_pomoMasterGain.gain.value=this.value/100">
+        <button class="noise-float-close" onclick="toggleNoisePanel()">✕</button>
+      </div>
+    </div>
+    <div class="pomo-noise-grid" id="noiseFloatGrid">
+      <button class="pomo-noise-btn" data-noise="rain" onclick="toggleNoiseBtn('rain',this)"><span class="noise-icon">🌧</span><span class="noise-label">雨声</span></button>
+      <button class="pomo-noise-btn" data-noise="thunder" onclick="toggleNoiseBtn('thunder',this)"><span class="noise-icon">⛈</span><span class="noise-label">雷雨</span></button>
+      <button class="pomo-noise-btn" data-noise="stream" onclick="toggleNoiseBtn('stream',this)"><span class="noise-icon">🏞</span><span class="noise-label">溪流</span></button>
+      <button class="pomo-noise-btn" data-noise="wave" onclick="toggleNoiseBtn('wave',this)"><span class="noise-icon">🌊</span><span class="noise-label">海浪</span></button>
+      <button class="pomo-noise-btn" data-noise="fire" onclick="toggleNoiseBtn('fire',this)"><span class="noise-icon">🔥</span><span class="noise-label">篝火</span></button>
+      <button class="pomo-noise-btn" data-noise="forest" onclick="toggleNoiseBtn('forest',this)"><span class="noise-icon">🌲</span><span class="noise-label">森林</span></button>
+      <button class="pomo-noise-btn" data-noise="bird" onclick="toggleNoiseBtn('bird',this)"><span class="noise-icon">🐦</span><span class="noise-label">鸟鸣</span></button>
+      <button class="pomo-noise-btn" data-noise="wind" onclick="toggleNoiseBtn('wind',this)"><span class="noise-icon">🍃</span><span class="noise-label">微风</span></button>
+      <button class="pomo-noise-btn" data-noise="cafe" onclick="toggleNoiseBtn('cafe',this)"><span class="noise-icon">☕</span><span class="noise-label">咖啡厅</span></button>
+      <button class="pomo-noise-btn" data-noise="train" onclick="toggleNoiseBtn('train',this)"><span class="noise-icon">🚂</span><span class="noise-label">列车</span></button>
     </div>
   </div>
 
@@ -769,6 +804,9 @@ async function cloudSync(silent){
 
 // === TABS ===
 let _currentTab='home';
+function toggleNoisePanel(){const el=document.getElementById('noiseFloat');el.classList.toggle('show');if(el.classList.contains('show'))syncNoiseFloatState()}
+function toggleNoiseBtn(type,btn){if(_pomoNoiseNodes[type]){stopPomoNoise(type)}else{startPomoNoise(type)};syncNoiseFloatState()}
+function syncNoiseFloatState(){document.querySelectorAll('#noiseFloatGrid .pomo-noise-btn').forEach(b=>b.classList.toggle('active',!!_pomoNoiseNodes[b.dataset.noise]));const mixCb=document.getElementById('pomoNoiseMix');if(mixCb)document.getElementById('noiseFloatMix').checked=mixCb.checked;const volEl=document.getElementById('pomoNoiseVol');if(volEl)document.getElementById('noiseFloatVol').value=volEl.value}
 function switchTab(tab){
   _currentTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -1088,6 +1126,7 @@ function startPomoNoise(type){
   if(_pomoNoiseNodes[type])return;
   _pomoNoiseNodes[type]=_buildNoiseChain(ctx,type,_pomoMasterGain);
   document.querySelectorAll('.pomo-noise-btn').forEach(b=>b.classList.toggle('active',!!_pomoNoiseNodes[b.dataset.noise]));
+  syncNoiseFloatState();
 }
 function stopPomoNoise(type){
   if(type){
@@ -1170,7 +1209,7 @@ function renderPomo(){
   const subj=document.getElementById('pomoSubject').value;
   if(subj&&_pomoMode==='work'){tagEl.style.display='inline-block';tagEl.textContent=subj;const cMap={'数学':'rgba(59,130,246,.15);color:var(--blue)','Python':'rgba(16,185,129,.15);color:var(--green)','英语':'rgba(249,115,22,.15);color:var(--orange)','其他':'rgba(139,92,246,.15);color:var(--purple)'};tagEl.style.background=((cMap[subj]||'').split(';')[0]||'rgba(255,255,255,.08)');tagEl.style.color=((cMap[subj]||'').split('color:')[1]||'var(--text3)')}else{tagEl.style.display='none'}
   const setEl=document.getElementById('pomoSettings');if(setEl)setEl.style.display=_pomoRunning?'none':'block';
-  const noiseBar=document.getElementById('pomoNoisePanel');if(noiseBar)noiseBar.style.display=_pomoRunning?'none':'block';
+  // 白噪音面板专注时也显示，随时可调
   renderPomoDots();renderPomoGoal();renderPomoLog();renderPomoWeek();
 }
 function togglePomo(){
@@ -1567,7 +1606,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v23';
+    document.getElementById('cacheVer').textContent='v24';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
