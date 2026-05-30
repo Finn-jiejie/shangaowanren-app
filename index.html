@@ -596,7 +596,7 @@ const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.toISOS
 
 const defaultSettings={
   name:'Finn',birthday:'2008-06-09',enroll:'2026-09-05',
-  nightPay:240,dayPay:220,savingsTarget:15000,monthlyBudget:1200,cashOnHand:0,
+  cashOnHand:0,
   payday:'2026-06-10',exam:'',examName:'专升本考试',
   mathGoal:'集合+函数基础',cGoal:'翁恺1-5节',wordGoal:'390个',
   mathPct:0,cPct:0,wordPct:0,syncKey:'',
@@ -806,7 +806,7 @@ function quickAddExpense(){
 function addWork(){
   // v18: 班次打卡已移除，保留函数避免报错
 }
-function deleteWork(id){showModal('删除记录','确定删除这条班次记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown();scheduleAutoSync()})}
+function deleteWork(id){showModal('删除记录','确定删除这条记录？',()=>{const w=DB.get('works').filter(x=>x.id!==id);DB.set('works',w);renderWork();renderHomeStats();renderCountdown();scheduleAutoSync()})}
 function renderWork(){
   const works=DB.get('works');const el=document.getElementById('workList');
   const expenses=DB.get('expenses');
