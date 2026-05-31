@@ -167,7 +167,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .journal-area:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
 .journal-area::placeholder{color:var(--text3)}
 
-.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:rgba(255,255,255,.96);border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0;position:relative;z-index:10;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr;background:rgba(255,255,255,.96);border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0;position:relative;z-index:10;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
 .tab-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent;color:var(--text3)}
 .tab-btn svg{width:22px;height:22px;transition:transform .2s,filter .2s;stroke:currentColor}
 .tab-btn .text{font-size:10px;color:currentColor;transition:color .2s;font-weight:500}
@@ -309,17 +309,39 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="fs-qicon" style="background:rgba(245,158,11,.1);color:var(--accent)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg></div>
           <span>记账</span>
         </div>
-        <div class="fs-quick-btn" onclick="switchTab('study');switchSub('pomo',document.querySelectorAll('.sub-tab')[1])">
+        <div class="fs-quick-btn" onclick="quickAction('pomo')">
           <div class="fs-qicon" style="background:rgba(239,68,68,.1);color:var(--red)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           <span>番茄</span>
         </div>
-        <div class="fs-quick-btn" onclick="switchTab('study');switchSub('journal',document.querySelectorAll('.sub-tab')[2])">
+        <div class="fs-quick-btn" onclick="quickAction('journal')">
           <div class="fs-qicon" style="background:rgba(139,92,246,.1);color:var(--purple)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
           <span>日记</span>
         </div>
         <div class="fs-quick-btn" onclick="quickAction('noise')">
           <div class="fs-qicon" style="background:rgba(6,182,212,.08);color:#0891b2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
           <span>白噪音</span>
+        </div>
+      </div>
+
+      <!-- 今日摘要卡片 -->
+      <div class="fs-card" style="padding:14px 18px">
+        <div class="stats-row" style="margin-bottom:0">
+          <div class="stat" onclick="showTodayDetail('study')" style="cursor:pointer">
+            <div class="val" style="font-size:22px;color:var(--blue)" id="todayStudyTime">0h</div>
+            <div class="label">📚 学习</div>
+          </div>
+          <div class="stat" onclick="showTodayDetail('expense')" style="cursor:pointer">
+            <div class="val" style="font-size:22px;color:var(--orange)" id="todayExpense">¥0</div>
+            <div class="label">💰 支出</div>
+          </div>
+          <div class="stat" onclick="quickAction('pomo')" style="cursor:pointer">
+            <div class="val" style="font-size:22px;color:var(--red)" id="todayPomo">0</div>
+            <div class="label">🍅 番茄</div>
+          </div>
+          <div class="stat" onclick="showTodayDetail('achievements')" style="cursor:pointer">
+            <div class="val" style="font-size:22px;color:var(--accent2)" id="todayAchieve">0/10</div>
+            <div class="label">🏆 成就</div>
+          </div>
         </div>
       </div>
 
@@ -588,7 +610,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">&#x1F4C5; 今日状态</div>
       <div class="card" id="versionCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v29 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v30 · 利川版</div></div>
           <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
           <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
@@ -656,20 +678,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
   <div class="tab-bar">
     <div class="tab-btn active" data-tab="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5l9-7 9 7"/><path d="M5 9v10a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V9"/><path d="M9 20h6"/></svg>
-      <div class="text">首页</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
+      <div class="text">今日</div>
     </div>
     <div class="tab-btn" data-tab="plan">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="4" x2="9" y2="22"/><circle cx="15" cy="15" r="1.5" fill="currentColor" stroke="none"/></svg>
       <div class="text">计划</div>
-    </div>
-    <div class="tab-btn" data-tab="work">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M6 2v4"/><path d="M18 2v4"/><path d="M2 12h20"/><path d="M10 17h4" stroke-width="2"/></svg>
-      <div class="text">记账</div>
-    </div>
-    <div class="tab-btn" data-tab="study">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-width="2"/></svg>
-      <div class="text">学习</div>
     </div>
     <div class="tab-btn" data-tab="profile">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0112 0v1"/><path d="M16 21v-1a6 6 0 018 0v1"/></svg>
@@ -722,6 +736,10 @@ const ACHIEVEMENTS=[
   {id:'work_30',name:'老员工',desc:'工作30天',icon:'🏗️'},
   {id:'budget_on_track',name:'精打细算',desc:'月支出不超预算',icon:'📊'},
 ];
+
+function getAchievements(){return ACHIEVEMENTS}
+function checkAchievement(id,a){const u=DB.getObj('achievements')||{};return !!u[id]}
+function getTodayPomos(){return getPomoLogs().filter(p=>p.date===today()||!p.date)}
 
 // === PWA ===
 if('serviceWorker' in navigator){
@@ -979,6 +997,27 @@ function quickAction(type){
       '<div class="form-group"><label>分类</label><select id="quickCategory"><option value="饭">🍚 饭</option><option value="交通">🚌 交通</option><option value="日用品">🧴 日用品</option><option value="学习">📚 学习</option><option value="其他">📌 其他</option></select></div>'+
       '<button class="btn btn-primary btn-block" onclick="quickAddExpense()">记上</button>';
     document.getElementById('quickModal').classList.add('show');
+  }else if(type==='pomo'){
+    document.getElementById('quickTitle').textContent='🍅 番茄钟';
+    document.getElementById('quickContent').innerHTML=document.getElementById('page-study').querySelector('#sub-pomo').innerHTML;
+    document.getElementById('quickModal').classList.add('show');
+    // bind buttons inside
+    setTimeout(()=>{
+      const b=document.getElementById('pomoStart');if(b)b.onclick=togglePomo;
+      const r=document.querySelector('#quickContent #pomoResetBtn');if(r)r.onclick=resetPomo;
+      document.querySelectorAll('#quickContent .pomo-noise-btn').forEach(bn=>{
+        bn.onclick=function(){toggleNoiseBtn(bn.dataset.noise,bn)};
+      });
+      document.querySelectorAll('#quickContent .pomo-dur-btn').forEach(db=>{
+        db.onclick=function(){setPomoDur(parseInt(db.dataset.dur),db)};
+      });
+      if(typeof renderPomo==='function')renderPomo();
+    },100);
+  }else if(type==='journal'){
+    document.getElementById('quickTitle').textContent='📝 日记';
+    document.getElementById('quickContent').innerHTML='<div class="form-group"><textarea id="quickJournal" class="journal-area" placeholder="今天发生了什么..."></textarea></div><button class="btn btn-primary btn-block" onclick="quickSaveJournal()">保存</button>';
+    document.getElementById('quickModal').classList.add('show');
+    setTimeout(()=>{const tj=document.getElementById('quickJournal');if(tj){const j=JSON.parse(localStorage.getItem('sgw_journals')||'{}');tj.value=j[today()]||''}},100);
   }else if(type==='noise'){
     if(_pomoNoiseNodes['rain']){
       stopPomoNoise('rain');
@@ -1010,7 +1049,7 @@ function quickAddExpense(){
   const items=DB.get('expenses');items.unshift({amount,type:'expense',category,note:'',date:today(),id:Date.now()});
   DB.set('expenses',items);closeQuickModal();
   renderBudget();renderHomeStats();renderCountdown();scheduleAutoSync();checkBudgetAchievements();
-  switchTab('work');
+  const toast=document.createElement('div');toast.className='toast';toast.textContent='记账成功 ✅';document.body.appendChild(toast);setTimeout(()=>toast.remove(),2000);
 }
 // === WORK ===
 function addWork(){
@@ -1562,7 +1601,72 @@ function renderCountdown(){
 
 // === HOME STATS ===
 function renderHomeStats(){
-  renderStreak();updateHeroStatus();renderHomeTodayPlan();
+  renderStreak();updateHeroStatus();renderHomeTodayPlan();renderSummaryStats();
+}
+
+function renderSummaryStats(){
+  // 今日学习时长
+  const pomos=getTodayPomos();
+  const studyMin=pomos.filter(p=>!p.abandoned).reduce((s,p)=>s+(p.dur||25),0);
+  const studyH=studyMin>=60?Math.floor(studyMin/60)+'h'+(studyMin%60?studyMin%60+'m':''):studyMin+'m';
+  const el1=document.getElementById('todayStudyTime');if(el1)el1.textContent=studyMin?studyH:'0m';
+  // 今日支出
+  const expenses=DB.get('expenses')||[];const ts=today();
+  const todayExp=expenses.filter(e=>e.date===ts&&e.type!=='income').reduce((s,e)=>s+(e.amount||0),0);
+  const el2=document.getElementById('todayExpense');if(el2)el2.textContent='¥'+todayExp;
+  // 今日番茄数
+  const el3=document.getElementById('todayPomo');if(el3)el3.textContent=pomos.filter(p=>!p.abandoned).length;
+  // 成就进度
+  const achieved=getAchievements().filter(a=>checkAchievement(a.id,a)).length;
+  const total=getAchievements().length;
+  const el4=document.getElementById('todayAchieve');if(el4)el4.textContent=achieved+'/'+total;
+}
+
+function showTodayDetail(type){
+  if(type==='study'){
+    const pomos=getTodayPomos();
+    const done=pomos.filter(p=>!p.abandoned).length;
+    const studyMin=pomos.filter(p=>!p.abandoned).reduce((s,p)=>s+(p.dur||25),0);
+    const studyH=studyMin>=60?Math.floor(studyMin/60)+'h'+(studyMin%60?studyMin%60+'m':''):studyMin+'m';
+    const aband=pomos.filter(p=>p.abandoned).length;
+    let html='<div style="text-align:center;padding:8px 0"><div style="font-size:36px;font-weight:900;color:var(--blue)">'+studyH+'</div><div style="font-size:13px;color:var(--text3)">今日学习时长</div></div>';
+    html+='<div class="stats-row"><div class="stat"><div class="val" style="color:var(--red)">'+done+'</div><div class="label">完成番茄</div></div><div class="stat"><div class="val" style="color:var(--text3)">'+aband+'</div><div class="label">放弃</div></div></div>';
+    const subjects={};pomos.filter(p=>!p.abandoned).forEach(p=>{const s=p.subject||'其他';subjects[s]=(subjects[s]||0)+1});
+    html+='<div style="font-size:13px;color:var(--text2);margin-top:8px">科目分布</div>';
+    for(const[s,c]of Object.entries(subjects))html+='<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px"><span>'+s+'</span><span style="color:var(--accent2)">'+c+'个</span></div>';
+    showModal('📚 学习详情',html);
+  }else if(type==='expense'){
+    const expenses=DB.get('expenses')||[];const ts=today();
+    const todayExps=expenses.filter(e=>e.date===ts);
+    const totalOut=todayExps.filter(e=>e.type!=='income').reduce((s,e)=>s+(e.amount||0),0);
+    const totalIn=todayExps.filter(e=>e.type==='income').reduce((s,e)=>s+(e.amount||0),0);
+    let html='<div class="stats-row"><div class="stat"><div class="val" style="color:var(--red)">¥'+totalOut+'</div><div class="label">支出</div></div><div class="stat"><div class="val" style="color:var(--green)">¥'+totalIn+'</div><div class="label">收入</div></div></div>';
+    if(todayExps.length){
+      html+='<div style="font-size:13px;color:var(--text2);margin-top:8px">今日记录</div>';
+      const cats={'饭':'🍚','交通':'🚌','日用品':'🧴','学习':'📚','其他':'📌'};
+      todayExps.forEach(e=>{html+='<div class="list-item"><div class="list-icon" style="background:rgba(16,185,129,.08);font-size:16px">'+(cats[e.category]||'💰')+'</div><div class="list-info"><div class="list-title">'+e.note+'</div><div class="list-sub">'+e.category+'</div></div><div class="list-amount '+(e.type==='income'?'income':'')+'">'+(e.type==='income'?'+':'-')+'¥'+e.amount+'</div></div>'});
+    }else{html+='<div style="text-align:center;color:var(--text3);padding:16px">今天还没有记录</div>'}
+    showModal('💰 记账详情',html);
+  }else if(type==='achievements'){
+    const achieved=getAchievements().filter(a=>checkAchievement(a.id,a));
+    let html='<div class="achieve-grid">';
+    getAchievements().forEach(a=>{
+      const unlocked=checkAchievement(a.id,a);
+      html+='<div class="achieve-card'+(unlocked?' unlocked':'')+'"><div class="achieve-icon">'+a.icon+'</div><div class="achieve-name">'+a.name+'</div><div class="achieve-desc">'+a.desc+'</div></div>';
+    });
+    html+='</div>';
+    showModal('🏆 成就 ('+achieved.length+'/'+getAchievements().length+')',html);
+  }
+}
+
+function quickSaveJournal(){
+  const text=document.getElementById('quickJournal').value.trim();
+  if(!text)return;
+  const j=JSON.parse(localStorage.getItem('sgw_journals')||'{}');
+  j[today()]=text;localStorage.setItem('sgw_journals',JSON.stringify(j));
+  closeQuickModal();scheduleAutoSync();
+  const toast=document.createElement('div');toast.className='toast';toast.textContent='日记已保存 ✅';document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(),2000);
 }
 
 function renderHomeTodayPlan(){
@@ -1635,7 +1739,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v29';
+    document.getElementById('cacheVer').textContent='v30';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
