@@ -7,21 +7,22 @@
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#080c24">
+<meta name="theme-color" content="#f5f6fa">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#080c24;--bg2:rgba(15,20,50,.55);--bg3:rgba(25,32,72,.5);--bg4:rgba(40,50,90,.45);
-  --accent:#f59e0b;--accent2:#fbbf24;--accent3:#d97706;
-  --green:#10b981;--red:#ef4444;--orange:#f97316;--blue:#3b82f6;--purple:#8b5cf6;--pink:#ec4899;
-  --text:#f1f5f9;--text2:#94a3b8;--text3:#4a5580;
+  --bg:#f5f6fa;--bg2:rgba(255,255,255,.92);--bg3:rgba(255,255,255,.96);--bg4:rgba(0,0,0,.06);
+  --accent:#f59e0b;--accent2:#d97706;--accent3:#b45309;
+  --green:#059669;--red:#dc2626;--orange:#ea580c;--blue:#2563eb;--purple:#7c3aed;--pink:#db2777;
+  --text:#1e293b;--text2:#64748b;--text3:#94a3b8;
+  --border:rgba(0,0,0,.06);
   --radius:16px;--radius2:12px;
-  --shadow:0 2px 12px rgba(0,0,0,.25);--shadow-sm:0 1px 4px rgba(0,0,0,.15);
-  --glow:0 0 20px rgba(245,158,11,.1);
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  --glow:0 0 20px rgba(245,158,11,.08);
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-tap-highlight-color:transparent}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 120% 80% at 20% 0%,#1a1060 0%,transparent 60%),radial-gradient(ellipse 100% 60% at 80% 100%,#0d2040 0%,transparent 55%),radial-gradient(ellipse 80% 50% at 50% 50%,#0a1428 0%,var(--bg) 100%);z-index:0;pointer-events:none}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 10% 0%,rgba(245,158,11,.04) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 90% 100%,rgba(37,99,235,.03) 0%,transparent 50%);z-index:0;pointer-events:none}
 .app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative;z-index:1}
 
 .header{padding:18px 20px 6px;flex-shrink:0;position:relative;z-index:1}
@@ -35,7 +36,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .tab-page{display:none;animation:fadeUp .3s ease}.tab-page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-.card{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:relative;overflow:hidden;transition:border-color .3s}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:relative;overflow:hidden;transition:border-color .3s}
 .card::before{display:none}
 .card:active{transform:scale(.99);transition:transform .1s}
 .card-title{font-size:14px;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.2px}
@@ -44,39 +45,39 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* hero-card removed in v19 */
 
 .fs-quick-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
-.stat{background:var(--bg2);border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:14px 8px;text-align:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
 .stat .val{font-size:24px;font-weight:900;margin-bottom:2px;letter-spacing:-.5px}
 .stat .label{font-size:10px;color:var(--text3);letter-spacing:.3px;font-weight:500}
 .stat.green .val{color:var(--green)}.stat.blue .val{color:var(--blue)}.stat.orange .val{color:var(--orange)}.stat.red .val{color:var(--red)}.stat.purple .val{color:var(--accent2)}
 
 /* goal-item removed in v19 */
 
-.countdown-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.countdown-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
 .countdown-item:last-child{border-bottom:none}
 .cd-num{font-size:36px;font-weight:900;min-width:56px;text-align:center;letter-spacing:-1px}
 .cd-num.green{color:var(--green)}.cd-num.orange{color:var(--orange)}.cd-num.blue{color:var(--blue)}.cd-num.red{color:var(--red)}.cd-num.purple{color:var(--accent2)}
 .cd-info .cd-label{font-size:15px;font-weight:600}.cd-info .cd-date{font-size:12px;color:var(--text3);margin-top:3px}
 
-.progress{height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin-top:8px}
+.progress{height:7px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-top:8px}
 .progress-bar{height:100%;border-radius:4px;transition:width .5s}
 .progress-bar.green{background:linear-gradient(90deg,#059669,var(--green))}.progress-bar.blue{background:linear-gradient(90deg,#2563eb,var(--blue))}.progress-bar.orange{background:linear-gradient(90deg,#ea580c,var(--orange))}.progress-bar.purple{background:linear-gradient(90deg,#7c3aed,var(--purple))}
 
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 16px;color:var(--text);font-size:14px;outline:none;transition:border .3s,box-shadow .3s}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 16px;color:var(--text);font-size:14px;outline:none;transition:border .3s,box-shadow .3s}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
 .form-group select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 .form-group textarea{resize:none;height:70px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);opacity:0;transition:opacity .2s}
+.btn::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.04);opacity:0;transition:opacity .2s}
 .btn:hover::before{opacity:1}
 .btn:active{transform:scale(.97);transition-duration:.1s}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;box-shadow:0 2px 12px rgba(245,158,11,.25)}
 .btn-primary:hover{box-shadow:0 4px 18px rgba(245,158,11,.35);filter:brightness(1.05)}
-.btn-outline{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--text2)}
-.btn-outline:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--text3);color:var(--text)}
 .btn-danger{background:var(--red);color:#fff;font-size:12px;padding:6px 10px;border-radius:6px}
 .btn-block{width:100%}.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
 
@@ -84,7 +85,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fab-save:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(245,158,11,.45)}
 .fab-save:active{transform:scale(.92)}
 
-.list-item{display:flex;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.03);gap:12px}
+.list-item{display:flex;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);gap:12px}
 .list-item:last-child{border-bottom:none}
 .list-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--bg3)}
 .list-info{flex:1;min-width:0}
@@ -95,7 +96,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .cal-header h3{font-size:18px;font-weight:700}
-.cal-nav{background:var(--bg3);border:1px solid rgba(255,255,255,.07);color:var(--text);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cal-nav{background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .cal-nav:hover{background:var(--bg4);border-color:var(--accent)}
 .cal-nav:active{background:var(--accent);color:#0f172a}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
@@ -108,8 +109,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cal-dot{width:4px;height:4px;border-radius:50%}
 .cal-dot.work{background:var(--accent2)}.cal-dot.expense{background:var(--red)}.cal-dot.study{background:var(--green)}
 
-.plan-day{background:rgba(15,20,50,.45);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:10px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:border-color .3s}
-.plan-day:hover{border-color:rgba(255,255,255,.1)}
+.plan-day{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:border-color .3s}
+.plan-day:hover{border-color:var(--text3)}
 .plan-day .plan-date{font-size:14px;color:var(--accent2);font-weight:700;margin-bottom:10px;letter-spacing:.2px}
 .plan-item{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13px}
 .plan-item .plan-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--bg4);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
@@ -122,13 +123,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .pomo-settings{margin-bottom:18px}
 .pomo-setting-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .pomo-dur-btns{display:flex;gap:4px;flex:1}
-.pomo-dur-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:var(--text2);padding:6px 12px;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
+.pomo-dur-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text2);padding:6px 12px;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
 .pomo-dur-btn.active{background:rgba(251,146,60,.12);border-color:rgba(245,158,11,.3);color:var(--accent2);font-weight:700;box-shadow:0 0 12px rgba(245,158,11,.1)}
 .pomo-subject-tag{font-size:11px;margin-top:2px;padding:2px 8px;border-radius:6px;display:inline-block}
 .pomo-goal-bar{margin-bottom:14px;padding:0 4px}
 .pomo-noise-panel{margin:10px 0;padding:0 4px}
 .pomo-noise-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.pomo-noise-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 4px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.pomo-noise-btn{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 4px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
 .pomo-noise-btn .noise-icon{font-size:20px}
 .pomo-noise-btn .noise-label{font-size:10px;color:var(--text3);font-weight:500}
 .pomo-noise-btn.active{background:rgba(251,146,60,.12);border-color:rgba(245,158,11,.3);box-shadow:0 0 14px rgba(245,158,11,.08)}
@@ -140,7 +141,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .pomo-week-bar .bar-val{font-size:10px;color:var(--accent2);font-weight:700}
 .pomo-timer{position:relative;width:200px;height:200px;margin:0 auto 20px}
 .pomo-timer svg{transform:rotate(-90deg);filter:drop-shadow(0 0 12px rgba(245,158,11,.15))}
-.pomo-timer .ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:7}
+.pomo-timer .ring-bg{fill:none;stroke:var(--bg4);stroke-width:7}
 .pomo-timer .ring-fg{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
 .pomo-timer .ring-glow{fill:none;stroke-width:14;stroke-linecap:round;opacity:.15;transition:stroke-dashoffset 1s linear}
 .pomo-timer .pomo-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
@@ -149,7 +150,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .pomo-btns{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
 
 .achieve-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.achieve-card{background:var(--bg3);border-radius:16px;padding:16px 8px;text-align:center;border:1px solid rgba(255,255,255,.04);transition:all .3s;position:relative;overflow:hidden}
+.achieve-card{background:var(--bg2);border-radius:16px;padding:16px 8px;text-align:center;border:1px solid var(--border);transition:all .3s;position:relative;overflow:hidden}
 .achieve-card.unlocked{border-color:rgba(245,158,11,.25);box-shadow:0 0 20px rgba(245,158,11,.12),inset 0 0 30px rgba(245,158,11,.04);background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(251,191,36,.04),var(--bg3))}
 .achieve-card.unlocked::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0%,rgba(245,158,11,.06) 10%,transparent 20%);animation:achieveGlow 6s linear infinite}
 .achieve-card .achieve-icon{font-size:28px;margin-bottom:6px;filter:grayscale(1) opacity(.25);transition:filter .3s}
@@ -158,15 +159,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .achieve-card.unlocked .achieve-name{color:var(--accent2);font-weight:700}
 
 .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.report-item{background:var(--bg3);border-radius:14px;padding:16px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.report-item{background:var(--bg2);border-radius:14px;padding:16px;text-align:center;border:1px solid var(--border)}
 .report-item .r-val{font-size:24px;font-weight:900;letter-spacing:-.5px}
 .report-item .r-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:500;margin-top:2px}
 
-.journal-area{width:100%;background:rgba(15,20,50,.4);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;color:var(--text);font-size:14px;outline:none;resize:none;height:100px;transition:border .3s,box-shadow .3s;line-height:1.6}
+.journal-area{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:16px;color:var(--text);font-size:14px;outline:none;resize:none;height:100px;transition:border .3s,box-shadow .3s;line-height:1.6}
 .journal-area:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
 .journal-area::placeholder{color:var(--text3)}
 
-.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:rgba(8,12,36,.92);border-top:1px solid rgba(255,255,255,.05);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0;position:relative;z-index:10;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;background:rgba(255,255,255,.96);border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0;position:relative;z-index:10;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
 .tab-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent;color:var(--text3)}
 .tab-btn svg{width:22px;height:22px;transition:transform .2s,filter .2s;stroke:currentColor}
 .tab-btn .text{font-size:10px;color:currentColor;transition:color .2s;font-weight:500}
@@ -175,15 +176,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .tab-btn.active .text{font-weight:600}
 .tab-btn.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:2.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:0 0 2px 2px}
 
-.sub-tabs{display:flex;gap:4px;margin-bottom:16px;background:rgba(15,20,50,.5);border-radius:14px;padding:4px;border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.sub-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg2);border-radius:14px;padding:4px;border:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .sub-tab{padding:8px 14px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;flex:1;text-align:center;color:var(--text3)}
 .sub-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;box-shadow:0 2px 12px rgba(245,158,11,.3)}
 .sub-page{display:none}.sub-page.active{display:block;animation:fadeUp .2s ease}
 
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
 .modal-overlay.show{display:flex}
-.modal{background:rgba(12,16,44,.96);border-radius:20px 20px 0 0;padding:12px 20px env(safe-area-inset-bottom,20px);width:100%;max-width:480px;max-height:75vh;overflow-y:auto;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.1);animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
-.modal::before{content:'';display:block;width:36px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin:0 auto 16px}
+.modal{background:rgba(255,255,255,.98);border-radius:20px 20px 0 0;padding:12px 20px env(safe-area-inset-bottom,20px);width:100%;max-width:480px;max-height:75vh;overflow-y:auto;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.modal::before{content:'';display:block;width:36px;height:4px;background:var(--text3);border-radius:2px;margin:0 auto 16px}
 .modal h3{font-size:17px;margin-bottom:18px;font-weight:700;letter-spacing:-.2px}
 
 .install-banner{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;padding:14px 22px;border-radius:16px;font-size:14px;font-weight:700;z-index:90;display:none;align-items:center;gap:10px;box-shadow:0 6px 28px rgba(245,158,11,.4);max-width:92%}
@@ -196,12 +197,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .slider-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 
 /* 独立白噪音面板 */
-.noise-float{position:fixed;bottom:80px;left:8px;right:8px;background:rgba(12,16,44,.96);border-radius:20px;padding:20px;z-index:90;display:none;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 40px rgba(0,0,0,.5);animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.noise-float{position:fixed;bottom:80px;left:8px;right:8px;background:rgba(255,255,255,.98);border-radius:20px;padding:20px;z-index:90;display:none;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);box-shadow:0 8px 40px rgba(0,0,0,.12);animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
 .noise-float.show{display:block}
 .noise-float-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .noise-float-title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.2px}
-.noise-float-close{background:rgba(255,255,255,.06);border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:6px 10px;border-radius:10px;transition:all .2s}
-.noise-float-close:active{background:rgba(255,255,255,.12)}
+.noise-float-close{background:var(--bg4);border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:6px 10px;border-radius:10px;transition:all .2s}
+.noise-float-close:active{background:var(--border)}
 .slider-row label{font-size:12px;color:var(--text2);min-width:70px;flex-shrink:0}
 .slider-row input[type=range]{flex:1;accent-color:var(--accent);height:5px}
 .slider-row .slider-val{font-size:14px;font-weight:700;min-width:40px;text-right;color:var(--accent2)}
@@ -214,17 +215,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .section-header::before{content:'';width:3px;height:12px;background:var(--accent2);border-radius:2px;flex-shrink:0}
 
 .profile-header{display:flex;align-items:center;gap:16px;padding:16px 0;margin-bottom:16px}
-.profile-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#0f172a;flex-shrink:0;box-shadow:0 0 28px rgba(245,158,11,.2)}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(245,158,11,.25)}
 .profile-info{flex:1}
 .profile-info .name{font-size:20px;font-weight:700;letter-spacing:-.3px}
 .profile-info .meta{font-size:13px;color:var(--text3);margin-top:3px}
 
-.menu-item{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer}
+.menu-item{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--border);cursor:pointer}
 .menu-item:last-child{border-bottom:none}
 .menu-item .menu-icon{font-size:20px;width:36px;text-align:center}
 .menu-item .menu-text{flex:1;font-size:15px;font-weight:500}
 .menu-item .menu-arrow{color:var(--text3);font-size:14px}
-.menu-item:active{background:rgba(255,255,255,.02);margin:0 -20px;padding:15px 20px;border-radius:12px}
+.menu-item:active{background:var(--bg4);margin:0 -20px;padding:15px 20px;border-radius:12px}
 
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}.pulse{animation:pulse 2s infinite}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -244,19 +245,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fs-quick-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px}
 .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 .stats-row .stat{padding:16px 8px}
-.fs-quick-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;background:var(--bg2);border:1px solid rgba(255,255,255,.04);border-radius:14px;cursor:pointer;transition:all .2s;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.fs-quick-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:all .2s;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .fs-quick-btn:active{transform:scale(.94);background:var(--bg3)}
 .fs-qicon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center}
 .fs-quick-btn span{font-size:11px;color:var(--text2);font-weight:500}
 
-.fs-card{background:rgba(15,20,50,.45);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:20px;margin-bottom:14px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.fs-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:14px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--shadow)}
 .fs-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .fs-card-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;letter-spacing:.2px}
 .fs-card-title svg{flex-shrink:0}
 .fs-card-tag{font-size:11px;padding:4px 12px;border-radius:10px;background:rgba(59,130,246,.08);color:var(--blue);font-weight:600;letter-spacing:.3px}
 
 /* 飞书风格计划项 */
-.fs-plan-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.03);position:relative}
+.fs-plan-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);position:relative}
 .fs-plan-item:last-child{border-bottom:none}
 .fs-plan-left{width:3.5px;height:30px;border-radius:2px;flex-shrink:0}
 .fs-plan-check{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
@@ -267,7 +268,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fs-plan-time{font-size:12px;color:var(--text3);flex-shrink:0;min-width:42px;text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
 
 /* 飞书风格目标项 */
-.fs-goal-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.fs-goal-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
 .fs-goal-item:last-child{border-bottom:none}
 .fs-goal-check{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
 .fs-goal-check.done{background:var(--green);border-color:var(--green)}
@@ -316,8 +317,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="fs-qicon" style="background:rgba(139,92,246,.1);color:var(--purple)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
           <span>日记</span>
         </div>
-        <div class="fs-quick-btn" onclick="toggleNoisePanel()">
-          <div class="fs-qicon" style="background:rgba(6,182,212,.1);color:#06b6d4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <div class="fs-quick-btn" onclick="quickAction('noise')">
+          <div class="fs-qicon" style="background:rgba(6,182,212,.08);color:#0891b2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
           <span>白噪音</span>
         </div>
       </div>
@@ -504,16 +505,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               </div>
             </div>
             <div class="pomo-noise-grid">
-              <button class="pomo-noise-btn" data-noise="rain" title="雨声"><span class="noise-icon">🌧</span><span class="noise-label">雨声</span></button>
-              <button class="pomo-noise-btn" data-noise="thunder" title="雷雨"><span class="noise-icon">⛈</span><span class="noise-label">雷雨</span></button>
-              <button class="pomo-noise-btn" data-noise="stream" title="溪流"><span class="noise-icon">🏞</span><span class="noise-label">溪流</span></button>
-              <button class="pomo-noise-btn" data-noise="wave" title="海浪"><span class="noise-icon">🌊</span><span class="noise-label">海浪</span></button>
-              <button class="pomo-noise-btn" data-noise="fire" title="篝火"><span class="noise-icon">🔥</span><span class="noise-label">篝火</span></button>
-              <button class="pomo-noise-btn" data-noise="forest" title="森林"><span class="noise-icon">🌲</span><span class="noise-label">森林</span></button>
-              <button class="pomo-noise-btn" data-noise="bird" title="鸟鸣"><span class="noise-icon">🐦</span><span class="noise-label">鸟鸣</span></button>
-              <button class="pomo-noise-btn" data-noise="wind" title="微风"><span class="noise-icon">🍃</span><span class="noise-label">微风</span></button>
-              <button class="pomo-noise-btn" data-noise="cafe" title="咖啡厅"><span class="noise-icon">☕</span><span class="noise-label">咖啡厅</span></button>
-              <button class="pomo-noise-btn" data-noise="train" title="列车"><span class="noise-icon">🚂</span><span class="noise-label">列车</span></button>
+              <button class="pomo-noise-btn" data-noise="rain" title="雨声"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2v4"/><path d="M8 12v6"/><path d="M16 4v2"/><path d="M16 10v8"/><path d="M5 8l2 2"/><path d="M15 2l-2 2"/></svg></span><span class="noise-label">雨声</span></button>
+              <button class="pomo-noise-btn" data-noise="thunder" title="雷雨"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="noise-label">雷雨</span></button>
+              <button class="pomo-noise-btn" data-noise="stream" title="溪流"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 12c2-3 4-5 6-3s4 5 6 3 4-5 6-3"/><path d="M2 17c2-2 4-4 6-2s4 4 6 2 4-4 6-2"/></svg></span><span class="noise-label">溪流</span></button>
+              <button class="pomo-noise-btn" data-noise="wave" title="海浪"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 12c3-4 5-6 8-4s4 6 7 4 4-6 4-4"/><path d="M3 17c3-3 5-5 8-3s4 5 7 3 4-5 4-3"/></svg></span><span class="noise-label">海浪</span></button>
+              <button class="pomo-noise-btn" data-noise="fire" title="篝火"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3 5-7 3-11-1 3-3 2-4 0-2 2-2 6 1 11z"/><path d="M12 21c-3-4-2-8 0-11"/></svg></span><span class="noise-label">篝火</span></button>
+              <button class="pomo-noise-btn" data-noise="forest" title="森林"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V7"/><path d="M4 12l4-5h2l-3 7h3l4-9h2l-3 8h3l-4-10"/></svg></span><span class="noise-label">森林</span></button>
+              <button class="pomo-noise-btn" data-noise="bird" title="鸟鸣"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 14c0-2 1-3 3-5l7-1c2 0 3 1 3 3 0 2-1 3-3 3H4"/><path d="M20 9l-4-1"/><path d="M20 14c-2 0-3-1-4-2"/></svg></span><span class="noise-label">鸟鸣</span></button>
+              <button class="pomo-noise-btn" data-noise="wind" title="微风"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 12h12"/><path d="M2 17h8"/><path d="M2 7h16c2 0 3-1 3-3s-1-3-3-3"/></svg></span><span class="noise-label">微风</span></button>
+              <button class="pomo-noise-btn" data-noise="cafe" title="咖啡厅"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="14" height="12" rx="3"/><path d="M18 9h2a2 2 0 0 1 0 4h-2"/><path d="M6 3h10"/><path d="M8 21v-2h6v2"/></svg></span><span class="noise-label">咖啡厅</span></button>
+              <button class="pomo-noise-btn" data-noise="train" title="列车"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="20" r="2"/><circle cx="16" cy="20" r="2"/><path d="M8 6V2"/><path d="M16 6V2"/></svg></span><span class="noise-label">列车</span></button>
             </div>
             <!-- 混合模式 -->
             <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
@@ -587,7 +588,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="section-header">&#x1F4C5; 今日状态</div>
       <div class="card" id="versionCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v28 · 利川版</div></div>
+          <div><div style="font-size:12px;color:var(--text3)">版本</div><div style="font-weight:600;color:var(--accent)">v29 · 利川版</div></div>
           <div><div style="font-size:12px;color:var(--text3)">缓存</div><div style="font-weight:600" id="cacheVer">检测中...</div></div>
           <div><div style="font-size:12px;color:var(--text3)">更新</div><div style="font-weight:600" id="lastUpdate">-</div></div>
         </div>
@@ -638,16 +639,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
     <div class="pomo-noise-grid" id="noiseFloatGrid">
-      <button class="pomo-noise-btn" data-noise="rain" onclick="toggleNoiseBtn('rain',this)"><span class="noise-icon">🌧</span><span class="noise-label">雨声</span></button>
-      <button class="pomo-noise-btn" data-noise="thunder" onclick="toggleNoiseBtn('thunder',this)"><span class="noise-icon">⛈</span><span class="noise-label">雷雨</span></button>
-      <button class="pomo-noise-btn" data-noise="stream" onclick="toggleNoiseBtn('stream',this)"><span class="noise-icon">🏞</span><span class="noise-label">溪流</span></button>
-      <button class="pomo-noise-btn" data-noise="wave" onclick="toggleNoiseBtn('wave',this)"><span class="noise-icon">🌊</span><span class="noise-label">海浪</span></button>
-      <button class="pomo-noise-btn" data-noise="fire" onclick="toggleNoiseBtn('fire',this)"><span class="noise-icon">🔥</span><span class="noise-label">篝火</span></button>
-      <button class="pomo-noise-btn" data-noise="forest" onclick="toggleNoiseBtn('forest',this)"><span class="noise-icon">🌲</span><span class="noise-label">森林</span></button>
-      <button class="pomo-noise-btn" data-noise="bird" onclick="toggleNoiseBtn('bird',this)"><span class="noise-icon">🐦</span><span class="noise-label">鸟鸣</span></button>
-      <button class="pomo-noise-btn" data-noise="wind" onclick="toggleNoiseBtn('wind',this)"><span class="noise-icon">🍃</span><span class="noise-label">微风</span></button>
-      <button class="pomo-noise-btn" data-noise="cafe" onclick="toggleNoiseBtn('cafe',this)"><span class="noise-icon">☕</span><span class="noise-label">咖啡厅</span></button>
-      <button class="pomo-noise-btn" data-noise="train" onclick="toggleNoiseBtn('train',this)"><span class="noise-icon">🚂</span><span class="noise-label">列车</span></button>
+      <button class="pomo-noise-btn" data-noise="rain" onclick="toggleNoiseBtn('rain',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2v4"/><path d="M8 12v6"/><path d="M16 4v2"/><path d="M16 10v8"/><path d="M5 8l2 2"/><path d="M15 2l-2 2"/></svg></span><span class="noise-label">雨声</span></button>
+      <button class="pomo-noise-btn" data-noise="thunder" onclick="toggleNoiseBtn('thunder',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="noise-label">雷雨</span></button>
+      <button class="pomo-noise-btn" data-noise="stream" onclick="toggleNoiseBtn('stream',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 12c2-3 4-5 6-3s4 5 6 3 4-5 6-3"/><path d="M2 17c2-2 4-4 6-2s4 4 6 2 4-4 6-2"/></svg></span><span class="noise-label">溪流</span></button>
+      <button class="pomo-noise-btn" data-noise="wave" onclick="toggleNoiseBtn('wave',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 12c3-4 5-6 8-4s4 6 7 4 4-6 4-4"/><path d="M3 17c3-3 5-5 8-3s4 5 7 3 4-5 4-3"/></svg></span><span class="noise-label">海浪</span></button>
+      <button class="pomo-noise-btn" data-noise="fire" onclick="toggleNoiseBtn('fire',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3 5-7 3-11-1 3-3 2-4 0-2 2-2 6 1 11z"/><path d="M12 21c-3-4-2-8 0-11"/></svg></span><span class="noise-label">篝火</span></button>
+      <button class="pomo-noise-btn" data-noise="forest" onclick="toggleNoiseBtn('forest',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V7"/><path d="M4 12l4-5h2l-3 7h3l4-9h2l-3 8h3l-4-10"/></svg></span><span class="noise-label">森林</span></button>
+      <button class="pomo-noise-btn" data-noise="bird" onclick="toggleNoiseBtn('bird',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 14c0-2 1-3 3-5l7-1c2 0 3 1 3 3 0 2-1 3-3 3H4"/><path d="M20 9l-4-1"/><path d="M20 14c-2 0-3-1-4-2"/></svg></span><span class="noise-label">鸟鸣</span></button>
+      <button class="pomo-noise-btn" data-noise="wind" onclick="toggleNoiseBtn('wind',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 12h12"/><path d="M2 17h8"/><path d="M2 7h16c2 0 3-1 3-3s-1-3-3-3"/></svg></span><span class="noise-label">微风</span></button>
+      <button class="pomo-noise-btn" data-noise="cafe" onclick="toggleNoiseBtn('cafe',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="14" height="12" rx="3"/><path d="M18 9h2a2 2 0 0 1 0 4h-2"/><path d="M6 3h10"/><path d="M8 21v-2h6v2"/></svg></span><span class="noise-label">咖啡厅</span></button>
+      <button class="pomo-noise-btn" data-noise="train" onclick="toggleNoiseBtn('train',this)"><span class="noise-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="20" r="2"/><circle cx="16" cy="20" r="2"/><path d="M8 6V2"/><path d="M16 6V2"/></svg></span><span class="noise-label">列车</span></button>
     </div>
   </div>
 
@@ -978,6 +979,8 @@ function quickAction(type){
       '<div class="form-group"><label>分类</label><select id="quickCategory"><option value="饭">🍚 饭</option><option value="交通">🚌 交通</option><option value="日用品">🧴 日用品</option><option value="学习">📚 学习</option><option value="其他">📌 其他</option></select></div>'+
       '<button class="btn btn-primary btn-block" onclick="quickAddExpense()">记上</button>';
     document.getElementById('quickModal').classList.add('show');
+  }else if(type==='noise'){
+    toggleNoisePanel();
   }
 }
 function closeQuickModal(){document.getElementById('quickModal').classList.remove('show')}
@@ -1121,17 +1124,17 @@ function _brownNoise(ctx,len){const buf=ctx.createBuffer(2,len,ctx.sampleRate);f
 function _pinkNoise(ctx,len){const buf=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;for(let i=0;i<d.length;i++){const w=Math.random()*2-1;b0=0.99886*b0+w*0.0555179;b1=0.99332*b1+w*0.0750759;b2=0.96900*b2+w*0.1538520;b3=0.86650*b3+w*0.3104856;b4=0.55000*b4+w*0.5329522;b5=-0.7616*b5-w*0.0168980;d[i]=b0+b1+b2+b3+b4+b5+b6+w*0.5362;d[i]*=0.11;b6=w*0.115926}}return buf}
 function _whiteNoise(ctx,len){const buf=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*0.3}return buf}
 function _buildNoiseChain(ctx,type,master){
-  const len=ctx.sampleRate*6;const gain=ctx.createGain();gain.gain.value=0.5;gain.connect(master);const srcs=[];
-  if(type==='rain'){const s=ctx.createBufferSource();s.buffer=_brownNoise(ctx,len);s.loop=true;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=1200;f.Q.value=0.6;s.connect(f);f.connect(gain);srcs.push(s)}
-  else if(type==='thunder'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const f1=ctx.createBiquadFilter();f1.type='bandpass';f1.frequency.value=1200;f1.Q.value=0.6;const g1=ctx.createGain();g1.gain.value=0.6;s1.connect(g1);g1.connect(f1);f1.connect(gain);srcs.push(s1);const s2=ctx.createBufferSource();s2.buffer=_brownNoise(ctx,len);s2.loop=true;const f2=ctx.createBiquadFilter();f2.type='lowpass';f2.frequency.value=80;f2.Q.value=2;const g2=ctx.createGain();g2.gain.value=0.8;const lfo=ctx.createOscillator();lfo.frequency.value=0.15;const lg=ctx.createGain();lg.gain.value=0.6;lfo.connect(lg);lg.connect(g2.gain);s2.connect(f2);f2.connect(g2);g2.connect(gain);srcs.push(s2,lfo)}
-  else if(type==='stream'){const s=ctx.createBufferSource();s.buffer=_pinkNoise(ctx,len);s.loop=true;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=400;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=3000;bp.Q.value=0.2;const lfo=ctx.createOscillator();lfo.frequency.value=0.3;const lg=ctx.createGain();lg.gain.value=200;lfo.connect(lg);lg.connect(bp.frequency);s.connect(hp);hp.connect(bp);bp.connect(gain);srcs.push(s,lfo)}
-  else if(type==='wave'){const s=ctx.createBufferSource();s.buffer=_brownNoise(ctx,len);s.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=500;lp.Q.value=0.8;const lfo=ctx.createOscillator();lfo.frequency.value=0.08;const lg=ctx.createGain();lg.gain.value=300;lfo.connect(lg);lg.connect(lp.frequency);const g=ctx.createGain();g.gain.value=0.7;s.connect(lp);lp.connect(g);g.connect(gain);srcs.push(s,lfo)}
-  else if(type==='fire'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=500;lp.Q.value=1.5;s1.connect(lp);lp.connect(gain);srcs.push(s1);const s2=ctx.createBufferSource();s2.buffer=_whiteNoise(ctx,len);s2.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=4000;bp.Q.value=3;const lfo=ctx.createOscillator();lfo.frequency.value=2;const lg=ctx.createGain();lg.gain.value=0.3;lfo.connect(lg);lg.connect(bp.frequency);const g2=ctx.createGain();g2.gain.value=0.15;s2.connect(bp);bp.connect(g2);g2.connect(gain);srcs.push(s2,lfo)}
-  else if(type==='forest'){const s=ctx.createBufferSource();s.buffer=_pinkNoise(ctx,len);s.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2500;bp.Q.value=0.3;const lfo=ctx.createOscillator();lfo.frequency.value=0.15;const lg=ctx.createGain();lg.gain.value=500;lfo.connect(lg);lg.connect(bp.frequency);s.connect(bp);bp.connect(gain);srcs.push(s,lfo)}
-  else if(type==='bird'){const s=ctx.createBufferSource();s.buffer=_whiteNoise(ctx,len);s.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=3500;bp.Q.value=5;const lfo=ctx.createOscillator();lfo.frequency.value=4;const lg=ctx.createGain();lg.gain.value=800;lfo.connect(lg);lg.connect(bp.frequency);const lfo2=ctx.createOscillator();lfo2.frequency.value=0.3;const lg2=ctx.createGain();lg2.gain.value=0.4;lfo2.connect(lg2);lg2.connect(gain.gain);const g=ctx.createGain();g.gain.value=0.2;s.connect(bp);bp.connect(g);g.connect(gain);srcs.push(s,lfo,lfo2)}
-  else if(type==='wind'){const s=ctx.createBufferSource();s.buffer=_brownNoise(ctx,len);s.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=600;bp.Q.value=0.4;const lfo=ctx.createOscillator();lfo.frequency.value=0.05;const lg=ctx.createGain();lg.gain.value=400;lfo.connect(lg);lg.connect(bp.frequency);const g=ctx.createGain();g.gain.value=0.6;s.connect(bp);bp.connect(g);g.connect(gain);srcs.push(s,lfo)}
-  else if(type==='cafe'){const s=ctx.createBufferSource();s.buffer=_pinkNoise(ctx,len);s.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1800;bp.Q.value=0.5;const lfo=ctx.createOscillator();lfo.frequency.value=0.5;const lg=ctx.createGain();lg.gain.value=0.15;lfo.connect(lg);lg.connect(gain.gain);s.connect(bp);bp.connect(gain);srcs.push(s,lfo)}
-  else if(type==='train'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=300;lp.Q.value=1;const lfo=ctx.createOscillator();lfo.frequency.value=1.2;const lg=ctx.createGain();lg.gain.value=100;lfo.connect(lg);lg.connect(lp.frequency);s1.connect(lp);lp.connect(gain);srcs.push(s1,lfo);const s2=ctx.createBufferSource();s2.buffer=_pinkNoise(ctx,len);s2.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=800;bp.Q.value=1;const g2=ctx.createGain();g2.gain.value=0.3;s2.connect(bp);bp.connect(g2);g2.connect(gain);srcs.push(s2)}
+  const len=ctx.sampleRate*30;const gain=ctx.createGain();gain.gain.value=0.5;gain.connect(master);const srcs=[];
+  if(type==='rain'){const s=ctx.createBufferSource();s.buffer=_brownNoise(ctx,len);s.loop=true;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=1800;f.Q.value=0.4;const g=ctx.createGain();g.gain.value=0.7;s.connect(f);f.connect(g);g.connect(gain);srcs.push(s);const s2=ctx.createBufferSource();s2.buffer=_whiteNoise(ctx,len);s2.loop=true;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=6000;const g2=ctx.createGain();g2.gain.value=0.08;s2.connect(hp);hp.connect(g2);g2.connect(gain);srcs.push(s2)}
+  else if(type==='thunder'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const f1=ctx.createBiquadFilter();f1.type='bandpass';f1.frequency.value=1400;f1.Q.value=0.5;const g1=ctx.createGain();g1.gain.value=0.55;s1.connect(g1);g1.connect(f1);f1.connect(gain);srcs.push(s1);const s2=ctx.createBufferSource();s2.buffer=_brownNoise(ctx,len);s2.loop=true;const f2=ctx.createBiquadFilter();f2.type='lowpass';f2.frequency.value=60;f2.Q.value=1.5;const g2=ctx.createGain();g2.gain.value=0.9;const lfo=ctx.createOscillator();lfo.frequency.value=0.06;const lg=ctx.createGain();lg.gain.value=0.7;lfo.connect(lg);lg.connect(g2.gain);s2.connect(f2);f2.connect(g2);g2.connect(gain);srcs.push(s2,lfo)}
+  else if(type==='stream'){const s=ctx.createBufferSource();s.buffer=_pinkNoise(ctx,len);s.loop=true;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=300;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2800;bp.Q.value=0.25;const lfo=ctx.createOscillator();lfo.frequency.value=0.15;const lg=ctx.createGain();lg.gain.value=150;lfo.connect(lg);lg.connect(bp.frequency);const g=ctx.createGain();g.gain.value=0.65;s.connect(hp);hp.connect(bp);bp.connect(g);g.connect(gain);srcs.push(s,lfo)}
+  else if(type==='wave'){const s=ctx.createBufferSource();s.buffer=_brownNoise(ctx,len);s.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=450;lp.Q.value=0.7;const lfo=ctx.createOscillator();lfo.frequency.value=0.06;const lg=ctx.createGain();lg.gain.value=250;lfo.connect(lg);lg.connect(lp.frequency);const g=ctx.createGain();g.gain.value=0.65;s.connect(lp);lp.connect(g);g.connect(gain);srcs.push(s,lfo)}
+  else if(type==='fire'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=400;lp.Q.value=2;s1.connect(lp);lp.connect(gain);srcs.push(s1);const s2=ctx.createBufferSource();s2.buffer=_whiteNoise(ctx,len);s2.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=5000;bp.Q.value=4;const lfo=ctx.createOscillator();lfo.frequency.value=3;const lg=ctx.createGain();lg.gain.value=0.35;lfo.connect(lg);lg.connect(bp.frequency);const lfo2=ctx.createOscillator();lfo2.frequency.value=0.4;const lg2=ctx.createGain();lg2.gain.value=0.2;lfo2.connect(lg2);lg2.connect(gain.gain);const g2=ctx.createGain();g2.gain.value=0.18;s2.connect(bp);bp.connect(g2);g2.connect(gain);srcs.push(s2,lfo,lfo2)}
+  else if(type==='forest'){const s1=ctx.createBufferSource();s1.buffer=_pinkNoise(ctx,len);s1.loop=true;const bp1=ctx.createBiquadFilter();bp1.type='bandpass';bp1.frequency.value=2800;bp1.Q.value=0.35;const lfo1=ctx.createOscillator();lfo1.frequency.value=0.12;const lg1=ctx.createGain();lg1.gain.value=400;lfo1.connect(lg1);lg1.connect(bp1.frequency);const g1=ctx.createGain();g1.gain.value=0.45;s1.connect(bp1);bp1.connect(g1);g1.connect(gain);srcs.push(s1,lfo1);const s2=ctx.createBufferSource();s2.buffer=_brownNoise(ctx,len);s2.loop=true;const bp2=ctx.createBiquadFilter();bp2.type='bandpass';bp2.frequency.value=400;bp2.Q.value=0.5;const g2=ctx.createGain();g2.gain.value=0.25;s2.connect(bp2);bp2.connect(g2);g2.connect(gain);srcs.push(s2)}
+  else if(type==='bird'){const s=ctx.createBufferSource();s.buffer=_whiteNoise(ctx,len);s.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=3800;bp.Q.value=6;const lfo=ctx.createOscillator();lfo.frequency.value=5;const lg=ctx.createGain();lg.gain.value=700;lfo.connect(lg);lg.connect(bp.frequency);const lfo2=ctx.createOscillator();lfo2.frequency.value=0.4;const lg2=ctx.createGain();lg2.gain.value=0.5;lfo2.connect(lg2);lg2.connect(gain.gain);const g=ctx.createGain();g.gain.value=0.18;s.connect(bp);bp.connect(g);g.connect(gain);srcs.push(s,lfo,lfo2)}
+  else if(type==='wind'){const s=ctx.createBufferSource();s.buffer=_pinkNoise(ctx,len);s.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=550;bp.Q.value=0.35;const lfo=ctx.createOscillator();lfo.frequency.value=0.04;const lg=ctx.createGain();lg.gain.value=350;lfo.connect(lg);lg.connect(bp.frequency);const g=ctx.createGain();g.gain.value=0.55;s.connect(bp);bp.connect(g);g.connect(gain);srcs.push(s,lfo)}
+  else if(type==='cafe'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=350;lp.Q.value=0.8;const g1=ctx.createGain();g1.gain.value=0.35;s1.connect(lp);lp.connect(g1);g1.connect(gain);srcs.push(s1);const s2=ctx.createBufferSource();s2.buffer=_pinkNoise(ctx,len);s2.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1600;bp.Q.value=0.4;const lfo=ctx.createOscillator();lfo.frequency.value=0.3;const lg=ctx.createGain();lg.gain.value=0.2;lfo.connect(lg);lg.connect(gain.gain);const g2=ctx.createGain();g2.gain.value=0.3;s2.connect(bp);bp.connect(g2);g2.connect(gain);srcs.push(s2,lfo)}
+  else if(type==='train'){const s1=ctx.createBufferSource();s1.buffer=_brownNoise(ctx,len);s1.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=250;lp.Q.value=1.2;const lfo=ctx.createOscillator();lfo.frequency.value=1.4;const lg=ctx.createGain();lg.gain.value=90;lfo.connect(lg);lg.connect(lp.frequency);s1.connect(lp);lp.connect(gain);srcs.push(s1,lfo);const s2=ctx.createBufferSource();s2.buffer=_pinkNoise(ctx,len);s2.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=900;bp.Q.value=1.2;const lfo2=ctx.createOscillator();lfo2.frequency.value=0.7;const lg2=ctx.createGain();lg2.gain.value=0.25;lfo2.connect(lg2);lg2.connect(gain.gain);const g2=ctx.createGain();g2.gain.value=0.35;s2.connect(bp);bp.connect(g2);g2.connect(gain);srcs.push(s2,lfo2)}
   else{const s=ctx.createBufferSource();s.buffer=_brownNoise(ctx,len);s.loop=true;s.connect(gain);srcs.push(s)}
   srcs.forEach(c=>c.start());
   return {sources:srcs,gain};
@@ -1625,7 +1628,7 @@ function loadSettings(){
   
   // 版本检测
   if(document.getElementById('cacheVer')){
-    document.getElementById('cacheVer').textContent='v28';
+    document.getElementById('cacheVer').textContent='v29';
     document.getElementById('cacheVer').style.color='var(--green)';
   }
   if(document.getElementById('lastUpdate')){
