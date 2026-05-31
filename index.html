@@ -994,7 +994,8 @@ function quickAction(type){
     document.getElementById('quickTitle').textContent='快速记账';
     document.getElementById('quickContent').innerHTML=
       '<div class="form-group"><label>金额</label><input type="number" id="quickAmount" placeholder="0.00" step="0.01"></div>'+
-      '<div class="form-group"><label>分类</label><select id="quickCategory"><option value="饭">🍚 饭</option><option value="交通">🚌 交通</option><option value="日用品">🧴 日用品</option><option value="学习">📚 学习</option><option value="其他">📌 其他</option></select></div>'+
+      '<div class="form-row"><div class="form-group"><label>类型</label><select id="quickType"><option value="expense">💸 支出</option><option value="income">💰 收入</option></select></div>'+
+      '<div class="form-group"><label>分类</label><select id="quickCategory"><option value="饭">🍚 饭</option><option value="交通">🚌 交通</option><option value="日用品">🧴 日用品</option><option value="学习">📚 学习</option><option value="其他">📌 其他</option></select></div></div>'+
       '<button class="btn btn-primary btn-block" onclick="quickAddExpense()">记上</button>';
     document.getElementById('quickModal').classList.add('show');
   }else if(type==='pomo'){
@@ -1046,11 +1047,13 @@ function quickCheckin(){
 function quickAddExpense(){
   const amount=parseFloat(document.getElementById('quickAmount').value);if(!amount||amount<=0)return;
   const category=document.getElementById('quickCategory').value;
-  const items=DB.get('expenses');items.unshift({amount,type:'expense',category,note:'',date:today(),id:Date.now()});
+  const type=document.getElementById('quickType').value;
+  const items=DB.get('expenses');items.unshift({amount,type,category,note:'',date:today(),id:Date.now()});
   DB.set('expenses',items);closeQuickModal();
   renderBudget();renderHomeStats();renderCountdown();scheduleAutoSync();checkBudgetAchievements();
   const toast=document.createElement('div');toast.className='toast';toast.textContent='记账成功 ✅';document.body.appendChild(toast);setTimeout(()=>toast.remove(),2000);
 }
+function deleteExpense(id){showModal('删除确认','确定删除这条记录？',()=>{let items=DB.get('expenses');items=items.filter(x=>x.id!==id);DB.set('expenses',items);renderBudget();renderHomeStats();renderCountdown();scheduleAutoSync();closeQuickModal();setTimeout(()=>showTodayDetail('expense'),100)})}
 // === WORK ===
 function addWork(){
   // v18: 班次打卡已移除，保留函数避免报错
@@ -1641,12 +1644,20 @@ function showTodayDetail(type){
     const totalOut=todayExps.filter(e=>e.type!=='income').reduce((s,e)=>s+(e.amount||0),0);
     const totalIn=todayExps.filter(e=>e.type==='income').reduce((s,e)=>s+(e.amount||0),0);
     let html='<div class="stats-row"><div class="stat"><div class="val" style="color:var(--red)">¥'+totalOut+'</div><div class="label">支出</div></div><div class="stat"><div class="val" style="color:var(--green)">¥'+totalIn+'</div><div class="label">收入</div></div></div>';
+    // 今日记录
     if(todayExps.length){
-      html+='<div style="font-size:13px;color:var(--text2);margin-top:8px">今日记录</div>';
+      html+='<div style="font-size:13px;color:var(--text2);margin-top:8px;margin-bottom:4px">今日记录</div>';
       const cats={'饭':'🍚','交通':'🚌','日用品':'🧴','学习':'📚','其他':'📌'};
-      todayExps.forEach(e=>{html+='<div class="list-item"><div class="list-icon" style="background:rgba(16,185,129,.08);font-size:16px">'+(cats[e.category]||'💰')+'</div><div class="list-info"><div class="list-title">'+e.note+'</div><div class="list-sub">'+e.category+'</div></div><div class="list-amount '+(e.type==='income'?'income':'')+'">'+(e.type==='income'?'+':'-')+'¥'+e.amount+'</div></div>'});
+      todayExps.forEach(e=>{html+='<div class="list-item"><div class="list-icon" style="background:rgba(16,185,129,.08);font-size:16px">'+(cats[e.category]||'💰')+'</div><div class="list-info"><div class="list-title">'+(e.note||e.category)+'</div><div class="list-sub">'+e.date+'</div></div><div class="list-amount '+(e.type==='income'?'income':'')+'">'+(e.type==='income'?'+':'-')+'¥'+e.amount+'</div><button class="btn btn-danger" onclick="event.stopPropagation();deleteExpense('+e.id+')">✕</button></div>'});
     }else{html+='<div style="text-align:center;color:var(--text3);padding:16px">今天还没有记录</div>'}
-    showModal('💰 记账详情',html);
+    // 历史记录
+    const oldExps=expenses.filter(e=>e.date!==ts).slice(0,20);
+    if(oldExps.length){
+      html+='<div style="font-size:13px;color:var(--text2);margin-top:16px;margin-bottom:4px">历史记录</div>';
+      const cats={'饭':'🍚','交通':'🚌','日用品':'🧴','学习':'📚','其他':'📌'};
+      oldExps.forEach(e=>{html+='<div class="list-item"><div class="list-icon" style="background:rgba(16,185,129,.08);font-size:16px">'+(cats[e.category]||'💰')+'</div><div class="list-info"><div class="list-title">'+(e.note||e.category)+'</div><div class="list-sub">'+e.date+'</div></div><div class="list-amount '+(e.type==='income'?'income':'')+'">'+(e.type==='income'?'+':'-')+'¥'+e.amount+'</div><button class="btn btn-danger" onclick="event.stopPropagation();deleteExpense('+e.id+')">✕</button></div>'});
+    }
+    showModal('💰 记账',html);
   }else if(type==='achievements'){
     const achieved=getAchievements().filter(a=>checkAchievement(a.id,a));
     let html='<div class="achieve-grid">';
