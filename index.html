@@ -980,7 +980,14 @@ function quickAction(type){
       '<button class="btn btn-primary btn-block" onclick="quickAddExpense()">记上</button>';
     document.getElementById('quickModal').classList.add('show');
   }else if(type==='noise'){
-    toggleNoisePanel();
+    if(_pomoNoiseNodes['rain']){
+      stopPomoNoise('rain');
+    }else{
+      startPomoNoise('rain');
+      const el=document.getElementById('noiseFloat');
+      if(!el.classList.contains('show'))el.classList.add('show');
+      syncNoiseFloatState();
+    }
   }
 }
 function closeQuickModal(){document.getElementById('quickModal').classList.remove('show')}
